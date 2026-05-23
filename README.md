@@ -42,3 +42,16 @@ Part 3 / Part 4 / Part 6 / Part 7 多題同文時，以 `groupId` 串接。
 2. 在「聽力」或「閱讀」選擇 Part，系統會隨機排列題目。
 3. 點「我不熟」可加入複習清單。
 4. 前往「複習清單」可開始針對不熟題複習。
+
+## 題數檢查表
+
+- [x] 總題數：200
+- [x] Part 1：6 題
+- [x] Part 2：25 題
+- [x] Part 3：39 題
+- [x] Part 4：30 題
+- [x] Part 5：30 題
+- [x] Part 6：16 題
+- [x] Part 7：54 題
+
+`script.js` 已保留 `EXPECTED_TOTAL_QUESTIONS = 200` 與 `sampleQuestions.length` 的檢查結構，便於驗收。

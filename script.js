@@ -23,11 +23,11 @@ const sampleQuestions = {
     { id: "V5", type: "vocabulary-zh-en", question: "中翻英：運送", options: [], answer: "shipment", explanation: "shipment 常指貨運/運送。", English: "shipment", Chinese: "運送", partOfSpeech: "noun", exampleSentence: "The shipment arrived late." }
   ],
   cloze: [
-    { id: "C1", type: "cloze", question: "Please ____ me if you need any assistance.", options: [], answer: "contact", explanation: "助動詞後接原形動詞。" },
-    { id: "C2", type: "cloze", question: "The meeting was ____ due to bad weather.", options: [], answer: "canceled", explanation: "被動語態 was + p.p." },
-    { id: "C3", type: "cloze", question: "Our sales have ____ significantly this year.", options: [], answer: "increased", explanation: "現在完成式 have + p.p." },
-    { id: "C4", type: "cloze", question: "Please review the document ____ signing it.", options: [], answer: "before", explanation: "before + V-ing/N。" },
-    { id: "C5", type: "cloze", question: "She is responsible ____ customer service.", options: [], answer: "for", explanation: "be responsible for 固定搭配。" }
+    { id: "C1", type: "cloze", question: "Please ____ me if you need any assistance.", options: ["contact", "contacts", "contacted", "contacting"], answer: "contact", explanation: "Please 後接原形動詞，故選 contact。" },
+    { id: "C2", type: "cloze", question: "The meeting was ____ due to bad weather.", options: ["cancel", "canceled", "canceling", "cancels"], answer: "canceled", explanation: "被動語態為 was + 過去分詞，因此選 canceled。" },
+    { id: "C3", type: "cloze", question: "Our sales have ____ significantly this year.", options: ["increase", "increases", "increased", "increasing"], answer: "increased", explanation: "現在完成式 have + 過去分詞，故選 increased。" },
+    { id: "C4", type: "cloze", question: "Please review the document ____ signing it.", options: ["before", "after", "during", "until"], answer: "before", explanation: "語意為「簽名前先審閱」，應選 before。" },
+    { id: "C5", type: "cloze", question: "She is responsible ____ customer service.", options: ["of", "to", "for", "with"], answer: "for", explanation: "固定搭配為 be responsible for。" }
   ],
   sentence: [
     { id: "S1", type: "sentence-translation", question: "中翻英：請在今天下午前回覆這封郵件。", options: [], answer: "Please reply to this email by this afternoon.", explanation: "重點是 by this afternoon。" },

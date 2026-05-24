@@ -77,54 +77,232 @@ const p2 = [
 p2.forEach((item, i) => sampleQuestions.push(q({ id: `L2-${i + 1}`, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, tags: ["Q&A"] })));
 
 // keep rest minimal due space
-const p3Passages = [
-  "Woman: We need to reschedule Monday's budget meeting. Man: The director is visiting another branch that morning. Woman: Let's move it to Tuesday at 2 p.m. and update everyone.",
-  "Man: I'd like to confirm my hotel reservation under David Lin. Woman: Yes, three nights starting July 8. Man: Great, please add airport pickup at 9 p.m.",
-  "Woman: I'm calling about my damaged headset. Man: I'm sorry about that. We can ship a replacement today. Woman: Please send it to my office address.",
-  "Man: The product demo starts in ten minutes. Woman: I'll prepare the sample units and brochures. Man: I'll greet guests at the entrance.",
-  "Woman: We need quotes for 500 steel brackets. Man: I can provide unit prices by tomorrow. Woman: Please include shipping and lead time.",
-  "Man: The new staff training is this Friday. Woman: Should we book the larger training room? Man: Yes, thirty employees signed up.",
-  "Woman: The copier on Floor 6 keeps jamming. Man: I'll inspect it after lunch. Woman: Thanks, we need it for payroll documents.",
-  "Man: My flight to Osaka was changed to 6 a.m. Woman: Then I'll revise your itinerary and hotel check-in. Man: Please also notify the client.",
-  "Woman: The office move begins next weekend. Man: I'll label each department's boxes. Woman: IT will disconnect computers on Friday.",
-  "Man: Registration for the safety seminar closes tomorrow. Woman: We still need five participants from accounting. Man: I'll send a reminder now.",
-  "Woman: Legal asked us to verify clause 12. Man: I'll compare it with the previous contract. Woman: Please send the final version by 5 p.m.",
-  "Man: Stock levels of toner are low again. Woman: I can place a rush order today. Man: Please update the inventory sheet afterward.",
-  "Woman: How is the mobile app project going? Man: Design is complete, and coding is 70 percent done. Woman: Good, share a progress report tomorrow."
+const p3Groups = [
+  {
+    passage: "Woman: We need to reschedule Monday's budget meeting. Man: The director is visiting the Kaohsiung branch that morning. Woman: Then let's move the meeting to Tuesday at 2 p.m. and notify finance.",
+    items: [
+      ["Why are the speakers changing the meeting schedule?", ["The director will be out of the office on Monday.", "The budget file was deleted.", "The conference room is under repair for a week.", "Finance requested a larger meeting room."], "The director will be out of the office on Monday.", "男方說主管週一上午要去高雄分公司，因此無法原時間開會。其他選項未在對話出現。"],
+      ["When will the meeting take place?", ["Tuesday at 2 p.m.", "Monday at 2 p.m.", "Tuesday at 10 a.m.", "Friday at 2 p.m."], "Tuesday at 2 p.m.", "女方明確提議改到週二下午兩點。其餘時間與對話不符。"],
+      ["What will the woman probably do next?", ["Inform the finance team about the new schedule.", "Book train tickets to Kaohsiung.", "Prepare the annual report alone.", "Cancel the meeting completely."], "Inform the finance team about the new schedule.", "她提到要通知 finance，代表下一步是發出改期通知。"],
+    ],
+  },
+  {
+    passage: "Man: Hello, I'd like to confirm my reservation at Harbor Hotel. Woman: Certainly, Mr. Wu. You have a room for three nights starting July 8. Man: Great. Could you also arrange airport pickup at 9 p.m.?",
+    items: [
+      ["What is the man calling about?", ["A hotel reservation", "A restaurant complaint", "A delayed shipment", "A visa application"], "A hotel reservation", "男方一開始就說要確認在飯店的預訂。其他選項與內容無關。"],
+      ["How long will the man stay?", ["Three nights", "One night", "Five nights", "One week"], "Three nights", "女方確認住宿為三晚。其餘天數不正確。"],
+      ["What additional request does the man make?", ["Airport pickup at 9 p.m.", "Late checkout at 6 p.m.", "A room upgrade with no fee", "Breakfast for two guests"], "Airport pickup at 9 p.m.", "男方補充要求九點的機場接送服務。其餘服務未被提及。"],
+    ],
+  },
+  {
+    passage: "Woman: I'm calling because the headset I received is damaged. Man: I'm sorry to hear that. We can ship a replacement this afternoon. Woman: Thanks. Please send it to my office address.",
+    items: [
+      ["What problem does the woman report?", ["She received a damaged headset.", "She forgot her account password.", "She was charged twice.", "She got the wrong invoice date."], "She received a damaged headset.", "女方明確表示收到的耳機有損壞。其他問題未出現。"],
+      ["What solution does the man offer?", ["Send a replacement today", "Issue a full refund only", "Dispatch a technician next month", "Cancel all future orders"], "Send a replacement today", "男方提出當天下午補寄新品。其餘做法不是對話內容。"],
+      ["Where should the replacement be delivered?", ["To the woman's office", "To a convenience store", "To the company's warehouse", "To the airport counter"], "To the woman's office", "女方要求寄到辦公室地址。"],
+    ],
+  },
+  {
+    passage: "Man: The product demonstration starts in ten minutes. Woman: I'll set up the sample units and brochures now. Man: Perfect. I'll greet visitors at the entrance.",
+    items: [
+      ["What event are the speakers preparing for?", ["A product demonstration", "A press interview", "A safety inspection", "A budget meeting"], "A product demonstration", "男方第一句指出產品展示即將開始。"],
+      ["What will the woman do?", ["Prepare samples and brochures", "Print employee ID cards", "Call the delivery driver", "Check hotel bookings"], "Prepare samples and brochures", "女方說她要布置樣品與型錄。"],
+      ["Where will the man be?", ["At the entrance", "In the storage room", "At the cashier desk", "On the loading dock"], "At the entrance", "男方表示他會在入口迎接來賓。"],
+    ],
+  },
+  {
+    passage: "Woman: We need quotations for 500 steel brackets. Man: I can send unit prices by tomorrow morning. Woman: Please include shipping fees and lead time in the quote.",
+    items: [
+      ["What does the woman request?", ["Quotations for steel brackets", "A revised training schedule", "An updated payroll list", "A conference venue booking"], "Quotations for steel brackets", "女方要求 500 個鋼製支架的報價。"],
+      ["When will the man provide pricing?", ["By tomorrow morning", "By the end of this month", "This afternoon", "Next week"], "By tomorrow morning", "男方明確說明明早提供單價。"],
+      ["What additional information is needed?", ["Shipping fees and lead time", "Tax refund documents", "Insurance policy numbers", "Product photos only"], "Shipping fees and lead time", "女方補充要運費與交期資訊。"],
+    ],
+  },
+  {
+    passage: "Man: The new employee training is this Friday. Woman: Should we reserve the larger training room? Man: Yes, because thirty employees registered.",
+    items: [
+      ["What are the speakers discussing?", ["An employee training session", "A client dinner", "A software outage", "A contract renewal"], "An employee training session", "對話圍繞新進員工訓練安排。"],
+      ["Why do they need a larger room?", ["Many employees signed up", "The projector is missing", "The original room is closed permanently", "The trainer requested outdoor seating"], "Many employees signed up", "男方指出已有 30 人報名，所以需要較大教室。"],
+      ["When is the training scheduled?", ["This Friday", "Tomorrow morning", "Next Monday", "At the end of the quarter"], "This Friday", "男方第一句直接給出時間是本週五。"],
+    ],
+  },
+  {
+    passage: "Woman: The copier on Floor 6 keeps jamming. Man: I'll inspect it right after lunch. Woman: Thanks, we need it to print payroll documents today.",
+    items: [
+      ["What equipment problem is mentioned?", ["A copier keeps jamming", "A scanner cannot connect to Wi-Fi", "A projector lamp is broken", "A laptop battery is swollen"], "A copier keeps jamming", "女方指出六樓影印機一直卡紙。"],
+      ["When will the man check the machine?", ["After lunch", "Before 9 a.m.", "Tomorrow evening", "Next week"], "After lunch", "男方說午餐後立刻檢查。"],
+      ["Why is quick repair important?", ["Payroll documents must be printed today.", "A customer tour starts now.", "The office is moving tonight.", "The copier lease expires today."], "Payroll documents must be printed today.", "女方補充今天要印薪資文件，因此維修有急迫性。"],
+    ],
+  },
+  {
+    passage: "Man: My flight to Osaka was changed to 6 a.m. Woman: Then I'll revise your itinerary and hotel check-in time. Man: Please also notify the client about the earlier arrival.",
+    items: [
+      ["What changed in the man's travel plan?", ["His flight now departs at 6 a.m.", "His destination changed to Tokyo.", "His hotel reservation was canceled.", "His passport expired."], "His flight now departs at 6 a.m.", "男方說航班改為早上六點。其餘資訊未提及。"],
+      ["What will the woman update?", ["The itinerary and hotel check-in time", "The annual budget report", "The product catalog", "The training attendance sheet"], "The itinerary and hotel check-in time", "女方表示會更新行程與入住時間。"],
+      ["Who else needs to be informed?", ["The client", "The building manager", "The courier company", "The accounting intern"], "The client", "男方最後要求也要通知客戶。"],
+    ],
+  },
+  {
+    passage: "Woman: The office move starts next weekend. Man: I'll label each department's boxes this Thursday. Woman: Great. IT will disconnect all computers on Friday evening.",
+    items: [
+      ["What project are the speakers planning?", ["An office relocation", "A product launch", "A tax audit", "A vendor exhibition"], "An office relocation", "對話主題是辦公室搬遷。"],
+      ["What task will the man handle?", ["Label department boxes", "Book moving trucks", "Install computers", "Prepare welcome gifts"], "Label department boxes", "男方說會先標示各部門箱子。"],
+      ["What will IT do?", ["Disconnect computers on Friday evening", "Set up desks on Thursday morning", "Deliver boxes to a branch", "Approve moving expenses"], "Disconnect computers on Friday evening", "女方說 IT 週五晚間會拔除電腦設備。"],
+    ],
+  },
+  {
+    passage: "Man: Registration for the safety seminar closes tomorrow at 5 p.m. Woman: We still need five people from accounting. Man: I'll send a reminder to that department this afternoon.",
+    items: [
+      ["What deadline is mentioned?", ["Seminar registration closes tomorrow at 5 p.m.", "Payroll submission closes tonight", "Hotel booking closes this morning", "Contract review closes next week"], "Seminar registration closes tomorrow at 5 p.m.", "男方指出安全講座報名截止時間。"],
+      ["Which department still needs participants?", ["Accounting", "Sales", "Human Resources", "Legal"], "Accounting", "女方提到會計部還差五位人員。"],
+      ["What will the man do next?", ["Send a reminder email", "Cancel the seminar", "Reserve a larger hall", "Print name cards"], "Send a reminder email", "男方表示下午就會發提醒通知。"],
+    ],
+  },
+  {
+    passage: "Woman: Legal asked us to verify clause 12 in the draft. Man: I'll compare it with the previous contract. Woman: Please send the final version by 5 p.m. today.",
+    items: [
+      ["What did legal request?", ["Verification of clause 12", "A new marketing plan", "An urgent hiring request", "A warehouse inspection"], "Verification of clause 12", "女方說法務要求確認第 12 條。"],
+      ["What will the man compare?", ["The draft with the previous contract", "Two shipping invoices", "Three vendor brochures", "Old employee records"], "The draft with the previous contract", "男方表示要和舊合約比對。"],
+      ["By when is the final version needed?", ["By 5 p.m. today", "By noon tomorrow", "By the end of the week", "No deadline is given"], "By 5 p.m. today", "女方給出明確期限是今天五點前。"],
+    ],
+  },
+  {
+    passage: "Man: Our toner stock is low again. Woman: I can place a rush order this afternoon. Man: Thanks. Please update the inventory sheet after ordering.",
+    items: [
+      ["What inventory issue is discussed?", ["Toner stock is running low", "Paper clips are overstocked", "Printers were returned", "Warehouse shelves are broken"], "Toner stock is running low", "男方指出碳粉存量不足。"],
+      ["What action will the woman take?", ["Place a rush order today", "Cancel all printing tasks", "Request budget cuts", "Move stock to another city"], "Place a rush order today", "女方表示今天下午會加急下單。"],
+      ["What should be done after ordering?", ["Update the inventory sheet", "Notify hotel reception", "Submit travel expenses", "Print training manuals"], "Update the inventory sheet", "男方要求下單後更新庫存表。"],
+    ],
+  },
+  {
+    passage: "Woman: How is the mobile app project going? Man: Design is complete, and coding is about 70 percent finished. Woman: Good. Please send me a progress report by tomorrow noon.",
+    items: [
+      ["What project are they talking about?", ["A mobile app project", "A branch relocation", "A customer refund case", "A delivery route change"], "A mobile app project", "女方開頭直接詢問手機 App 專案進度。"],
+      ["How much coding is complete?", ["About 70 percent", "About 30 percent", "Fully complete", "Coding has not started"], "About 70 percent", "男方明確說開發完成約七成。"],
+      ["What does the woman request?", ["A progress report by tomorrow noon", "A new design mockup by tonight", "A meeting cancellation notice", "A budget increase request"], "A progress report by tomorrow noon", "女方要求明天中午前提交進度報告。"],
+    ],
+  },
 ];
-function addListeningGroups(partPrefix, part, type, passages) {
-  let idx = 1;
-  passages.forEach((passage, g) => {
-    const bank = {
-      "L3": [
-        ["What are the speakers mainly discussing?","Which day is the meeting moved to?","What will the woman do next?"],
-        ["What is the man calling about?","How many nights is the stay?","What additional service is requested?"],
-        ["What problem does the woman report?","What solution does the man offer?","Where should the replacement be sent?"],
-        ["What event is about to begin?","What will the woman prepare?","Where will the man be?"],
-        ["What is being requested from the man?","When will prices be ready?","What extra details are requested?"],
-        ["What is the topic of the conversation?","Why is a larger room needed?","What will they likely do next?"],
-        ["What equipment has a problem?","When will it be checked?","Why is quick repair important?"],
-        ["What changed in the man's schedule?","What will the woman revise?","Who else should be informed?"],
-        ["What project are they planning?","What will the man do first?","What is IT's role?"],
-        ["What deadline is mentioned?","Which department still needs participants?","What will the man do now?"],
-        ["What did legal request?","What will the man compare?","By when is the final version needed?"],
-        ["What inventory issue is discussed?","What action will the woman take?","What should be updated after ordering?"],
-        ["What is the conversation about?","How complete is coding?","What does the woman request?" ]
-      ]
-    };
-    const opts = [
-      ["meeting reschedule","food menu","airport taxi","salary raise"],
-      ["Tuesday at 2 p.m.","Monday 9 a.m.","Friday noon","No new date"],
-      ["Send an update notice.","Cancel the project.","Book a concert hall.","Order office chairs."]
-    ];
-    (bank[partPrefix] ? bank[partPrefix][g] : []).forEach((qq, i) => sampleQuestions.push(q({ id: `${partPrefix}-${idx++}`, section: "listening", part, type, groupId: `${partPrefix}G-${g + 1}`, passage, question: qq, options: opts[i], answer: opts[i][0], explanation: `依內容判斷。中文解析：正確答案與對話重點一致，其餘選項偏離情境。`, tags: ["group"] })));
-  });
-}
-addListeningGroups("L3", "Part 3", "conversations", p3Passages);
 
-const p4Passages = ["Airport announcement...Gate changed to C12 due to weather.","Company notice...annual health check starts June 10.","Store promotion...buy two get one free until Sunday.","Voicemail...please return my call about contract edits.","Weather delay notice...truck departs after storm warning lifted.","Exhibition announcement...register at Hall B desk before 10.","Course notice...submit assignment by Friday midnight.","Hotel service notice...water supply paused 1-3 p.m. for maintenance.","Logistics notice...parcel ETA revised to Thursday morning.","System maintenance notice...portal unavailable Saturday 1-4 a.m."];
-let l4idx=1; p4Passages.forEach((p,g)=>{
-  [["What is the announcement mainly about?","A schedule/service update.","A schedule/service update."],["When does it happen?","A specific time is stated.","A specific time is stated."],["What should listeners do?","Follow the instruction in the notice.","Follow the instruction in the notice."]].forEach((x,i)=>sampleQuestions.push(q({id:`L4-${l4idx++}`,section:"listening",part:"Part 4",type:"talks",groupId:`L4G-${g+1}`,passage:p,question:x[0],options:[x[1],"Ignore all messages.","Apply for leave.","Order new uniforms."],answer:x[2],explanation:"中文解析：根據獨白中的時間與指示作答。",tags:["talk"]})))
+let l3idx = 1;
+p3Groups.forEach((group, gi) => {
+  group.items.forEach((item) => {
+    sampleQuestions.push(q({
+      id: `L3-${l3idx++}`,
+      section: "listening",
+      part: "Part 3",
+      type: "conversations",
+      groupId: `L3G-${gi + 1}`,
+      passage: group.passage,
+      question: item[0],
+      options: item[1],
+      answer: item[2],
+      explanation: `${item[3]} 中文解析：依對話關鍵資訊判斷正確答案。`,
+      tags: ["conversation"],
+    }));
+  });
+});
+
+const p4Groups = [
+  {
+    passage: "Airport announcement: Flight JT328 to Busan is delayed until 7:45 p.m. due to heavy rain. Passengers are asked to remain near Gate C12 for the next update.",
+    items: [
+      ["What is the announcement about?", ["A delayed flight to Busan", "A gate closure for maintenance", "A baggage claim error", "A passport control change"], "A delayed flight to Busan", "廣播說明飛往釜山的 JT328 航班延誤。"],
+      ["Why is the flight delayed?", ["Heavy rain", "A staffing shortage", "A mechanical inspection", "A late pilot"], "Heavy rain", "原因句明確指出是因大雨延誤。"],
+      ["What should passengers do?", ["Wait near Gate C12", "Go to Gate A1 immediately", "Collect luggage now", "Leave the airport"], "Wait near Gate C12", "廣播要求旅客在 C12 附近等候更新。"],
+    ],
+  },
+  {
+    passage: "Company notice: The annual health check program begins on June 10. All employees must reserve a time slot through the HR portal by June 5.",
+    items: [
+      ["What program is being announced?", ["Annual health checks", "A language training course", "A new bonus policy", "An office relocation"], "Annual health checks", "公告主旨是年度健康檢查。"],
+      ["What is the reservation deadline?", ["June 5", "June 10", "May 31", "June 20"], "June 5", "文中寫明需在 6/5 前完成預約。"],
+      ["How should employees reserve a slot?", ["Through the HR portal", "By phone to accounting", "At the reception counter", "By paper form only"], "Through the HR portal", "公告指定透過 HR 系統預約。"],
+    ],
+  },
+  {
+    passage: "Store promotion broadcast: This weekend only, buy two notebooks and get one free at BrightMart. The offer is valid until Sunday 9 p.m. at all city branches.",
+    items: [
+      ["What is the promotion?", ["Buy two notebooks, get one free", "50% off all electronics", "Free delivery for furniture", "A free coffee with any purchase"], "Buy two notebooks, get one free", "促銷內容是筆記本買二送一。"],
+      ["How long is the promotion valid?", ["Until Sunday 9 p.m.", "Until Friday noon", "For one month", "Only today"], "Until Sunday 9 p.m.", "廣播給出截止時間為週日晚上九點。"],
+      ["Where can customers use this offer?", ["At all city branches", "Only at the airport branch", "Online only", "At the warehouse outlet only"], "At all city branches", "公告說明活動適用所有市區分店。"],
+    ],
+  },
+  {
+    passage: "Voicemail: Hi Ms. Lin, this is Eric from Nova Legal. We revised section 4 of your contract. Please call me back before 4 p.m. so we can submit the final copy today.",
+    items: [
+      ["Who left the voicemail?", ["Eric from Nova Legal", "Ms. Lin from finance", "A courier driver", "The hotel manager"], "Eric from Nova Legal", "留言開頭自我介紹為 Nova Legal 的 Eric。"],
+      ["What was revised?", ["Section 4 of the contract", "The shipping invoice", "The staff schedule", "The project budget"], "Section 4 of the contract", "留言指出已修改合約第 4 條。"],
+      ["By when should Ms. Lin call back?", ["Before 4 p.m.", "Before noon tomorrow", "By the end of the week", "No callback is needed"], "Before 4 p.m.", "對方要求四點前回電以便當天送件。"],
+    ],
+  },
+  {
+    passage: "Weather delay notice: Due to a thunderstorm warning, truck route B will depart at 3:30 p.m. instead of 1:00 p.m. Drivers should check road updates on the logistics app every 30 minutes.",
+    items: [
+      ["Why is truck route B delayed?", ["A thunderstorm warning", "A fuel shortage", "A customs inspection", "A driver strike"], "A thunderstorm warning", "通知說因雷雨警報而延後發車。"],
+      ["What is the new departure time?", ["3:30 p.m.", "1:00 p.m.", "2:00 p.m.", "5:30 p.m."], "3:30 p.m.", "新時間明確改為下午 3:30。"],
+      ["What are drivers asked to do?", ["Check the logistics app every 30 minutes", "Return to headquarters immediately", "Call customers one by one", "Switch to route C"], "Check the logistics app every 30 minutes", "通知要求駕駛每 30 分鐘查看路況更新。"],
+    ],
+  },
+  {
+    passage: "Exhibition announcement: The Smart Factory Expo opens at 10 a.m. in Hall B. Visitors who registered online must pick up badges at Counter 6 before entering the keynote session.",
+    items: [
+      ["Where is the expo held?", ["In Hall B", "In Hall D", "At Counter 6", "On the second floor lobby"], "In Hall B", "第一句說明展覽地點在 Hall B。"],
+      ["When does the expo open?", ["At 10 a.m.", "At 9 a.m.", "At noon", "At 3 p.m."], "At 10 a.m.", "公告明確給出開展時間。"],
+      ["What must online registrants do first?", ["Pick up badges at Counter 6", "Pay the fee at Hall D", "Submit resumes", "Join the keynote directly"], "Pick up badges at Counter 6", "進場前需先至 6 號櫃台領取識別證。"],
+    ],
+  },
+  {
+    passage: "Course notice: The advanced Excel class will be held online this Thursday at 7 p.m. Participants should download the sample workbook from the training portal before class.",
+    items: [
+      ["What course is mentioned?", ["An advanced Excel class", "A public speaking workshop", "A beginner coding camp", "A design seminar"], "An advanced Excel class", "公告主題是進階 Excel 課程。"],
+      ["When will the class take place?", ["This Thursday at 7 p.m.", "This Tuesday at 9 a.m.", "Friday at noon", "Next Monday evening"], "This Thursday at 7 p.m.", "時間資訊在第一句已明確說明。"],
+      ["What should participants do before class?", ["Download the sample workbook", "Submit a printed report", "Reserve a classroom seat", "Install a new printer"], "Download the sample workbook", "公告要求課前先下載範例檔。"],
+    ],
+  },
+  {
+    passage: "Hotel service notice: Water supply on floors 12 to 15 will be suspended from 1 p.m. to 3 p.m. today for pipe maintenance. Guests may use shower rooms on floor 5 during that period.",
+    items: [
+      ["Which floors are affected by the maintenance?", ["Floors 12 to 15", "Floors 1 to 3", "Only floor 5", "All floors"], "Floors 12 to 15", "通知指出 12 到 15 樓停水維修。"],
+      ["How long will the suspension last?", ["Two hours", "One hour", "Three hours", "All day"], "Two hours", "時間從 1 點到 3 點，共兩小時。"],
+      ["What alternative is offered to guests?", ["Use shower rooms on floor 5", "Move to another hotel", "Request refunds at reception", "Use gym lockers"], "Use shower rooms on floor 5", "公告提供 5 樓淋浴間作替代方案。"],
+    ],
+  },
+  {
+    passage: "Logistics update: Parcel batch KX-77 is expected to arrive Thursday morning, not Wednesday evening. Receiving staff should prepare Dock 2 and update the unloading schedule.",
+    items: [
+      ["What changed in the delivery schedule?", ["Arrival moved to Thursday morning", "Delivery moved to Tuesday night", "Batch KX-77 was canceled", "Only half the parcels will arrive"], "Arrival moved to Thursday morning", "通知說由週三晚改為週四早上到貨。"],
+      ["Which batch is mentioned?", ["KX-77", "AB-19", "MZ-04", "TR-88"], "KX-77", "文中直接標示批次編號為 KX-77。"],
+      ["What should receiving staff do?", ["Prepare Dock 2 and update the schedule", "Send parcels back to the vendor", "Notify hotel reception", "Print billing statements"], "Prepare Dock 2 and update the schedule", "公告要求收貨人員準備 2 號碼頭並更新卸貨時程。"],
+    ],
+  },
+  {
+    passage: "System maintenance notice: The employee portal will be unavailable from 1 a.m. to 4 a.m. this Saturday for security upgrades. Please submit leave requests before midnight Friday.",
+    items: [
+      ["Why will the portal be unavailable?", ["Security upgrades", "A network outage caused by weather", "A hardware delivery delay", "A payroll error"], "Security upgrades", "通知說明停機原因是安全升級。"],
+      ["When is the maintenance window?", ["Saturday 1 a.m. to 4 a.m.", "Friday 1 p.m. to 4 p.m.", "Saturday 4 a.m. to 8 a.m.", "Sunday midnight to 3 a.m."], "Saturday 1 a.m. to 4 a.m.", "維護時段在公告中明確列出。"],
+      ["What should employees do in advance?", ["Submit leave requests before Friday midnight", "Change passwords at reception", "Print all payroll records", "Avoid using email all week"], "Submit leave requests before Friday midnight", "公告要求週五午夜前先送出請假申請。"],
+    ],
+  },
+];
+
+let l4idx = 1;
+p4Groups.forEach((group, gi) => {
+  group.items.forEach((item) => {
+    sampleQuestions.push(q({
+      id: `L4-${l4idx++}`,
+      section: "listening",
+      part: "Part 4",
+      type: "talks",
+      groupId: `L4G-${gi + 1}`,
+      passage: group.passage,
+      question: item[0],
+      options: item[1],
+      answer: item[2],
+      explanation: `${item[3]} 中文解析：依公告中的關鍵資訊對應答案。`,
+      tags: ["announcement"],
+    }));
+  });
 });
 
 const p5 = [

@@ -306,20 +306,100 @@ p4Groups.forEach((group, gi) => {
 });
 
 const p5 = [
-["If she ____ the draft tonight, we can print it tomorrow.",["finishes","finish","finished","finishing"],"finishes","if 子句用現在式表未來。","時態"],
-["Please place the samples ____ the top shelf.",["on","for","during","toward"],"on","在表面用 on。","介系詞"],
-["We waited in the lobby ____ the manager arrived.",["until","unless","despite","because of"],"until","直到用 until。","連接詞"],
-["The report was written very ____.",["clearly","clear","clarity","clearing"],"clearly","修飾動詞用副詞。","詞性"],
-["All forms must ____ before submission.",["be signed","sign","signed","be signing"],"be signed","表單是被簽署。","主動被動"],
-["The team plans ____ a new vendor next month.",["to meet","meeting","meet","met"],"to meet","plan to V。","不定詞"],
-["He suggested ____ the shipment by rail.",["sending","to send","send","sent"],"sending","suggest 後接 V-ing。","動名詞"],
-["The consultant ____ visited us yesterday sent a follow-up email.",["who","which","whom","whose"],"who","先行詞人作主詞。","關係代名詞"],
-["This model is ____ than last year's version.",["more efficient","most efficient","efficiently","efficiency"],"more efficient","比較級。","比較級"],
-["Our director has ____ approved the proposal.",["already","yet","still","almost"],"already","副詞位置。","副詞位置"],
+["By the time the auditor arrived, the team ____ all receipts.",["had organized","has organized","organize","organizing"],"had organized","過去另一時間點之前已完成的動作用過去完成式。","時態"],
+["Please place the signed agreement ____ the blue folder.",["in","at","for","with"],"in","文件在資料夾裡用 in。","介系詞"],
+["The manager approved overtime ____ the deadline was moved up.",["because","although","unless","whereas"],"because","表示原因用 because。","連接詞"],
+["Her explanation was clear and highly ____.",["persuasive","persuade","persuasion","persuasively"],"persuasive","and 連接兩個形容詞，需用 persuasive。","詞性"],
+["All visitor badges must ____ at the front desk.",["be returned","return","returned","be returning"],"be returned","徽章是被歸還，用被動語態。","主被動"],
+["We decided ____ the vendor before signing the contract.",["to meet","meeting","meet","met"],"to meet","decide 後接不定詞 to V。","不定詞"],
+["They postponed ____ the software until next week.",["installing","to install","install","installed"],"installing","postpone 後接動名詞。","動名詞"],
+["The assistant ____ prepared the chart will present first.",["who","which","whom","whose"],"who","先行詞是人且作主詞，用 who。","關係代名詞"],
+["This quarter's profit is ____ than last quarter's.",["higher","highest","high","more high"],"higher","兩者比較用比較級。","比較級"],
+["The receptionist has ____ confirmed your appointment.",["already","yet","still","almostly"],"already","already 常放在助動詞後、過去分詞前。","副詞位置"],
+["____ the proposal twice, she found a pricing error.",["Reviewing","Review","Reviewed","To review"],"Reviewing","分詞構句可表先後或伴隨動作。","分詞"],
+["If I ____ in your position, I would request an extension.",["were","am","was","be"],"were","與現在事實相反的假設語氣用 were。","假設語氣"],
+["Several ____ were missing from the shipment list.",["items","item","item's","items'"],"items","several 後接可數複數名詞。","名詞單複數"],
+["We need more ____ before we can finalize the budget.",["information","informations","an information","info"],"information","information 為不可數名詞。","可數不可數"],
+["Each department ____ required to submit a monthly summary.",["is","are","were","be"],"is","each + 單數名詞視為單數主詞。","主詞動詞一致"],
+["By next June, the company ____ in this building for ten years.",["will have operated","will operate","operated","has operated"],"will have operated","到未來某時間前已持續一段時間用未來完成式。","時態"],
+["The package arrived ____ time despite heavy traffic.",["on","in","at","from"],"on","固定片語 on time。","介系詞"],
+["Please call me ____ you receive the signed copy.",["once","unless","despite","whereas"],"once","once 表示一...就...。","連接詞"],
+["The director spoke ____ about the merger plan.",["briefly","brief","briefness","briefing"],"briefly","修飾動詞 spoke 用副詞 briefly。","詞性"],
+["All reports should ____ by noon on Friday.",["be submitted","submit","submitted","be submitting"],"be submitted","報告是被提交，應用被動。","主被動"],
+["He agreed ____ the presentation slides tonight.",["to revise","revising","revise","revised"],"to revise","agree 後接不定詞。","不定詞"],
+["We recommend ____ your password every three months.",["changing","to change","change","changed"],"changing","recommend 後接動名詞。","動名詞"],
+["The office ____ windows face east gets morning sunlight.",["whose","who","which","whom"],"whose","表所有關係用 whose。","關係代名詞"],
+["This model is ____ than the previous one.",["more durable","most durable","durably","durability"],"more durable","兩者比較用 more + 形容詞。","比較級"],
+["The legal team has ____ reviewed the final draft.",["just","yet","still","almost"],"just","just 常置於 has 與過去分詞之間。","副詞位置"],
+["____ all supporting files, he sent the application.",["Checking","Checked","Check","To checking"],"Checking","分詞構句用現在分詞起首。","分詞"],
+["If the weather ____ better, the event would be outdoors.",["were","is","was","be"],"were","與現在事實相反，用 were。","假設語氣"],
+["All ____ must be labeled before storage.",["boxes","box","boxs","box's"],"boxes","all 後接可數複數。","名詞單複數"],
+["There isn't much ____ left in the printer.",["ink","inks","an ink","inking"],"ink","ink 為不可數名詞。","可數不可數"],
+["Neither of the proposals ____ acceptable to the board.",["is","are","were","be"],"is","neither 視為單數主詞。","主詞動詞一致"]
 ];
-for(let i=1;i<=30;i++){const s=p5[(i-1)%10];sampleQuestions.push(q({id:`R5-${i}`,section:"reading",part:"Part 5",type:"incomplete-sentences",question:s[0],options:s[1],answer:s[2],explanation:`${s[3]} 中文解析：其餘選項在文法或語意上不合。`,grammarPoint:s[4],tags:["grammar"]}));}
+for (let i = 1; i <= 30; i++) {
+  const s = p5[i - 1];
+  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, grammarPoint: s[4], tags: ["grammar"] }));
+}
 
-const p6Scenarios=["公司內部通知","客服回信","活動報名通知","採購流程說明"]; for(let g=1;g<=4;g++){const passage=`${p6Scenarios[g-1]}：請依程序完成對應步驟並留意截止時間。`; const set=[["Please ____ the attached form today.",["review","reviews","reviewed","reviewing"],"review","祈使句動詞原形。","時態"],["Your request cannot proceed ____ your ID is verified.",["unless","because","although","while"],"unless","條件連接詞。","連接詞"],["The documents should ____ to the support desk.",["be sent","send","sent","be sending"],"be sent","被動語態。","主動被動"],["We appreciate your ____ during this process.",["patience","patient","patiently","patients"],"patience","名詞用法。","詞性"]]; set.forEach((s,i)=>sampleQuestions.push(q({id:`R6-${(g-1)*4+i+1}`,section:"reading",part:"Part 6",type:"text-completion",groupId:`R6G-${g}`,passage,question:s[0],options:s[1],answer:s[2],explanation:`${s[3]} 中文解析：依短文語境與文法選答案。`,grammarPoint:s[4],tags:["passage"]})));}
+const p6Groups = [
+  {
+    passage: "Internal Notice: Starting July 1, all departments must submit weekly progress updates by 4 p.m. every Friday through the intranet form. Reports sent by email will not be accepted.",
+    items: [
+      ["What is the main purpose of this notice?", ["To announce a new weekly reporting rule", "To cancel intranet access", "To recruit new managers", "To explain travel reimbursement"], "To announce a new weekly reporting rule", "短文主旨是宣布每週進度回報的新規定。"],
+      ["When is the reporting deadline each week?", ["By 4 p.m. on Friday", "By noon on Thursday", "Before 9 a.m. Monday", "Any time during the weekend"], "By 4 p.m. on Friday", "文中明確指出每週五下午四點前繳交。"],
+      ["Updates must be submitted ____ the intranet form.", ["through", "between", "despite", "across"], "through", "透過某系統提交用 through。", "介系詞"],
+      ["Reports sent by email will ____ accepted.", ["not be", "not", "be not", "not being"], "not be", "被動語態否定為 will not be + 過去分詞。", "主被動"]
+    ]
+  },
+  {
+    passage: "Customer Service Reply: Thank you for contacting us about Order 5521. We have shipped a replacement power adapter today, and delivery is expected on Tuesday. Please keep the defective item in its original box for courier pickup.",
+    items: [
+      ["Why was this reply sent?", ["To respond to an order problem", "To advertise a new product", "To confirm a hotel booking", "To request invoice payment"], "To respond to an order problem", "開頭提到針對訂單 5521 的聯繫進行回覆。"],
+      ["When is the replacement expected to arrive?", ["On Tuesday", "On Monday", "This weekend", "No date is provided"], "On Tuesday", "內文直接提供預計到貨日為星期二。"],
+      ["Please keep the defective item ____ pickup.", ["for", "among", "unless", "toward"], "for", "for pickup 表示供取件使用。", "介系詞"],
+      ["A replacement adapter has been ____ today.", ["shipped", "shipping", "ship", "ships"], "shipped", "現在完成式被動結構 has been + 過去分詞。", "時態"]
+    ]
+  },
+  {
+    passage: "Event Registration Notice: The Business Writing Workshop will be held on August 14 at Central Hall. The fee is NT$1,200, and payment must be completed by August 7 to secure your seat. Late payments will be placed on a waiting list.",
+    items: [
+      ["What event is announced?", ["A Business Writing Workshop", "A software maintenance drill", "A warehouse safety audit", "A customer feedback survey"], "A Business Writing Workshop", "第一句指出活動名稱為商務寫作工作坊。"],
+      ["What is the registration fee?", ["NT$1,200", "NT$800", "NT$2,000", "No fee is required"], "NT$1,200", "短文明確列出費用為 1,200 元。"],
+      ["Payment must be completed ____ August 7.", ["by", "from", "between", "while"], "by", "期限前用 by + 日期。", "介系詞"],
+      ["Late payments will be ____ on a waiting list.", ["placed", "placing", "place", "places"], "placed", "被動語態 will be placed 表示被列入。", "主被動"]
+    ]
+  },
+  {
+    passage: "Procurement Process Guide: For purchases above NT$50,000, teams must collect two vendor quotations, complete the approval sheet, and submit documents to Procurement before creating a purchase order.",
+    items: [
+      ["When are two quotations required?", ["For purchases above NT$50,000", "For all office supply orders", "Only for overseas travel", "After an order is delivered"], "For purchases above NT$50,000", "首句說明超過五萬元的採購需兩家報價。"],
+      ["What must teams do before creating a purchase order?", ["Submit documents to Procurement", "Ask HR to confirm attendance", "Send invoices directly to clients", "Book a meeting room"], "Submit documents to Procurement", "流程最後要求下單前先送件給採購部。"],
+      ["Teams should avoid ____ orders before approval.", ["placing", "to place", "place", "placed"], "placing", "avoid 後接動名詞。", "動名詞"],
+      ["The approval sheet must ____ by the department head.", ["be signed", "sign", "signed", "be signing"], "be signed", "表單是被簽署，需被動語態。", "主被動"]
+    ]
+  }
+];
+
+let r6idx = 1;
+p6Groups.forEach((group, g) => {
+  group.items.forEach((item) => {
+    sampleQuestions.push(q({
+      id: `R6-${r6idx++}`,
+      section: "reading",
+      part: "Part 6",
+      type: "text-completion",
+      groupId: `R6G-${g + 1}`,
+      passage: group.passage,
+      question: item[0],
+      options: item[1],
+      answer: item[2],
+      explanation: `${item[3]} 中文解析：依短文內容與句型選出最適合答案。`,
+      grammarPoint: item[4] || "",
+      tags: ["passage"],
+    }));
+  });
+});
 
 for(let g=1;g<=18;g++){const passage=`Article ${g}: This notice includes a clear purpose, date/deadline, responsible team, fee or location, and a required next step.`; const qset=[["What is the main purpose of this article?","To explain a specific business update."],["What specific deadline or time is mentioned?","A concrete date or time is provided."],["What should the reader do next?","Complete the requested follow-up action."]]; qset.forEach((x,i)=>sampleQuestions.push(q({id:`R7-${(g-1)*3+i+1}`,section:"reading",part:"Part 7",type:"reading-comprehension",groupId:`R7G-${g}`,passage,question:x[0],options:[x[1],"No details are included.","Ignore this message.","Wait for a weather report."],answer:x[1],explanation:"中文解析：題目可直接從文章中的主旨、期限與行動要求定位。",tags:["reading"]})));}
 

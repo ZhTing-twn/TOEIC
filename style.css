@@ -50,6 +50,20 @@ input, textarea {
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .stat { background:#f8fbff; border:1px solid var(--border); border-radius:10px; padding:.7rem; }
 small.muted { color:#69788f; }
+.grouped-card .question-block + .question-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+.passage-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  background: #f7faff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem;
+  margin: 0 0 1rem;
+}
 @media (max-width: 720px) {
   .grid-2 { grid-template-columns: 1fr; }
 }

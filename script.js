@@ -401,7 +401,117 @@ p6Groups.forEach((group, g) => {
   });
 });
 
-for(let g=1;g<=18;g++){const passage=`Article ${g}: This notice includes a clear purpose, date/deadline, responsible team, fee or location, and a required next step.`; const qset=[["What is the main purpose of this article?","To explain a specific business update."],["What specific deadline or time is mentioned?","A concrete date or time is provided."],["What should the reader do next?","Complete the requested follow-up action."]]; qset.forEach((x,i)=>sampleQuestions.push(q({id:`R7-${(g-1)*3+i+1}`,section:"reading",part:"Part 7",type:"reading-comprehension",groupId:`R7G-${g}`,passage,question:x[0],options:[x[1],"No details are included.","Ignore this message.","Wait for a weather report."],answer:x[1],explanation:"中文解析：題目可直接從文章中的主旨、期限與行動要求定位。",tags:["reading"]})));}
+const p7Groups = [
+  { type: "email", passage: "Email: Subject: Parking Permit Renewal. Dear Staff, To keep your parking access for July, submit your plate number and employee ID to parking@nova.com by June 28. Permits not renewed by that date will be deactivated on July 1.", items: [
+    ["What must employees submit for renewal?", ["Their plate number and employee ID", "A fuel receipt and route map", "A manager recommendation letter", "A copy of their driver's license only"], "Their plate number and employee ID", "信件明確要求提交車牌號碼與員工編號。"],
+    ["When will unrenewed permits stop working?", ["July 1", "June 28", "July 15", "No deactivation date is mentioned"], "July 1", "文中指出未續辦者將於 7 月 1 日失效。"],
+    ["Who is the intended audience?", ["Company employees with parking access", "Outside delivery drivers", "Customers visiting the showroom", "New job applicants"], "Company employees with parking access", "主旨為停車證續辦，對象是員工。"]
+  ]},
+  { type: "memo", passage: "Memo: The Marketing Department will move to Floor 8 on June 12. Pack personal items by June 10 and label each box with your team name. IT will reconnect desktop computers on June 13.", items: [
+    ["Which department is relocating?", ["Marketing", "Finance", "Human Resources", "Procurement"], "Marketing", "備忘錄第一句指出是行銷部門搬遷。"],
+    ["What should staff do by June 10?", ["Pack personal items and label boxes", "Return access cards to security", "Attend a safety drill", "Submit travel receipts"], "Pack personal items and label boxes", "文中要求 6/10 前完成打包與標示。"],
+    ["Why is June 13 mentioned?", ["IT will reconnect computers that day", "The office lease ends that day", "A vendor audit is scheduled", "A company holiday begins"], "IT will reconnect computers that day", "備忘錄說明 IT 在 6/13 重新連接電腦。"]
+  ]},
+  { type: "notice", passage: "Notice: The cafeteria on Level 2 will operate with a limited menu from 11:30 a.m. to 1:30 p.m. this Thursday due to kitchen equipment maintenance. Please expect longer wait times.", items: [
+    ["Why will the menu be limited?", ["Kitchen equipment maintenance", "A food supplier strike", "A holiday closure", "A staff training seminar"], "Kitchen equipment maintenance", "公告直接說明原因是廚房設備維護。"],
+    ["During what hours does this notice apply?", ["11:30 a.m. to 1:30 p.m.", "9:00 a.m. to 11:00 a.m.", "1:30 p.m. to 3:30 p.m.", "All day"], "11:30 a.m. to 1:30 p.m.", "文中給出限定時段。"],
+    ["What can readers infer?", ["Lunch service may be slower than usual", "The cafeteria is closing permanently", "Only drinks will be sold", "All employees must eat off-site"], "Lunch service may be slower than usual", "公告提醒等待時間變長，可推論服務速度較慢。"]
+  ]},
+  { type: "advertisement", passage: "Advertisement: BrightSkills Training Center offers a Weekend Business English Program. Tuition is NT$6,800 for eight sessions, including mock interviews and pronunciation coaching. Register by July 5 to receive a free workbook.", items: [
+    ["What is being advertised?", ["A weekend business English program", "A translation software license", "A corporate tax service", "A recruitment fair"], "A weekend business English program", "廣告主題是週末商務英文課程。"],
+    ["How much is the tuition?", ["NT$6,800", "NT$5,200", "NT$7,500", "NT$680"], "NT$6,800", "文中明確列出學費金額。"],
+    ["What is offered to early registrants?", ["A free workbook", "A free tablet", "A refund coupon", "A private coaching session"], "A free workbook", "7/5 前報名可獲得免費教材。"]
+  ]},
+  { type: "schedule", passage: "Schedule: Vendor Onboarding Day, July 18, Room 402. 09:00-09:30 Check-in, 09:30-10:30 Compliance Briefing, 10:45-11:30 System Account Setup, 11:30-12:00 Q&A.", items: [
+    ["Where will Vendor Onboarding Day be held?", ["Room 402", "Room 305", "Main Lobby", "Online only"], "Room 402", "時程表標明活動地點是 402 室。"],
+    ["What happens at 10:45?", ["System account setup begins", "Compliance briefing ends", "Lunch break starts", "Q&A session starts"], "System account setup begins", "10:45-11:30 的項目是系統帳號設定。"],
+    ["Who is this schedule most likely for?", ["Newly approved vendors", "Hotel guests", "Factory inspectors", "Job candidates"], "Newly approved vendors", "活動名稱是 Vendor Onboarding，可推論對象為新供應商。"]
+  ]},
+  { type: "invoice", passage: "Invoice #A5831: Issued to Orion Office Co. Item: 12 ergonomic chairs. Subtotal NT$24,000; Delivery fee NT$1,200; Total NT$25,200. Payment due within 30 days by bank transfer.", items: [
+    ["What is the invoice total?", ["NT$25,200", "NT$24,000", "NT$26,400", "NT$1,200"], "NT$25,200", "發票總額欄位清楚列為 25,200 元。"],
+    ["How should payment be made?", ["By bank transfer", "By cash on delivery", "By credit card at store", "By mobile wallet"], "By bank transfer", "付款方式欄位指定銀行轉帳。"],
+    ["Which amount is the delivery fee?", ["NT$1,200", "NT$2,400", "NT$12,000", "NT$25,200"], "NT$1,200", "運費欄位標示 1,200 元。"]
+  ]},
+  { type: "receipt", passage: "Receipt: GreenLine Express, June 3. Service: Same-day parcel delivery. Base fee NT$320, fuel surcharge NT$40, insurance NT$25. Amount paid NT$385 by corporate card.", items: [
+    ["What service was purchased?", ["Same-day parcel delivery", "International air freight", "Warehouse storage", "Office cleaning"], "Same-day parcel delivery", "收據服務項目寫明當日包裹配送。"],
+    ["How much was paid in total?", ["NT$385", "NT$320", "NT$360", "NT$425"], "NT$385", "收據最後顯示實付金額 385 元。"],
+    ["What can be inferred about payment?", ["The payment was already completed", "Payment is due in 30 days", "Only a deposit was paid", "The transaction was canceled"], "The payment was already completed", "收據使用 Amount paid，表示款項已支付。"]
+  ]},
+  { type: "job posting", passage: "Job Posting: Logistics Coordinator, Delta Supply Ltd. Requirements: at least 2 years of inventory control experience, advanced Excel skills, and ability to communicate with overseas vendors. Apply by sending a resume to hr@deltasupply.com by June 30.", items: [
+    ["What position is being offered?", ["Logistics Coordinator", "Finance Analyst", "Sales Trainer", "IT Support Specialist"], "Logistics Coordinator", "職缺標題直接寫明職稱。"],
+    ["Which skill is specifically required?", ["Advanced Excel skills", "Graphic design expertise", "Legal drafting experience", "Public speaking certification"], "Advanced Excel skills", "需求條件列有 advanced Excel skills。"],
+    ["What should applicants do to apply?", ["Email a resume by June 30", "Call the warehouse manager", "Submit documents in person only", "Register through a travel portal"], "Email a resume by June 30", "公告說明以 email 寄履歷且有截止日。"]
+  ]},
+  { type: "customer review", passage: "Customer Review: The new online reservation tool is fast and easy to use. I booked a meeting room in under two minutes. However, the cancellation policy is hard to find, so clearer instructions would help.", items: [
+    ["What did the reviewer like?", ["The booking process was quick", "The cancellation policy was clear", "Phone support was immediate", "The fee was reduced"], "The booking process was quick", "評論稱讚預約流程快速易用。"],
+    ["What problem is mentioned?", ["Cancellation policy is hard to find", "The website frequently crashes", "Payment options are missing", "No rooms are available"], "Cancellation policy is hard to find", "評論中具體指出取消政策不易找到。"],
+    ["What is the writer's purpose?", ["To provide feedback with praise and a suggestion", "To request a refund immediately", "To advertise a competing service", "To report billing fraud"], "To provide feedback with praise and a suggestion", "內容同時包含優點與改進建議，屬回饋性評論。"]
+  ]},
+  { type: "business letter", passage: "Business Letter: June 6. Dear Mr. Park, Thank you for your proposal for monthly equipment maintenance. We would like to proceed, but please revise Clause 3 to include emergency on-site support within 4 hours. Sincerely, Nina Chen, Operations Manager.", items: [
+    ["Why is this letter sent?", ["To request a revision before agreement", "To terminate an existing contract", "To confirm shipment delivery", "To invite Mr. Park to an interview"], "To request a revision before agreement", "信中表示願意合作但要求修改第 3 條。"],
+    ["What change is requested?", ["Add 4-hour emergency on-site support", "Reduce monthly fee by 50%", "Remove all maintenance visits", "Extend contract length to five years"], "Add 4-hour emergency on-site support", "具體要求在條款加入 4 小時內到場支援。"],
+    ["Who wrote the letter?", ["Nina Chen, Operations Manager", "Mr. Park, Sales Director", "The legal department intern", "A customer service agent"], "Nina Chen, Operations Manager", "結尾簽名清楚標示寄件人職稱姓名。"]
+  ]},
+  { type: "email", passage: "Email: Subject: Webinar Link Update. The product webinar on June 21 has moved from Zoom Room A to Zoom Room C due to participant limits. Please use the new link in the attached calendar invite.", items: [
+    ["Why was the webinar room changed?", ["Participant limits were reached", "The presenter canceled", "The topic was updated", "A power outage occurred"], "Participant limits were reached", "信件說明改房因參加人數限制。"],
+    ["What should recipients use to join?", ["The new link in the attached invite", "The old link from last week", "A phone number in the footer", "The company intranet homepage"], "The new link in the attached invite", "文中要求使用附件行事曆中的新連結。"],
+    ["What type of text is this?", ["A schedule update email", "A payment receipt", "A hiring announcement", "A public advertisement"], "A schedule update email", "內容格式與目的都是通知會議連結異動。"]
+  ]},
+  { type: "memo", passage: "Memo: Quarterly Safety Drill. All floor leaders must submit attendance records within 24 hours after each drill. Missing records will delay compliance reporting to headquarters.", items: [
+    ["Who must submit attendance records?", ["Floor leaders", "All visitors", "Security guards only", "External auditors"], "Floor leaders", "備忘錄點名 floor leaders 為責任對象。"],
+    ["When is the submission deadline?", ["Within 24 hours after each drill", "Before the drill starts", "At the end of each month", "No deadline is specified"], "Within 24 hours after each drill", "文中明確給出 24 小時期限。"],
+    ["What may happen if records are missing?", ["Compliance reporting will be delayed", "The drill will be canceled", "Employee salaries will be reduced", "Headquarters will close the office"], "Compliance reporting will be delayed", "後句直接說明缺件後果為合規報告延遲。"]
+  ]},
+  { type: "notice", passage: "Notice: Lobby access-card scanners will be replaced this Saturday from 8 a.m. to 11 a.m. During that period, temporary paper badges will be issued at the reception desk.", items: [
+    ["What maintenance work is planned?", ["Replacing lobby card scanners", "Upgrading cafeteria tables", "Painting the parking lot", "Testing fire alarms"], "Replacing lobby card scanners", "公告主題是更換大廳刷卡設備。"],
+    ["Where can people get temporary badges?", ["At the reception desk", "At the security control room", "In the HR office", "At the loading dock"], "At the reception desk", "通知指出臨時紙卡在櫃台發放。"],
+    ["How long will the replacement take?", ["Three hours", "One hour", "Half a day", "All weekend"], "Three hours", "8 點到 11 點共 3 小時。"]
+  ]},
+  { type: "advertisement", passage: "Advertisement: GreenLine Courier guarantees same-day delivery for downtown parcels submitted before noon. A flat rate of NT$180 applies to packages under 3 kilograms.", items: [
+    ["What does GreenLine Courier guarantee?", ["Same-day downtown delivery before-noon submissions", "International delivery within one day", "Free shipping on all parcels", "Weekend-only pickup service"], "Same-day downtown delivery before-noon submissions", "廣告強調中午前送件可當日送達市區。"],
+    ["What is the stated flat rate?", ["NT$180", "NT$150", "NT$200", "NT$300"], "NT$180", "文中明確列出固定費率。"],
+    ["Which package condition is required for that rate?", ["Under 3 kilograms", "Over 5 kilograms", "Fragile items only", "International destination"], "Under 3 kilograms", "固定費率適用於 3 公斤以下。"]
+  ]},
+  { type: "schedule", passage: "Schedule: New Hire Orientation, July 3. 09:30 Welcome Session (HR), 10:30 IT Account Setup, 11:15 Office Tour, 12:00 Lunch with Team Leads.", items: [
+    ["Who leads the 9:30 session?", ["HR", "IT", "Finance", "Operations"], "HR", "時程表括號標示 9:30 由 HR 主持。"],
+    ["What is scheduled at 10:30?", ["IT account setup", "Office tour", "Lunch", "Welcome session"], "IT account setup", "10:30 的項目是帳號設定。"],
+    ["Who is this schedule intended for?", ["Newly hired employees", "External vendors", "Customers visiting showrooms", "Senior executives only"], "Newly hired employees", "活動名稱為 New Hire Orientation。"]
+  ]},
+  { type: "invoice", passage: "Invoice #M7702: May Website Maintenance Service. Monthly service fee NT$780. Additional emergency fix NT$220. Total due NT$1,000. Payment due date: June 15.", items: [
+    ["How much is the emergency fix charge?", ["NT$220", "NT$780", "NT$1,000", "NT$200"], "NT$220", "發票細項列出緊急修復費用。"],
+    ["What is the total amount due?", ["NT$1,000", "NT$780", "NT$1,220", "NT$1,500"], "NT$1,000", "總額欄位明示 1,000 元。"],
+    ["When is payment due?", ["June 15", "May 15", "June 30", "No due date provided"], "June 15", "付款期限欄位寫明 6 月 15 日。"]
+  ]},
+  { type: "receipt", passage: "Receipt: Metro Print Shop. Item: 200 color brochures. Printing NT$1,600; Binding NT$300; Tax NT$95. Total paid NT$1,995 by cash. Thank you for your business.", items: [
+    ["What item was purchased?", ["200 color brochures", "200 envelopes", "A printer cartridge", "Binding machine rental"], "200 color brochures", "收據品項欄位寫明 200 份彩色型錄。"],
+    ["How much tax was charged?", ["NT$95", "NT$300", "NT$1,600", "NT$1,995"], "NT$95", "稅額欄位為 95 元。"],
+    ["What payment method was used?", ["Cash", "Bank transfer", "Credit card", "Company check"], "Cash", "收據載明 by cash。"]
+  ]},
+  { type: "job posting", passage: "Job Posting: Financial Analyst, Apex Manufacturing. Responsibilities include monthly forecasting, variance analysis, and dashboard reporting. Candidates should have CPA-level accounting knowledge and at least 3 years of experience.", items: [
+    ["What role is Apex Manufacturing hiring for?", ["Financial Analyst", "Logistics Coordinator", "Marketing Specialist", "Recruitment Officer"], "Financial Analyst", "職缺標題即為 Financial Analyst。"],
+    ["Which task is listed as a responsibility?", ["Monthly forecasting", "Warehouse equipment repair", "Customer hotline support", "Contract translation"], "Monthly forecasting", "職務內容包含每月預測。"],
+    ["What level of experience is requested?", ["At least 3 years", "No experience required", "At least 1 year", "More than 10 years"], "At least 3 years", "條件中明確寫至少三年經驗。"]
+  ]}
+];
+
+let r7idx = 1;
+p7Groups.forEach((group, gi) => {
+  group.items.forEach((item) => {
+    sampleQuestions.push(q({
+      id: `R7-${r7idx++}`,
+      section: "reading",
+      part: "Part 7",
+      type: "reading-comprehension",
+      groupId: `R7G-${gi + 1}`,
+      passage: group.passage,
+      question: item[0],
+      options: item[1],
+      answer: item[2],
+      explanation: `${item[3]} 中文解析：請依文本中的關鍵資訊定位答案。`,
+      tags: ["reading", group.type],
+    }));
+  });
+});
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };

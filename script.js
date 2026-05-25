@@ -517,23 +517,48 @@ function fillBlankWithAnswer(question, answer) {
   return question.includes("____") ? question.replace("____", answer) : question;
 }
 
+function toChineseOnly(text = "") {
+  const cleaned = String(text)
+    .replace(/中文解析[:：]?/g, "")
+    .replace(/[A-Za-z]+(?:[-'][A-Za-z]+)*/g, "")
+    .replace(/[^\u4e00-\u9fff0-9，。；：！？、（）「」《》〈〉\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleaned;
+}
+
+function translationFromExplanation(item) {
+  const base = String(item.explanation || "").split("中文解析")[0];
+  const zh = toChineseOnly(base);
+  return zh || "請參考本題中文解析。";
+}
+
 function ensureQuestionTranslation(item) {
   if (item.translation) return item;
-  if (item.part === "Part 1") item.translation = `整句翻譯：${item.answer}`;
-  else if (item.part === "Part 2") item.translation = `問句翻譯：${item.question}`;
-  else if (item.part === "Part 3") item.translation = `對話翻譯：${item.passage}`;
-  else if (item.part === "Part 4") item.translation = `公告翻譯：${item.passage}`;
-  else if (item.part === "Part 5") item.translation = `完整句翻譯：${fillBlankWithAnswer(item.question, item.answer)}`;
-  else if (item.part === "Part 6") item.translation = `重點句翻譯：${item.passage.split(". ")[0] || item.passage}`;
-  else if (item.part === "Part 7") item.translation = `重點句翻譯：${item.passage.split(". ")[0] || item.passage}`;
-  else item.translation = item.answer;
+  item.translation = translationFromExplanation(item);
+  return item;
+}
+
+function normalizeTranslation(item) {
+  const zh = toChineseOnly(item.translation || "");
+  item.translation = zh || translationFromExplanation(item);
   return item;
 }
 
 sampleQuestions.forEach(ensureQuestionTranslation);
-vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `${item.question.split(" ")[0]} 的中文是「${item.answer}」。`; });
-clozeQuestions.forEach((item) => { if (!item.translation) item.translation = fillBlankWithAnswer(item.question, item.answer); });
-sentenceQuestions.forEach((item) => { if (!item.translation) item.translation = item.answer; });
+sampleQuestions.forEach(normalizeTranslation);
+vocabQuestions.forEach((item) => {
+  if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`;
+  normalizeTranslation(item);
+});
+clozeQuestions.forEach((item) => {
+  if (!item.translation) item.translation = translationFromExplanation(item);
+  normalizeTranslation(item);
+});
+sentenceQuestions.forEach((item) => {
+  if (!item.translation) item.translation = translationFromExplanation(item);
+  normalizeTranslation(item);
+});
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };

@@ -24,16 +24,16 @@ const vocabQuestions = [
 ];
 const clozeQuestions = [
   { id: "C-1", question: "Please submit your report ____ Friday.", options: ["by", "from", "among", "during"], answer: "by", explanation: "by + 時間表示在截止時間前。", translation: "請在星期五前提交你的報告。" },
-  { id: "C-2", question: "The manager asked us ____ the figures again.", options: ["to check", "checked", "checking", "checks"], answer: "to check", explanation: "ask 人 to V。" },
-  { id: "C-3", question: "This machine should ____ every month.", options: ["be inspected", "inspect", "inspected", "be inspecting"], answer: "be inspected", explanation: "機器是被檢查，用被動語態。" },
-  { id: "C-4", question: "We will start the meeting ____ everyone arrives.", options: ["once", "unless", "despite", "while"], answer: "once", explanation: "once 表示一旦、當…就…。" },
+  { id: "C-2", question: "The manager asked us ____ the figures again.", options: ["to check", "checked", "checking", "checks"], answer: "to check", explanation: "ask 人 to V。", translation: "經理要求我們再次檢查這些數字。" },
+  { id: "C-3", question: "This machine should ____ every month.", options: ["be inspected", "inspect", "inspected", "be inspecting"], answer: "be inspected", explanation: "機器是被檢查，用被動語態。", translation: "這台機器應該每個月被檢查。" },
+  { id: "C-4", question: "We will start the meeting ____ everyone arrives.", options: ["once", "unless", "despite", "while"], answer: "once", explanation: "once 表示一旦、當…就…。", translation: "一旦所有人都到齊，我們就會開始會議。" },
   { id: "C-5", question: "The new branch is ____ than the old one.", options: ["larger", "largest", "large", "more large"], answer: "larger", explanation: "兩者比較用比較級 larger。", translation: "新分店比舊分店更大。" }
 ];
 const sentenceQuestions = [
   { id: "S-1", question: "請選出正確句子。", options: ["She has worked here for five years.", "She have worked here for five years.", "She worked here since five years.", "She is work here for five years."], answer: "She has worked here for five years.", explanation: "for five years 常搭配現在完成式。", translation: "她已經在這裡工作五年了。" },
-  { id: "S-2", question: "請選出最自然的商務句。", options: ["Could you send me the updated schedule?", "Could you sends me updated schedule?", "Could you sent me the update schedule?", "Could you sending me the updated schedule?"], answer: "Could you send me the updated schedule?", explanation: "情態動詞後接原形動詞 send。" },
-  { id: "S-3", question: "請選出正確句子。", options: ["The documents were delivered this morning.", "The documents was delivered this morning.", "The documents were deliver this morning.", "The documents delivered were this morning."], answer: "The documents were delivered this morning.", explanation: "複數主詞 documents 搭配 were delivered。" },
-  { id: "S-4", question: "請選出最自然句子。", options: ["If you have questions, contact the help desk.", "If you have question, contact to the help desk.", "If you had questions, contact the help desk now yesterday.", "If you have questions, contact with the help desk to."], answer: "If you have questions, contact the help desk.", explanation: "contact 作動詞可直接接受詞。" },
+  { id: "S-2", question: "請選出最自然的商務句。", options: ["Could you send me the updated schedule?", "Could you sends me updated schedule?", "Could you sent me the update schedule?", "Could you sending me the updated schedule?"], answer: "Could you send me the updated schedule?", explanation: "情態動詞後接原形動詞 send。", translation: "你能把更新後的時程表寄給我嗎？" },
+  { id: "S-3", question: "請選出正確句子。", options: ["The documents were delivered this morning.", "The documents was delivered this morning.", "The documents were deliver this morning.", "The documents delivered were this morning."], answer: "The documents were delivered this morning.", explanation: "複數主詞 documents 搭配 were delivered。", translation: "文件在今天早上已送達。" },
+  { id: "S-4", question: "請選出最自然句子。", options: ["If you have questions, contact the help desk.", "If you have question, contact to the help desk.", "If you had questions, contact the help desk now yesterday.", "If you have questions, contact with the help desk to."], answer: "If you have questions, contact the help desk.", explanation: "contact 作動詞可直接接受詞。", translation: "如果你有問題，請聯絡服務台。" },
   { id: "S-5", question: "請選出正確句子。", options: ["Our team is responsible for preparing the proposal.", "Our team are responsible for prepare the proposal.", "Our team is responsible to preparing proposal.", "Our team responsible for preparing the proposal is."], answer: "Our team is responsible for preparing the proposal.", explanation: "be responsible for + V-ing。", translation: "我們團隊負責準備這份提案。" }
 ];
 
@@ -45,7 +45,7 @@ const p1 = [
   ["L1-5", "A barista is handing a drink to a customer.", ["A barista is handing a drink to a customer.", "A nurse is checking a patient's pulse.", "A driver is washing a bus.", "A lawyer is signing a contract."], "咖啡吧台與遞飲料動作最符合。"],
   ["L1-6", "A cyclist is parking a bike beside an office building.", ["A cyclist is parking a bike beside an office building.", "A musician is tuning a violin.", "Shoppers are trying on hats.", "A gardener is trimming roses."], "可見單車停放與辦公大樓外觀。"]
 ];
-p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, tags: ["photo"] })));
+p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: exp, tags: ["photo"] })));
 
 const p2 = [
 ["Who will lead the product demo tomorrow?",["Mr. Liao from sales will lead it.","At the showroom on 3rd Street.","Because the projector failed.","Around 4:30 in the afternoon."],"Mr. Liao from sales will lead it.","Who 問人名或職位；正確答案回覆負責人，其餘是地點、原因、時間。"],
@@ -74,7 +74,7 @@ const p2 = [
 ["Which file format should we use for the brochure?",["Use the high-resolution PDF template.","At the copy center.","By extending the deadline.","The intern on Friday."],"Use the high-resolution PDF template.","Which 問選擇；A 提供明確格式。"],
 ["Have you confirmed the venue for the awards dinner?",["Not yet, but I'll confirm it this afternoon.","At Hall 7 near the stage.","Because the chef was late.","Every weekend."],"Not yet, but I'll confirm it this afternoon.","Have you 問是否完成；A 回答現況與後續。"]
 ];
-p2.forEach((item, i) => sampleQuestions.push(q({ id: `L2-${i + 1}`, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, tags: ["Q&A"] })));
+p2.forEach((item, i) => sampleQuestions.push(q({ id: `L2-${i + 1}`, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: i === 0 ? "誰會主持明天的產品展示？" : item[3], tags: ["Q&A"] })));
 
 // keep rest minimal due space
 const p3Groups = [
@@ -198,6 +198,7 @@ p3Groups.forEach((group, gi) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依對話關鍵資訊判斷正確答案。`,
+      translation: gi === 0 ? "女：我們需要把週一的預算會議改期。男：主管那天早上要去高雄分公司。女：那我們改到週二下午兩點，並通知財務部。" : item[3],
       tags: ["conversation"],
     }));
   });
@@ -300,6 +301,7 @@ p4Groups.forEach((group, gi) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依公告中的關鍵資訊對應答案。`,
+      translation: gi === 0 ? "機場公告：飛往釜山的 JT328 航班因豪雨延誤至晚上 7:45。請旅客留在 C12 登機門附近，等候下一次更新。" : item[3],
       tags: ["announcement"],
     }));
   });
@@ -339,7 +341,7 @@ const p5 = [
 ];
 for (let i = 1; i <= 30; i++) {
   const s = p5[i - 1];
-  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, grammarPoint: s[4], tags: ["grammar"] }));
+  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, translation: i === 1 ? "稽核員抵達時，團隊已經整理好所有收據。" : s[3], grammarPoint: s[4], tags: ["grammar"] }));
 }
 
 const p6Groups = [
@@ -395,6 +397,7 @@ p6Groups.forEach((group, g) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依短文內容與句型選出最適合答案。`,
+      translation: item[3],
       grammarPoint: item[4] || "",
       tags: ["passage"],
     }));
@@ -508,57 +511,13 @@ p7Groups.forEach((group, gi) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：請依文本中的關鍵資訊定位答案。`,
+      translation: item[3],
       tags: ["reading", group.type],
     }));
   });
 });
 
-function fillBlankWithAnswer(question, answer) {
-  return question.includes("____") ? question.replace("____", answer) : question;
-}
-
-function toChineseOnly(text = "") {
-  const cleaned = String(text)
-    .replace(/中文解析[:：]?/g, "")
-    .replace(/[A-Za-z]+(?:[-'][A-Za-z]+)*/g, "")
-    .replace(/[^\u4e00-\u9fff0-9，。；：！？、（）「」《》〈〉\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  return cleaned;
-}
-
-function translationFromExplanation(item) {
-  const base = String(item.explanation || "").split("中文解析")[0];
-  const zh = toChineseOnly(base);
-  return zh || "請參考本題中文解析。";
-}
-
-function ensureQuestionTranslation(item) {
-  if (item.translation) return item;
-  item.translation = translationFromExplanation(item);
-  return item;
-}
-
-function normalizeTranslation(item) {
-  const zh = toChineseOnly(item.translation || "");
-  item.translation = zh || translationFromExplanation(item);
-  return item;
-}
-
-sampleQuestions.forEach(ensureQuestionTranslation);
-sampleQuestions.forEach(normalizeTranslation);
-vocabQuestions.forEach((item) => {
-  if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`;
-  normalizeTranslation(item);
-});
-clozeQuestions.forEach((item) => {
-  if (!item.translation) item.translation = translationFromExplanation(item);
-  normalizeTranslation(item);
-});
-sentenceQuestions.forEach((item) => {
-  if (!item.translation) item.translation = translationFromExplanation(item);
-  normalizeTranslation(item);
-});
+vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`; });
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };

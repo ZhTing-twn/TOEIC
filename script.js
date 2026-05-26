@@ -10,8 +10,24 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [] }) {
-  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId };
+function buildDefaultOptionTranslations(options = []) {
+  return options.map((_, idx) => `選項${idx + 1}的中文翻譯待補。`);
+}
+
+function buildDefaultOptionReasons(options = [], answer = "") {
+  return options.map((opt) => (opt === answer ? "此選項符合題意與語法。" : "此選項不符合題意或語法條件。"));
+}
+
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null }) {
+  const safeOptions = Array.isArray(options) ? options : [];
+  const normalizedOptionTranslations = Array.isArray(optionTranslations) && optionTranslations.length === safeOptions.length
+    ? optionTranslations
+    : buildDefaultOptionTranslations(safeOptions);
+  const normalizedOptionReasons = Array.isArray(optionReasons) && optionReasons.length === safeOptions.length
+    ? optionReasons
+    : buildDefaultOptionReasons(safeOptions, answer);
+  const normalizedQuestionTranslation = questionTranslation || translation || "此題題目翻譯待補。";
+  return { id, section, part, type, question, passage, audioUrl: "", options: safeOptions, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation: normalizedQuestionTranslation, optionTranslations: normalizedOptionTranslations, optionReasons: normalizedOptionReasons };
 }
 
 const sampleQuestions = [];
@@ -36,6 +52,25 @@ const sentenceQuestions = [
   { id: "S-4", question: "請選出最自然句子。", options: ["If you have questions, contact the help desk.", "If you have question, contact to the help desk.", "If you had questions, contact the help desk now yesterday.", "If you have questions, contact with the help desk to."], answer: "If you have questions, contact the help desk.", explanation: "contact 作動詞可直接接受詞。", translation: "如果你有問題，請聯絡服務台。" },
   { id: "S-5", question: "請選出正確句子。", options: ["Our team is responsible for preparing the proposal.", "Our team are responsible for prepare the proposal.", "Our team is responsible to preparing proposal.", "Our team responsible for preparing the proposal is."], answer: "Our team is responsible for preparing the proposal.", explanation: "be responsible for + V-ing。", translation: "我們團隊負責準備這份提案。" }
 ];
+
+
+function normalizeSupplementalQuestion(item) {
+  const normalized = q({
+    id: item.id,
+    section: "reading",
+    part: "Supplemental",
+    type: "supplemental",
+    question: item.question,
+    options: item.options,
+    answer: item.answer,
+    explanation: item.explanation,
+    translation: item.translation || "",
+    questionTranslation: item.questionTranslation || item.translation || "此題題目翻譯待補。",
+    optionTranslations: item.optionTranslations,
+    optionReasons: item.optionReasons,
+  });
+  return { ...item, questionTranslation: normalized.questionTranslation, optionTranslations: normalized.optionTranslations, optionReasons: normalized.optionReasons };
+}
 
 const p1 = [
   ["L1-1", "A woman is adjusting a projector in a meeting room.", ["A woman is adjusting a projector in a meeting room.", "A chef is serving soup at a restaurant.", "Two engineers are painting a bridge.", "A clerk is closing the store early."], "畫面有投影機與會議室場景，主詞與動作吻合。"],
@@ -703,7 +738,9 @@ function validateQuestionBank() {
     if (actual !== count) errors.push(`${part} should be ${count}, got ${actual}`);
   });
   sampleQuestions.forEach((item) => {
-    ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
+    ["question", "options", "answer", "explanation", "translation", "questionTranslation", "optionTranslations", "optionReasons"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
+    if (Array.isArray(item.optionTranslations) && item.optionTranslations.length !== item.options.length) errors.push(`${item.id} optionTranslations length mismatch`);
+    if (Array.isArray(item.optionReasons) && item.optionReasons.length !== item.options.length) errors.push(`${item.id} optionReasons length mismatch`);
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
   });
   return { isValid: errors.length === 0, errors };
@@ -847,7 +884,7 @@ function renderPracticePool(pool, options = {}) {
   }
   return html.join("");
 }
-function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}<br>解析：${esc(qItem.explanation)}${qItem.translation ? `<br>整句翻譯：${esc(qItem.translation)}` : ""}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
+function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; const optionLabels = ["A", "B", "C", "D"]; const questionTranslationRow = qItem.questionTranslation ? `<br>題目翻譯：${esc(qItem.questionTranslation)}` : ""; const optionTranslationsRow = Array.isArray(qItem.optionTranslations) && qItem.optionTranslations.length === qItem.options.length ? `<br>選項翻譯：<br>${qItem.optionTranslations.map((txt, idx) => `${optionLabels[idx] || `${idx + 1}`}. ${esc(txt)}`).join("<br>")}` : ""; const optionReasonsRow = Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length ? `<br>選項說明：<br>${qItem.optionReasons.map((txt, idx) => `${optionLabels[idx] || `${idx + 1}`}. ${esc(txt)}`).join("<br>")}` : ""; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}${questionTranslationRow}${optionTranslationsRow}<br>解析：${esc(qItem.explanation)}${optionReasonsRow}${qItem.translation ? `<br>整句翻譯：${esc(qItem.translation)}` : ""}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
 function renderTabs(){const nav=document.getElementById("tabNav");nav.innerHTML=tabs.map(([k,v])=>`<button class='tab-btn ${currentTab===k?"active":""}' data-tab='${k}'>${v}</button>`).join("");nav.querySelectorAll(".tab-btn").forEach((b)=>{b.onclick=()=>{currentTab=b.dataset.tab;renderTabs();renderContent();};});}
 function renderDashboard(){const acc=state.total?((state.correct/state.total)*100).toFixed(1):"0.0";document.getElementById("dashboard").innerHTML=`<h2>學習統計</h2><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div></div>`;}
 function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=>PART_SPECS[p].section===section);document.getElementById("content").innerHTML=`<h2>${section==="listening"?"聽力":"閱讀"}練習</h2><select id='partFilter'><option value='all'>全部</option>${parts.map((p)=>`<option value='${p}'>${p}</option>`).join("")}</select><button id='reshuffle' class='primary'>重新隨機出題</button><div id='qArea'></div>`;const draw=()=>{const part=document.getElementById("partFilter").value;const pool=buildRandomPracticePool(section,part);document.getElementById("qArea").innerHTML=renderPracticePool(pool);bindQuestionEvents(pool);};document.getElementById("partFilter").onchange=draw;document.getElementById("reshuffle").onclick=draw;draw();}

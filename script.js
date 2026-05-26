@@ -10,31 +10,31 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function q({ id, section, part, type, question, options, answer, explanation, grammarPoint = "", passage = "", groupId = "", tags = [] }) {
-  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, grammarPoint, difficulty: "550-750", tags, groupId };
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [] }) {
+  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId };
 }
 
 const sampleQuestions = [];
 const vocabQuestions = [
-  { id: "V-1", question: "procurement 最接近哪個中文意思？", options: ["採購", "申訴", "分紅", "裁員"], answer: "採購", explanation: "procurement 指企業採購流程。" },
-  { id: "V-2", question: "deadline 最接近哪個中文意思？", options: ["截止日", "午休", "報價單", "折扣"], answer: "截止日", explanation: "deadline 表示最後期限。" },
-  { id: "V-3", question: "invoice 最接近哪個中文意思？", options: ["發票", "履歷", "合約", "樣品"], answer: "發票", explanation: "invoice 是請款或交易用的發票。" },
-  { id: "V-4", question: "reschedule 最接近哪個中文意思？", options: ["改期", "取消", "確認", "轉帳"], answer: "改期", explanation: "reschedule 是重新安排時間。" },
-  { id: "V-5", question: "maintenance 最接近哪個中文意思？", options: ["維護", "行銷", "出貨", "面試"], answer: "維護", explanation: "maintenance 常見於設備或系統維護。" }
+  { id: "V-1", question: "procurement 最接近哪個中文意思？", options: ["採購", "申訴", "分紅", "裁員"], answer: "採購", explanation: "procurement 指企業採購流程。", translation: "procurement 的中文是「採購」。" },
+  { id: "V-2", question: "deadline 最接近哪個中文意思？", options: ["截止日", "午休", "報價單", "折扣"], answer: "截止日", explanation: "deadline 表示最後期限。", translation: "deadline 的中文是「截止日」。" },
+  { id: "V-3", question: "invoice 最接近哪個中文意思？", options: ["發票", "履歷", "合約", "樣品"], answer: "發票", explanation: "invoice 是請款或交易用的發票。", translation: "invoice 的中文是「發票」。" },
+  { id: "V-4", question: "reschedule 最接近哪個中文意思？", options: ["改期", "取消", "確認", "轉帳"], answer: "改期", explanation: "reschedule 是重新安排時間。", translation: "reschedule 的中文是「改期」。" },
+  { id: "V-5", question: "maintenance 最接近哪個中文意思？", options: ["維護", "行銷", "出貨", "面試"], answer: "維護", explanation: "maintenance 常見於設備或系統維護。", translation: "maintenance 的中文是「維護」。" }
 ];
 const clozeQuestions = [
-  { id: "C-1", question: "Please submit your report ____ Friday.", options: ["by", "from", "among", "during"], answer: "by", explanation: "by + 時間表示在截止時間前。" },
-  { id: "C-2", question: "The manager asked us ____ the figures again.", options: ["to check", "checked", "checking", "checks"], answer: "to check", explanation: "ask 人 to V。" },
-  { id: "C-3", question: "This machine should ____ every month.", options: ["be inspected", "inspect", "inspected", "be inspecting"], answer: "be inspected", explanation: "機器是被檢查，用被動語態。" },
-  { id: "C-4", question: "We will start the meeting ____ everyone arrives.", options: ["once", "unless", "despite", "while"], answer: "once", explanation: "once 表示一旦、當…就…。" },
-  { id: "C-5", question: "The new branch is ____ than the old one.", options: ["larger", "largest", "large", "more large"], answer: "larger", explanation: "兩者比較用比較級 larger。" }
+  { id: "C-1", question: "Please submit your report ____ Friday.", options: ["by", "from", "among", "during"], answer: "by", explanation: "by + 時間表示在截止時間前。", translation: "請在星期五前提交你的報告。" },
+  { id: "C-2", question: "The manager asked us ____ the figures again.", options: ["to check", "checked", "checking", "checks"], answer: "to check", explanation: "ask 人 to V。", translation: "經理要求我們再次檢查這些數字。" },
+  { id: "C-3", question: "This machine should ____ every month.", options: ["be inspected", "inspect", "inspected", "be inspecting"], answer: "be inspected", explanation: "機器是被檢查，用被動語態。", translation: "這台機器應該每個月被檢查。" },
+  { id: "C-4", question: "We will start the meeting ____ everyone arrives.", options: ["once", "unless", "despite", "while"], answer: "once", explanation: "once 表示一旦、當…就…。", translation: "一旦所有人都到齊，我們就會開始會議。" },
+  { id: "C-5", question: "The new branch is ____ than the old one.", options: ["larger", "largest", "large", "more large"], answer: "larger", explanation: "兩者比較用比較級 larger。", translation: "新分店比舊分店更大。" }
 ];
 const sentenceQuestions = [
-  { id: "S-1", question: "請選出正確句子。", options: ["She has worked here for five years.", "She have worked here for five years.", "She worked here since five years.", "She is work here for five years."], answer: "She has worked here for five years.", explanation: "for five years 常搭配現在完成式。" },
-  { id: "S-2", question: "請選出最自然的商務句。", options: ["Could you send me the updated schedule?", "Could you sends me updated schedule?", "Could you sent me the update schedule?", "Could you sending me the updated schedule?"], answer: "Could you send me the updated schedule?", explanation: "情態動詞後接原形動詞 send。" },
-  { id: "S-3", question: "請選出正確句子。", options: ["The documents were delivered this morning.", "The documents was delivered this morning.", "The documents were deliver this morning.", "The documents delivered were this morning."], answer: "The documents were delivered this morning.", explanation: "複數主詞 documents 搭配 were delivered。" },
-  { id: "S-4", question: "請選出最自然句子。", options: ["If you have questions, contact the help desk.", "If you have question, contact to the help desk.", "If you had questions, contact the help desk now yesterday.", "If you have questions, contact with the help desk to."], answer: "If you have questions, contact the help desk.", explanation: "contact 作動詞可直接接受詞。" },
-  { id: "S-5", question: "請選出正確句子。", options: ["Our team is responsible for preparing the proposal.", "Our team are responsible for prepare the proposal.", "Our team is responsible to preparing proposal.", "Our team responsible for preparing the proposal is."], answer: "Our team is responsible for preparing the proposal.", explanation: "be responsible for + V-ing。" }
+  { id: "S-1", question: "請選出正確句子。", options: ["She has worked here for five years.", "She have worked here for five years.", "She worked here since five years.", "She is work here for five years."], answer: "She has worked here for five years.", explanation: "for five years 常搭配現在完成式。", translation: "她已經在這裡工作五年了。" },
+  { id: "S-2", question: "請選出最自然的商務句。", options: ["Could you send me the updated schedule?", "Could you sends me updated schedule?", "Could you sent me the update schedule?", "Could you sending me the updated schedule?"], answer: "Could you send me the updated schedule?", explanation: "情態動詞後接原形動詞 send。", translation: "你能把更新後的時程表寄給我嗎？" },
+  { id: "S-3", question: "請選出正確句子。", options: ["The documents were delivered this morning.", "The documents was delivered this morning.", "The documents were deliver this morning.", "The documents delivered were this morning."], answer: "The documents were delivered this morning.", explanation: "複數主詞 documents 搭配 were delivered。", translation: "文件在今天早上已送達。" },
+  { id: "S-4", question: "請選出最自然句子。", options: ["If you have questions, contact the help desk.", "If you have question, contact to the help desk.", "If you had questions, contact the help desk now yesterday.", "If you have questions, contact with the help desk to."], answer: "If you have questions, contact the help desk.", explanation: "contact 作動詞可直接接受詞。", translation: "如果你有問題，請聯絡服務台。" },
+  { id: "S-5", question: "請選出正確句子。", options: ["Our team is responsible for preparing the proposal.", "Our team are responsible for prepare the proposal.", "Our team is responsible to preparing proposal.", "Our team responsible for preparing the proposal is."], answer: "Our team is responsible for preparing the proposal.", explanation: "be responsible for + V-ing。", translation: "我們團隊負責準備這份提案。" }
 ];
 
 const p1 = [
@@ -45,7 +45,15 @@ const p1 = [
   ["L1-5", "A barista is handing a drink to a customer.", ["A barista is handing a drink to a customer.", "A nurse is checking a patient's pulse.", "A driver is washing a bus.", "A lawyer is signing a contract."], "咖啡吧台與遞飲料動作最符合。"],
   ["L1-6", "A cyclist is parking a bike beside an office building.", ["A cyclist is parking a bike beside an office building.", "A musician is tuning a violin.", "Shoppers are trying on hats.", "A gardener is trimming roses."], "可見單車停放與辦公大樓外觀。"]
 ];
-p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, tags: ["photo"] })));
+const p1Translations = {
+  "L1-1": "一名女子正在會議室調整投影機。",
+  "L1-2": "幾名旅客正在登機門前排隊。",
+  "L1-3": "一名技術人員正在更換天花板燈具。",
+  "L1-4": "工人正在倉庫裡堆放箱子。",
+  "L1-5": "一名咖啡師正在把飲料遞給顧客。",
+  "L1-6": "一名騎自行車的人正在辦公大樓旁停放腳踏車。",
+};
+p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"] })));
 
 const p2 = [
 ["Who will lead the product demo tomorrow?",["Mr. Liao from sales will lead it.","At the showroom on 3rd Street.","Because the projector failed.","Around 4:30 in the afternoon."],"Mr. Liao from sales will lead it.","Who 問人名或職位；正確答案回覆負責人，其餘是地點、原因、時間。"],
@@ -74,7 +82,37 @@ const p2 = [
 ["Which file format should we use for the brochure?",["Use the high-resolution PDF template.","At the copy center.","By extending the deadline.","The intern on Friday."],"Use the high-resolution PDF template.","Which 問選擇；A 提供明確格式。"],
 ["Have you confirmed the venue for the awards dinner?",["Not yet, but I'll confirm it this afternoon.","At Hall 7 near the stage.","Because the chef was late.","Every weekend."],"Not yet, but I'll confirm it this afternoon.","Have you 問是否完成；A 回答現況與後續。"]
 ];
-p2.forEach((item, i) => sampleQuestions.push(q({ id: `L2-${i + 1}`, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, tags: ["Q&A"] })));
+const p2Translations = {
+  "L2-1": "誰會主持明天的產品展示？",
+  "L2-2": "客戶合約什麼時候到期？",
+  "L2-3": "參加研討會的訪客應該在哪裡報到？",
+  "L2-4": "客服團隊為什麼把這張支援單升級處理？",
+  "L2-5": "我要如何申請差旅費報銷？",
+  "L2-6": "你介意關上會議室的窗戶嗎？",
+  "L2-7": "你能把發票重新寄成 PDF 檔嗎？",
+  "L2-8": "你知道停車場是否已經滿了嗎？",
+  "L2-9": "董事會核准了哪一份提案？",
+  "L2-10": "你已經提交每月庫存報告了嗎？",
+  "L2-11": "我能把行李箱放在接待區嗎？",
+  "L2-12": "我們應該延後訓練課程嗎？",
+  "L2-13": "軟體更新需要多久？",
+  "L2-14": "你們團隊多久檢討一次供應商表現？",
+  "L2-15": "前往工廠的接駁車幾點出發？",
+  "L2-16": "你們部門由誰處理保固索賠？",
+  "L2-17": "線上新進人員說明會什麼時候開始？",
+  "L2-18": "我可以在哪裡領取新的門禁卡？",
+  "L2-19": "為什麼展示機被蓋住了？",
+  "L2-20": "我們要如何降低列印成本？",
+  "L2-21": "你想在網路研討會前收到提醒電子郵件嗎？",
+  "L2-22": "你能確認 503 會議室是否有空嗎？",
+  "L2-23": "你知道緊急出口在哪裡嗎？",
+  "L2-24": "我們應該用哪種檔案格式製作手冊？",
+  "L2-25": "你已經確認頒獎晚宴的場地了嗎？",
+};
+p2.forEach((item, i) => {
+  const id = `L2-${i + 1}`;
+  sampleQuestions.push(q({ id, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: p2Translations[id], tags: ["Q&A"] }));
+});
 
 // keep rest minimal due space
 const p3Groups = [
@@ -185,19 +223,36 @@ const p3Groups = [
 ];
 
 let l3idx = 1;
+const p3Translations = {
+  "L3G-1": "女：我們需要把週一的預算會議改期。男：主管那天早上要去高雄分公司。女：那我們改到週二下午兩點，並通知財務部。",
+  "L3G-2": "男：你好，我想確認我在 Harbor 飯店的預訂。女：當然可以，吳先生。您從 7 月 8 日開始預訂了三晚客房。男：太好了，也請幫我安排晚上九點的機場接送。",
+  "L3G-3": "女：我打來是因為我收到的耳機有損壞。男：很抱歉聽到這件事，我們今天下午可以寄出替換品。女：謝謝，請寄到我的辦公室地址。",
+  "L3G-4": "男：產品展示十分鐘後開始。女：我現在就去擺好樣品和型錄。男：很好，我會在入口迎接來賓。",
+  "L3G-5": "女：我們需要 500 個鋼製支架的報價。男：我明天早上可以提供單價。女：請在報價中加入運費和交期。",
+  "L3G-6": "男：新進員工訓練在這週五。女：我們要不要預訂比較大的訓練教室？男：要，因為有三十位員工報名。",
+  "L3G-7": "女：六樓的影印機一直卡紙。男：我午餐後會立刻去檢查。女：謝謝，我們今天要用它印薪資文件。",
+  "L3G-8": "男：我飛大阪的班機改到早上六點。女：那我會更新你的行程和飯店入住時間。男：也請通知客戶我會更早抵達。",
+  "L3G-9": "女：辦公室搬遷下週末開始。男：我這週四會幫各部門的箱子貼標籤。女：很好，IT 會在週五晚上拔除所有電腦設備。",
+  "L3G-10": "男：安全講座報名明天下午五點截止。女：我們還缺會計部五位人員。男：我今天下午會寄提醒給那個部門。",
+  "L3G-11": "女：法務要我們確認草案中的第 12 條。男：我會和前一版合約比對。女：請在今天下午五點前把最終版本給我。",
+  "L3G-12": "男：我們的碳粉庫存又不夠了。女：我今天下午可以下加急訂單。男：謝謝，下單後請更新庫存表。",
+  "L3G-13": "女：手機 App 專案進度如何？男：設計已完成，程式開發約完成七成。女：很好，請在明天中午前寄給我進度報告。",
+};
 p3Groups.forEach((group, gi) => {
   group.items.forEach((item) => {
+    const groupId = `L3G-${gi + 1}`;
     sampleQuestions.push(q({
       id: `L3-${l3idx++}`,
       section: "listening",
       part: "Part 3",
       type: "conversations",
-      groupId: `L3G-${gi + 1}`,
+      groupId,
       passage: group.passage,
       question: item[0],
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依對話關鍵資訊判斷正確答案。`,
+      translation: p3Translations[groupId],
       tags: ["conversation"],
     }));
   });
@@ -287,19 +342,33 @@ const p4Groups = [
 ];
 
 let l4idx = 1;
+const p4Translations = {
+  "L4G-1": "機場公告：飛往釜山的 JT328 航班因豪雨延誤至晚上 7 點 45 分。請旅客留在 C12 登機門附近，等候下一次更新。",
+  "L4G-2": "公司公告：年度健康檢查計畫將於 6 月 10 日開始。所有員工必須在 6 月 5 日前透過 HR 入口網站預約時段。",
+  "L4G-3": "門市促銷廣播：僅限本週末，BrightMart 筆記本買二送一。此優惠在所有市區分店有效至週日晚上 9 點。",
+  "L4G-4": "語音留言：林小姐您好，我是 Nova Legal 的 Eric。我們已修改您合約的第 4 條。請在下午 4 點前回電，以便我們今天提交最終版本。",
+  "L4G-5": "天候延誤通知：因雷雨警報，B 路線卡車將由下午 1 點改為下午 3 點 30 分發車。駕駛請每 30 分鐘在物流 App 查看路況更新。",
+  "L4G-6": "展覽公告：智慧工廠博覽會將於上午 10 點在 B 館開幕。已線上報名的來賓，進入主題演講前須先到 6 號櫃台領取識別證。",
+  "L4G-7": "課程通知：進階 Excel 課程將於本週四晚上 7 點線上舉行。參加者請在上課前先至訓練入口網站下載範例活頁簿。",
+  "L4G-8": "飯店服務公告：今日下午 1 點至 3 點，12 到 15 樓將因管線維修暫停供水。住客可於該時段使用 5 樓淋浴間。",
+  "L4G-9": "物流更新：KX-77 批次包裹預計於週四早上到達，而非週三晚上。收貨人員請準備 2 號碼頭並更新卸貨時程。",
+  "L4G-10": "系統維護通知：本週六凌晨 1 點至 4 點，員工入口網站將因安全升級而暫停服務。請在週五午夜前提交請假申請。",
+};
 p4Groups.forEach((group, gi) => {
   group.items.forEach((item) => {
+    const groupId = `L4G-${gi + 1}`;
     sampleQuestions.push(q({
       id: `L4-${l4idx++}`,
       section: "listening",
       part: "Part 4",
       type: "talks",
-      groupId: `L4G-${gi + 1}`,
+      groupId,
       passage: group.passage,
       question: item[0],
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依公告中的關鍵資訊對應答案。`,
+      translation: p4Translations[groupId],
       tags: ["announcement"],
     }));
   });
@@ -337,9 +406,41 @@ const p5 = [
 ["There isn't much ____ left in the printer.",["ink","inks","an ink","inking"],"ink","ink 為不可數名詞。","可數不可數"],
 ["Neither of the proposals ____ acceptable to the board.",["is","are","were","be"],"is","neither 視為單數主詞。","主詞動詞一致"]
 ];
+const p5Translations = {
+  "R5-1": "稽核員抵達時，團隊已經整理好所有收據。",
+  "R5-2": "請把已簽署的協議放進藍色資料夾。",
+  "R5-3": "經理核准了加班，因為截止日期被提前了。",
+  "R5-4": "她的說明清楚且很有說服力。",
+  "R5-5": "所有訪客識別證都必須歸還到前台。",
+  "R5-6": "我們決定在簽合約前先與供應商會面。",
+  "R5-7": "他們把安裝軟體延後到下週。",
+  "R5-8": "準備圖表的助理會先進行簡報。",
+  "R5-9": "本季利潤比上一季高。",
+  "R5-10": "接待員已經確認了你的預約。",
+  "R5-11": "在審查提案兩次後，她發現一個定價錯誤。",
+  "R5-12": "如果我是你，我會要求延長期限。",
+  "R5-13": "出貨清單中少了幾個項目。",
+  "R5-14": "在我們完成預算前，需要更多資訊。",
+  "R5-15": "每個部門都必須提交每月摘要。",
+  "R5-16": "到明年六月時，這家公司在這棟大樓營運就滿十年了。",
+  "R5-17": "儘管交通壅塞，包裹仍準時送達。",
+  "R5-18": "你收到已簽署的副本後，請打電話給我。",
+  "R5-19": "主管簡短說明了合併計畫。",
+  "R5-20": "所有報告都應在星期五中午前提交。",
+  "R5-21": "他同意今晚修改簡報投影片。",
+  "R5-22": "我們建議你每三個月更換一次密碼。",
+  "R5-23": "窗戶朝東的辦公室會照到早晨陽光。",
+  "R5-24": "這個型號比前一個更耐用。",
+  "R5-25": "法務團隊剛剛審查完最終草稿。",
+  "R5-26": "檢查完所有佐證檔案後，他送出了申請。",
+  "R5-27": "如果天氣好一點，活動就會在戶外舉行。",
+  "R5-28": "所有箱子在入庫前都必須貼上標籤。",
+  "R5-29": "印表機裡剩下的墨水不多了。",
+  "R5-30": "這兩份提案都無法被董事會接受。",
+};
 for (let i = 1; i <= 30; i++) {
   const s = p5[i - 1];
-  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, grammarPoint: s[4], tags: ["grammar"] }));
+  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, translation: p5Translations[`R5-${i}`], grammarPoint: s[4], tags: ["grammar"] }));
 }
 
 const p6Groups = [
@@ -382,10 +483,29 @@ const p6Groups = [
 ];
 
 let r6idx = 1;
+const p6Translations = {
+  "R6-1": "從 7 月 1 日起，所有部門都必須每週五下午 4 點前，透過內部網路表單提交每週進度更新。",
+  "R6-2": "每週進度更新必須在每週五下午 4 點前提交。",
+  "R6-3": "更新必須透過內部網路表單提交。",
+  "R6-4": "透過電子郵件寄送的報告將不被接受。",
+  "R6-5": "感謝你就 5521 號訂單與我們聯絡。",
+  "R6-6": "替換用電源變壓器預計會在星期二送達。",
+  "R6-7": "請保留有瑕疵的商品，供快遞取件。",
+  "R6-8": "替換用電源變壓器今天已經寄出。",
+  "R6-9": "商務寫作工作坊將於 8 月 14 日在 Central Hall 舉行。",
+  "R6-10": "報名費為新台幣 1,200 元。",
+  "R6-11": "付款必須在 8 月 7 日前完成。",
+  "R6-12": "逾期付款者將被列入候補名單。",
+  "R6-13": "超過新台幣 50,000 元的採購，團隊必須取得兩家供應商報價。",
+  "R6-14": "建立採購訂單前，團隊必須將文件提交給採購部。",
+  "R6-15": "團隊應避免在核准前下訂單。",
+  "R6-16": "核准表必須由部門主管簽署。",
+};
 p6Groups.forEach((group, g) => {
   group.items.forEach((item) => {
+    const id = `R6-${r6idx++}`;
     sampleQuestions.push(q({
-      id: `R6-${r6idx++}`,
+      id,
       section: "reading",
       part: "Part 6",
       type: "text-completion",
@@ -395,6 +515,7 @@ p6Groups.forEach((group, g) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依短文內容與句型選出最適合答案。`,
+      translation: p6Translations[id],
       grammarPoint: item[4] || "",
       tags: ["passage"],
     }));
@@ -495,10 +616,67 @@ const p7Groups = [
 ];
 
 let r7idx = 1;
+const p7Translations = {
+  "R7-1": "為了保留七月的停車權限，員工必須在 6 月 28 日前提交車牌號碼與員工編號。",
+  "R7-2": "未在該日期前續辦的停車證，將於 7 月 1 日停用。",
+  "R7-3": "這封信的對象是擁有停車權限的公司員工。",
+  "R7-4": "行銷部門將於 6 月 12 日搬到 8 樓。",
+  "R7-5": "員工必須在 6 月 10 日前打包個人物品，並在每個箱子上標示團隊名稱。",
+  "R7-6": "IT 部門將於 6 月 13 日重新連接桌上型電腦。",
+  "R7-7": "由於廚房設備維護，2 樓餐廳本週四上午 11 點 30 分至下午 1 點 30 分只供應有限菜單。",
+  "R7-8": "這則通知適用於本週四上午 11 點 30 分至下午 1 點 30 分。",
+  "R7-9": "請預期等候時間會比平常更長。",
+  "R7-10": "BrightSkills 訓練中心提供週末商務英文課程。",
+  "R7-11": "八堂課的學費為新台幣 6,800 元。",
+  "R7-12": "7 月 5 日前報名者可獲得免費練習冊。",
+  "R7-13": "供應商導入日將於 7 月 18 日在 402 室舉行。",
+  "R7-14": "上午 10 點 45 分開始進行系統帳號設定。",
+  "R7-15": "這份時程表最可能是給新核准的供應商看的。",
+  "R7-16": "這張發票的總金額為新台幣 25,200 元。",
+  "R7-17": "款項須在 30 天內以銀行轉帳支付。",
+  "R7-18": "運費為新台幣 1,200 元。",
+  "R7-19": "購買的服務是當日包裹配送。",
+  "R7-20": "已用公司卡支付新台幣 385 元。",
+  "R7-21": "收據上的已付款金額表示付款已完成。",
+  "R7-22": "Delta Supply Ltd. 正在徵聘物流協調員。",
+  "R7-23": "此職缺明確要求具備進階 Excel 技能。",
+  "R7-24": "申請者須在 6 月 30 日前將履歷寄到 hr@deltasupply.com。",
+  "R7-25": "新的線上預約工具快速且容易操作，評論者不到兩分鐘就訂好了會議室。",
+  "R7-26": "取消政策很難找到。",
+  "R7-27": "評論者提供了稱讚，也提出希望說明更清楚的建議。",
+  "R7-28": "寄件者想繼續進行合作，但要求先修改合約第 3 條。",
+  "R7-29": "對方要求加入 4 小時內緊急到場支援。",
+  "R7-30": "這封信由營運經理 Nina Chen 撰寫。",
+  "R7-31": "由於參加人數限制，6 月 21 日的產品網路研討會從 Zoom Room A 改到 Zoom Room C。",
+  "R7-32": "收件者應用附件行事曆邀請中的新連結加入會議。",
+  "R7-33": "這是一封通知網路研討會連結更新的電子郵件。",
+  "R7-34": "所有樓層負責人都必須在每次演練後 24 小時內提交出席紀錄。",
+  "R7-35": "提交期限是每次演練後 24 小時內。",
+  "R7-36": "缺少紀錄會延誤提交給總部的合規報告。",
+  "R7-37": "大廳門禁卡掃描器將於本週六上午 8 點至 11 點更換。",
+  "R7-38": "在該時段，臨時紙本識別證會在接待櫃台發放。",
+  "R7-39": "更換作業將花費三小時。",
+  "R7-40": "GreenLine Courier 保證中午前提交的市區包裹可當日送達。",
+  "R7-41": "固定費率為新台幣 180 元。",
+  "R7-42": "該費率適用於 3 公斤以下的包裹。",
+  "R7-43": "這份時程表是 7 月 3 日的新進員工說明會。",
+  "R7-44": "上午 10 點 30 分安排 IT 帳號設定。",
+  "R7-45": "這份時程表是給新進員工看的。",
+  "R7-46": "緊急修復費用為新台幣 220 元。",
+  "R7-47": "應付總金額為新台幣 1,000 元。",
+  "R7-48": "付款截止日為 6 月 15 日。",
+  "R7-49": "購買的品項是 200 份彩色型錄。",
+  "R7-50": "收取的稅額為新台幣 95 元。",
+  "R7-51": "付款方式為現金。",
+  "R7-52": "Apex Manufacturing 正在徵聘財務分析師。",
+  "R7-53": "職責包含每月預測、差異分析與儀表板報告。",
+  "R7-54": "應徵者應具備 CPA 等級的會計知識與至少三年經驗。",
+};
 p7Groups.forEach((group, gi) => {
   group.items.forEach((item) => {
+    const id = `R7-${r7idx++}`;
     sampleQuestions.push(q({
-      id: `R7-${r7idx++}`,
+      id,
       section: "reading",
       part: "Part 7",
       type: "reading-comprehension",
@@ -508,10 +686,13 @@ p7Groups.forEach((group, gi) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：請依文本中的關鍵資訊定位答案。`,
+      translation: p7Translations[id],
       tags: ["reading", group.type],
     }));
   });
 });
+
+vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`; });
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };
@@ -522,7 +703,7 @@ function validateQuestionBank() {
     if (actual !== count) errors.push(`${part} should be ${count}, got ${actual}`);
   });
   sampleQuestions.forEach((item) => {
-    ["question", "options", "answer", "explanation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
+    ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
   });
   return { isValid: errors.length === 0, errors };
@@ -666,7 +847,7 @@ function renderPracticePool(pool, options = {}) {
   }
   return html.join("");
 }
-function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}<br>解析：${esc(qItem.explanation)}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
+function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}<br>解析：${esc(qItem.explanation)}${qItem.translation ? `<br>整句翻譯：${esc(qItem.translation)}` : ""}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
 function renderTabs(){const nav=document.getElementById("tabNav");nav.innerHTML=tabs.map(([k,v])=>`<button class='tab-btn ${currentTab===k?"active":""}' data-tab='${k}'>${v}</button>`).join("");nav.querySelectorAll(".tab-btn").forEach((b)=>{b.onclick=()=>{currentTab=b.dataset.tab;renderTabs();renderContent();};});}
 function renderDashboard(){const acc=state.total?((state.correct/state.total)*100).toFixed(1):"0.0";document.getElementById("dashboard").innerHTML=`<h2>學習統計</h2><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div></div>`;}
 function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=>PART_SPECS[p].section===section);document.getElementById("content").innerHTML=`<h2>${section==="listening"?"聽力":"閱讀"}練習</h2><select id='partFilter'><option value='all'>全部</option>${parts.map((p)=>`<option value='${p}'>${p}</option>`).join("")}</select><button id='reshuffle' class='primary'>重新隨機出題</button><div id='qArea'></div>`;const draw=()=>{const part=document.getElementById("partFilter").value;const pool=buildRandomPracticePool(section,part);document.getElementById("qArea").innerHTML=renderPracticePool(pool);bindQuestionEvents(pool);};document.getElementById("partFilter").onchange=draw;document.getElementById("reshuffle").onclick=draw;draw();}

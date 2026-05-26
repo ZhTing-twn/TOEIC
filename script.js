@@ -483,10 +483,29 @@ const p6Groups = [
 ];
 
 let r6idx = 1;
+const p6Translations = {
+  "R6-1": "從 7 月 1 日起，所有部門都必須每週五下午 4 點前，透過內部網路表單提交每週進度更新。",
+  "R6-2": "每週進度更新必須在每週五下午 4 點前提交。",
+  "R6-3": "更新必須透過內部網路表單提交。",
+  "R6-4": "透過電子郵件寄送的報告將不被接受。",
+  "R6-5": "感謝你就 5521 號訂單與我們聯絡。",
+  "R6-6": "替換用電源變壓器預計會在星期二送達。",
+  "R6-7": "請保留有瑕疵的商品，供快遞取件。",
+  "R6-8": "替換用電源變壓器今天已經寄出。",
+  "R6-9": "商務寫作工作坊將於 8 月 14 日在 Central Hall 舉行。",
+  "R6-10": "報名費為新台幣 1,200 元。",
+  "R6-11": "付款必須在 8 月 7 日前完成。",
+  "R6-12": "逾期付款者將被列入候補名單。",
+  "R6-13": "超過新台幣 50,000 元的採購，團隊必須取得兩家供應商報價。",
+  "R6-14": "建立採購訂單前，團隊必須將文件提交給採購部。",
+  "R6-15": "團隊應避免在核准前下訂單。",
+  "R6-16": "核准表必須由部門主管簽署。",
+};
 p6Groups.forEach((group, g) => {
   group.items.forEach((item) => {
+    const id = `R6-${r6idx++}`;
     sampleQuestions.push(q({
-      id: `R6-${r6idx++}`,
+      id,
       section: "reading",
       part: "Part 6",
       type: "text-completion",
@@ -496,7 +515,7 @@ p6Groups.forEach((group, g) => {
       options: item[1],
       answer: item[2],
       explanation: `${item[3]} 中文解析：依短文內容與句型選出最適合答案。`,
-      translation: item[3],
+      translation: p6Translations[id],
       grammarPoint: item[4] || "",
       tags: ["passage"],
     }));

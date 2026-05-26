@@ -45,7 +45,15 @@ const p1 = [
   ["L1-5", "A barista is handing a drink to a customer.", ["A barista is handing a drink to a customer.", "A nurse is checking a patient's pulse.", "A driver is washing a bus.", "A lawyer is signing a contract."], "咖啡吧台與遞飲料動作最符合。"],
   ["L1-6", "A cyclist is parking a bike beside an office building.", ["A cyclist is parking a bike beside an office building.", "A musician is tuning a violin.", "Shoppers are trying on hats.", "A gardener is trimming roses."], "可見單車停放與辦公大樓外觀。"]
 ];
-p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: exp, tags: ["photo"] })));
+const p1Translations = {
+  "L1-1": "一名女子正在會議室調整投影機。",
+  "L1-2": "幾名旅客正在登機門前排隊。",
+  "L1-3": "一名技術人員正在更換天花板燈具。",
+  "L1-4": "工人正在倉庫裡堆放箱子。",
+  "L1-5": "一名咖啡師正在把飲料遞給顧客。",
+  "L1-6": "一名騎自行車的人正在辦公大樓旁停放腳踏車。",
+};
+p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"] })));
 
 const p2 = [
 ["Who will lead the product demo tomorrow?",["Mr. Liao from sales will lead it.","At the showroom on 3rd Street.","Because the projector failed.","Around 4:30 in the afternoon."],"Mr. Liao from sales will lead it.","Who 問人名或職位；正確答案回覆負責人，其餘是地點、原因、時間。"],
@@ -74,7 +82,37 @@ const p2 = [
 ["Which file format should we use for the brochure?",["Use the high-resolution PDF template.","At the copy center.","By extending the deadline.","The intern on Friday."],"Use the high-resolution PDF template.","Which 問選擇；A 提供明確格式。"],
 ["Have you confirmed the venue for the awards dinner?",["Not yet, but I'll confirm it this afternoon.","At Hall 7 near the stage.","Because the chef was late.","Every weekend."],"Not yet, but I'll confirm it this afternoon.","Have you 問是否完成；A 回答現況與後續。"]
 ];
-p2.forEach((item, i) => sampleQuestions.push(q({ id: `L2-${i + 1}`, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: i === 0 ? "誰會主持明天的產品展示？" : item[3], tags: ["Q&A"] })));
+const p2Translations = {
+  "L2-1": "誰會主持明天的產品展示？",
+  "L2-2": "客戶合約什麼時候到期？",
+  "L2-3": "參加研討會的訪客應該在哪裡報到？",
+  "L2-4": "客服團隊為什麼把這張支援單升級處理？",
+  "L2-5": "我要如何申請差旅費報銷？",
+  "L2-6": "你介意關上會議室的窗戶嗎？",
+  "L2-7": "你能把發票重新寄成 PDF 檔嗎？",
+  "L2-8": "你知道停車場是否已經滿了嗎？",
+  "L2-9": "董事會核准了哪一份提案？",
+  "L2-10": "你已經提交每月庫存報告了嗎？",
+  "L2-11": "我能把行李箱放在接待區嗎？",
+  "L2-12": "我們應該延後訓練課程嗎？",
+  "L2-13": "軟體更新需要多久？",
+  "L2-14": "你們團隊多久檢討一次供應商表現？",
+  "L2-15": "前往工廠的接駁車幾點出發？",
+  "L2-16": "你們部門由誰處理保固索賠？",
+  "L2-17": "線上新進人員說明會什麼時候開始？",
+  "L2-18": "我可以在哪裡領取新的門禁卡？",
+  "L2-19": "為什麼展示機被蓋住了？",
+  "L2-20": "我們要如何降低列印成本？",
+  "L2-21": "你想在網路研討會前收到提醒電子郵件嗎？",
+  "L2-22": "你能確認 503 會議室是否有空嗎？",
+  "L2-23": "你知道緊急出口在哪裡嗎？",
+  "L2-24": "我們應該用哪種檔案格式製作手冊？",
+  "L2-25": "你已經確認頒獎晚宴的場地了嗎？",
+};
+p2.forEach((item, i) => {
+  const id = `L2-${i + 1}`;
+  sampleQuestions.push(q({ id, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: p2Translations[id], tags: ["Q&A"] }));
+});
 
 // keep rest minimal due space
 const p3Groups = [

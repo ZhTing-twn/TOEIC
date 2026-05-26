@@ -406,9 +406,41 @@ const p5 = [
 ["There isn't much ____ left in the printer.",["ink","inks","an ink","inking"],"ink","ink 為不可數名詞。","可數不可數"],
 ["Neither of the proposals ____ acceptable to the board.",["is","are","were","be"],"is","neither 視為單數主詞。","主詞動詞一致"]
 ];
+const p5Translations = {
+  "R5-1": "稽核員抵達時，團隊已經整理好所有收據。",
+  "R5-2": "請把已簽署的協議放進藍色資料夾。",
+  "R5-3": "經理核准了加班，因為截止日期被提前了。",
+  "R5-4": "她的說明清楚且很有說服力。",
+  "R5-5": "所有訪客識別證都必須歸還到前台。",
+  "R5-6": "我們決定在簽合約前先與供應商會面。",
+  "R5-7": "他們把安裝軟體延後到下週。",
+  "R5-8": "準備圖表的助理會先進行簡報。",
+  "R5-9": "本季利潤比上一季高。",
+  "R5-10": "接待員已經確認了你的預約。",
+  "R5-11": "在審查提案兩次後，她發現一個定價錯誤。",
+  "R5-12": "如果我是你，我會要求延長期限。",
+  "R5-13": "出貨清單中少了幾個項目。",
+  "R5-14": "在我們完成預算前，需要更多資訊。",
+  "R5-15": "每個部門都必須提交每月摘要。",
+  "R5-16": "到明年六月時，這家公司在這棟大樓營運就滿十年了。",
+  "R5-17": "儘管交通壅塞，包裹仍準時送達。",
+  "R5-18": "你收到已簽署的副本後，請打電話給我。",
+  "R5-19": "主管簡短說明了合併計畫。",
+  "R5-20": "所有報告都應在星期五中午前提交。",
+  "R5-21": "他同意今晚修改簡報投影片。",
+  "R5-22": "我們建議你每三個月更換一次密碼。",
+  "R5-23": "窗戶朝東的辦公室會照到早晨陽光。",
+  "R5-24": "這個型號比前一個更耐用。",
+  "R5-25": "法務團隊剛剛審查完最終草稿。",
+  "R5-26": "檢查完所有佐證檔案後，他送出了申請。",
+  "R5-27": "如果天氣好一點，活動就會在戶外舉行。",
+  "R5-28": "所有箱子在入庫前都必須貼上標籤。",
+  "R5-29": "印表機裡剩下的墨水不多了。",
+  "R5-30": "這兩份提案都無法被董事會接受。",
+};
 for (let i = 1; i <= 30; i++) {
   const s = p5[i - 1];
-  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, translation: i === 1 ? "稽核員抵達時，團隊已經整理好所有收據。" : s[3], grammarPoint: s[4], tags: ["grammar"] }));
+  sampleQuestions.push(q({ id: `R5-${i}`, section: "reading", part: "Part 5", type: "incomplete-sentences", question: s[0], options: s[1], answer: s[2], explanation: `${s[3]} 中文解析：其餘選項在語法或語意上不正確。`, translation: p5Translations[`R5-${i}`], grammarPoint: s[4], tags: ["grammar"] }));
 }
 
 const p6Groups = [

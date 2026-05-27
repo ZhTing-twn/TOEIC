@@ -363,6 +363,22 @@ p4Groups.forEach((group, gi) => {
     p4QuestionTranslations[id] = "請根據廣播內容回答問題";
     p4OptionTranslations[id] = ["選項一的中文翻譯", "選項二的中文翻譯", "選項三的中文翻譯", "選項四的中文翻譯"];
     p4OptionReasons[id] = ["關鍵資訊支持此選項", "內容沒有支持這個敘述", "提到的重點不一致", "時間或事件不符"];
+
+    if (id === "L4-1") {
+      p4QuestionTranslations[id] = "這則廣播是關於什麼？";
+      p4OptionTranslations[id] = ["飛往釜山的航班延誤。", "登機門因維修而關閉。", "行李領取發生錯誤。", "護照查驗流程改變。"];
+      p4OptionReasons[id] = ["正確，廣播說 JT328 飛往釜山的航班延誤。", "錯誤，廣播沒有說登機門維修或關閉。", "錯誤，廣播沒有提到行李領取問題。", "錯誤，廣播沒有提到護照查驗流程改變。"];
+    }
+    if (id === "L4-2") {
+      p4QuestionTranslations[id] = "航班為什麼延誤？";
+      p4OptionTranslations[id] = ["豪雨。", "人手不足。", "機械檢查。", "機師遲到。"];
+      p4OptionReasons[id] = ["正確，廣播明確說延誤原因是豪雨。", "錯誤，廣播沒有提到人手不足。", "錯誤，廣播沒有提到機械檢查。", "錯誤，廣播沒有提到機師遲到。"];
+    }
+    if (id === "L4-3") {
+      p4QuestionTranslations[id] = "乘客應該怎麼做？";
+      p4OptionTranslations[id] = ["在 C12 登機門附近等候。", "立刻前往 A1 登機門。", "現在領取行李。", "離開機場。"];
+      p4OptionReasons[id] = ["正確，廣播要求乘客留在 C12 登機門附近等候更新。", "錯誤，廣播沒有要求前往 A1 登機門。", "錯誤，廣播沒有要求領取行李。", "錯誤，廣播要求乘客留在原處，不是離開機場。"];
+    }
   });
 });
 p4Groups.forEach((group, gi) => {
@@ -883,7 +899,75 @@ function renderPracticePool(pool, options = {}) {
   }
   return html.join("");
 }
-function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}<br>解析：${esc(qItem.explanation)}${qItem.translation ? `<br>整句翻譯：${esc(qItem.translation)}` : ""}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
+function bindQuestionEvents(pool, options = {}) {
+  pool.forEach((qItem) => {
+    document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => {
+      btn.onclick = () => {
+        const ans = qItem.options[Number(btn.dataset.idx)];
+        const ok = evaluate(qItem, ans, options);
+        if (ok === null) return;
+        document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; });
+
+        const el = document.getElementById(`fb-${qItem.id}`);
+        const optionLabels = ["A", "B", "C", "D"];
+        const feedbackLines = [`${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}`];
+
+        if (qItem.questionTranslation) feedbackLines.push(`題目翻譯：${esc(qItem.questionTranslation)}`);
+
+        if (Array.isArray(qItem.optionTranslations) && qItem.optionTranslations.length === qItem.options.length) {
+          feedbackLines.push("選項翻譯：");
+          qItem.optionTranslations.forEach((text, idx) => {
+            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
+          });
+        }
+
+        feedbackLines.push(`解析：${esc(qItem.explanation)}`);
+
+        if (Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length) {
+          feedbackLines.push("選項說明：");
+          qItem.optionReasons.forEach((text, idx) => {
+            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
+          });
+        }
+
+        if (qItem.translation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
+        if (qItem.grammarPoint) feedbackLines.push(`文法重點：${esc(qItem.grammarPoint)}`);
+
+        el.className = `feedback ${ok ? "success" : "error"}`;
+        el.innerHTML = feedbackLines.join("<br>");
+      };
+    });
+  });
+
+  document.querySelectorAll(".mark-review").forEach((btn) => {
+    btn.onclick = () => {
+      const item = pool.find((x) => x.id === btn.dataset.review);
+      if (!item) return;
+      if (!state.reviewList.some((x) => x.id === item.id)) {
+        state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() });
+        saveState();
+      }
+    };
+  });
+
+  document.querySelectorAll(".play-listening").forEach((btn) => {
+    btn.onclick = () => {
+      if (!window.speechSynthesis) return;
+      const text = btn.dataset.speechText || "";
+      if (!text) return;
+      stopSpeech();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.95;
+      speechState.currentKey = btn.dataset.speechKey || "";
+      utterance.onend = () => { speechState.currentKey = ""; };
+      window.speechSynthesis.speak(utterance);
+    };
+  });
+
+  document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); });
+}
+
 function renderTabs(){const nav=document.getElementById("tabNav");nav.innerHTML=tabs.map(([k,v])=>`<button class='tab-btn ${currentTab===k?"active":""}' data-tab='${k}'>${v}</button>`).join("");nav.querySelectorAll(".tab-btn").forEach((b)=>{b.onclick=()=>{currentTab=b.dataset.tab;renderTabs();renderContent();};});}
 function renderDashboard(){const acc=state.total?((state.correct/state.total)*100).toFixed(1):"0.0";document.getElementById("dashboard").innerHTML=`<h2>學習統計</h2><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div></div>`;}
 function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=>PART_SPECS[p].section===section);document.getElementById("content").innerHTML=`<h2>${section==="listening"?"聽力":"閱讀"}練習</h2><select id='partFilter'><option value='all'>全部</option>${parts.map((p)=>`<option value='${p}'>${p}</option>`).join("")}</select><button id='reshuffle' class='primary'>重新隨機出題</button><div id='qArea'></div>`;const draw=()=>{const part=document.getElementById("partFilter").value;const pool=buildRandomPracticePool(section,part);document.getElementById("qArea").innerHTML=renderPracticePool(pool);bindQuestionEvents(pool);};document.getElementById("partFilter").onchange=draw;document.getElementById("reshuffle").onclick=draw;draw();}

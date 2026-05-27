@@ -10,8 +10,8 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [] }) {
-  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId };
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null }) {
+  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation, optionTranslations, optionReasons };
 }
 
 const sampleQuestions = [];
@@ -354,11 +354,23 @@ const p4Translations = {
   "L4G-9": "物流更新：KX-77 批次包裹預計於週四早上到達，而非週三晚上。收貨人員請準備 2 號碼頭並更新卸貨時程。",
   "L4G-10": "系統維護通知：本週六凌晨 1 點至 4 點，員工入口網站將因安全升級而暫停服務。請在週五午夜前提交請假申請。",
 };
+const p4QuestionTranslations = {};
+const p4OptionTranslations = {};
+const p4OptionReasons = {};
+p4Groups.forEach((group, gi) => {
+  group.items.forEach((item, qi) => {
+    const id = `L4-${gi * 3 + qi + 1}`;
+    p4QuestionTranslations[id] = "請根據廣播內容回答問題";
+    p4OptionTranslations[id] = ["選項一的中文翻譯", "選項二的中文翻譯", "選項三的中文翻譯", "選項四的中文翻譯"];
+    p4OptionReasons[id] = ["關鍵資訊支持此選項", "內容沒有支持這個敘述", "提到的重點不一致", "時間或事件不符"];
+  });
+});
 p4Groups.forEach((group, gi) => {
   group.items.forEach((item) => {
     const groupId = `L4G-${gi + 1}`;
+    const id = `L4-${l4idx++}`;
     sampleQuestions.push(q({
-      id: `L4-${l4idx++}`,
+      id,
       section: "listening",
       part: "Part 4",
       type: "talks",
@@ -369,6 +381,9 @@ p4Groups.forEach((group, gi) => {
       answer: item[2],
       explanation: `${item[3]} 中文解析：依公告中的關鍵資訊對應答案。`,
       translation: p4Translations[groupId],
+      questionTranslation: p4QuestionTranslations[id],
+      optionTranslations: p4OptionTranslations[id],
+      optionReasons: p4OptionReasons[id],
       tags: ["announcement"],
     }));
   });
@@ -696,6 +711,18 @@ vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `�
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };
+  const forbiddenPlaceholders = new Set([
+    "請根據對話內容回答問題",
+    "請根據廣播內容回答問題",
+    "選項一的中文翻譯",
+    "選項二的中文翻譯",
+    "選項三的中文翻譯",
+    "選項四的中文翻譯",
+    "關鍵資訊支持此選項",
+    "內容沒有支持這個敘述",
+    "提到的重點不一致",
+    "時間或事件不符",
+  ]);
   const errors = [];
   if (sampleQuestions.length !== 200) errors.push(`sampleQuestions.length should be 200, got ${sampleQuestions.length}`);
   Object.entries(requiredParts).forEach(([part, count]) => {
@@ -705,6 +732,15 @@ function validateQuestionBank() {
   sampleQuestions.forEach((item) => {
     ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
+
+    if (item.part === "Part 3" || item.part === "Part 4") {
+      const checkText = (value, field) => {
+        if (typeof value === "string" && forbiddenPlaceholders.has(value.trim())) errors.push(`${item.id} has placeholder ${field}: ${value.trim()}`);
+      };
+      checkText(item.questionTranslation, "questionTranslation");
+      (item.optionTranslations || []).forEach((v, idx) => checkText(v, `optionTranslations[${idx}]`));
+      (item.optionReasons || []).forEach((v, idx) => checkText(v, `optionReasons[${idx}]`));
+    }
   });
   return { isValid: errors.length === 0, errors };
 }

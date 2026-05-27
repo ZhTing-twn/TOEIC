@@ -409,6 +409,21 @@ p4Groups.forEach((group, gi) => {
       p4OptionTranslations[id] = ["所有市區分店。", "只限機場分店。", "只限線上。", "只限倉庫暢貨中心。"];
       p4OptionReasons[id] = ["正確，廣播說優惠適用於所有市區分店。", "錯誤，廣播沒有說只限機場分店。", "錯誤，廣播沒有說只限線上。", "錯誤，廣播沒有提到倉庫暢貨中心。"];
     }
+    if (id === "L4-10") {
+      p4QuestionTranslations[id] = "是誰留下這通語音留言？";
+      p4OptionTranslations[id] = ["Nova Legal 的 Eric。", "財務部的林小姐。", "一名快遞司機。", "飯店經理。"];
+      p4OptionReasons[id] = ["正確，留言開頭說話者自我介紹為 Nova Legal 的 Eric。", "錯誤，林小姐是收件人，不是留言者。", "錯誤，留言沒有提到快遞司機。", "錯誤，留言沒有提到飯店經理。"];
+    }
+    if (id === "L4-11") {
+      p4QuestionTranslations[id] = "什麼內容被修改了？";
+      p4OptionTranslations[id] = ["合約第 4 條。", "出貨發票。", "員工班表。", "專案預算。"];
+      p4OptionReasons[id] = ["正確，留言明確說已修改合約第 4 條。", "錯誤，留言沒有提到出貨發票。", "錯誤，留言沒有提到員工班表。", "錯誤，留言沒有提到專案預算。"];
+    }
+    if (id === "L4-12") {
+      p4QuestionTranslations[id] = "林小姐應該在什麼時候前回電？";
+      p4OptionTranslations[id] = ["下午 4 點前。", "明天中午前。", "本週結束前。", "不需要回電。"];
+      p4OptionReasons[id] = ["正確，Eric 要求林小姐在下午 4 點前回電。", "錯誤，留言沒有說明天中午前。", "錯誤，留言沒有說本週結束前。", "錯誤，留言明確要求回電。"];
+    }
   });
 });
 p4Groups.forEach((group, gi) => {

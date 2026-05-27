@@ -765,6 +765,12 @@ function validateQuestionBank() {
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
 
     if (item.part === "Part 3" || item.part === "Part 4") {
+      if (item.part === "Part 4") {
+        if (!item.questionTranslation) errors.push(`${item.id} missing questionTranslation`);
+        if (!Array.isArray(item.optionTranslations) || item.optionTranslations.length !== item.options.length) errors.push(`${item.id} missing optionTranslations`);
+        if (!Array.isArray(item.optionReasons) || item.optionReasons.length !== item.options.length) errors.push(`${item.id} missing optionReasons`);
+      }
+
       const checkText = (value, field) => {
         if (typeof value === "string" && forbiddenPlaceholders.has(value.trim())) errors.push(`${item.id} has placeholder ${field}: ${value.trim()}`);
       };

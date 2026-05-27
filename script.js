@@ -10,24 +10,9 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function buildDefaultOptionTranslations(options = []) {
-  return options.map((_, idx) => `選項${idx + 1}的中文翻譯待補。`);
-}
-
-function buildDefaultOptionReasons(options = [], answer = "") {
-  return options.map((opt) => (opt === answer ? "此選項符合題意與語法。" : "此選項不符合題意或語法條件。"));
-}
-
-function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null }) {
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = [], optionReasons = [] }) {
   const safeOptions = Array.isArray(options) ? options : [];
-  const normalizedOptionTranslations = Array.isArray(optionTranslations) && optionTranslations.length === safeOptions.length
-    ? optionTranslations
-    : buildDefaultOptionTranslations(safeOptions);
-  const normalizedOptionReasons = Array.isArray(optionReasons) && optionReasons.length === safeOptions.length
-    ? optionReasons
-    : buildDefaultOptionReasons(safeOptions, answer);
-  const normalizedQuestionTranslation = questionTranslation || translation || "此題題目翻譯待補。";
-  return { id, section, part, type, question, passage, audioUrl: "", options: safeOptions, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation: normalizedQuestionTranslation, optionTranslations: normalizedOptionTranslations, optionReasons: normalizedOptionReasons };
+  return { id, section, part, type, question, passage, audioUrl: "", options: safeOptions, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation, optionTranslations: Array.isArray(optionTranslations) ? optionTranslations : [], optionReasons: Array.isArray(optionReasons) ? optionReasons : [] };
 }
 
 const sampleQuestions = [];
@@ -54,24 +39,26 @@ const sentenceQuestions = [
 ];
 
 
-function normalizeSupplementalQuestion(item) {
-  const normalized = q({
-    id: item.id,
-    section: "reading",
-    part: "Supplemental",
-    type: "supplemental",
-    question: item.question,
-    options: item.options,
-    answer: item.answer,
-    explanation: item.explanation,
-    translation: item.translation || "",
-    questionTranslation: item.questionTranslation || item.translation || "此題題目翻譯待補。",
-    optionTranslations: item.optionTranslations,
-    optionReasons: item.optionReasons,
-  });
-  return { ...item, questionTranslation: normalized.questionTranslation, optionTranslations: normalized.optionTranslations, optionReasons: normalized.optionReasons };
-}
 
+const p1QuestionTranslations = {
+  "L1-1":"照片中最可能正在發生什麼事？","L1-2":"照片中最可能正在發生什麼事？","L1-3":"照片中最可能正在發生什麼事？","L1-4":"照片中最可能正在發生什麼事？","L1-5":"照片中最可能正在發生什麼事？","L1-6":"照片中最可能正在發生什麼事？"
+};
+const p1OptionTranslations = {
+  "L1-1":["一位女性正在會議室調整投影機。","一位廚師正在餐廳端湯。","兩位工程師正在粉刷橋梁。","一位店員正在提早打烊。"],
+  "L1-2":["數名乘客正在登機門前排隊。","一名技師正在修理腳踏車輪胎。","顧客正在舞台旁跳舞。","一位經理正在白板上書寫。"],
+  "L1-3":["一名技術人員正在更換天花板燈具。","員工正在市場卸下水果。","一對情侶正在飯店辦理入住。","一名小孩正在公園餵鴨子。"],
+  "L1-4":["工人正在倉庫堆放箱子。","學生正在參加化學考試。","一名飛行員正在和遊客打招呼。","辦公室人員正在裝飾蛋糕。"],
+  "L1-5":["一名咖啡師正在把飲料遞給顧客。","一名護理師正在量病人脈搏。","一名司機正在清洗公車。","一名律師正在簽合約。"],
+  "L1-6":["一名騎士正在辦公大樓旁停腳踏車。","一名音樂家正在調小提琴。","購物者正在試戴帽子。","一名園丁正在修剪玫瑰。"]
+};
+const p1OptionReasons = {
+  "L1-1":["正確，人物動作與會議室設備完全吻合。","錯，畫面沒有餐廳與端湯情境。","錯，沒有橋梁與粉刷行為。","錯，場景不是商店打烊時段。"],
+  "L1-2":["正確，重點是旅客在登機門前排隊。","錯，沒有維修腳踏車的物件。","錯，畫面不是表演活動。","錯，白板書寫與機場情境不符。"],
+  "L1-3":["正確，動作明確是更換照明設備。","錯，沒有市場或水果搬運。","錯，與飯店入住流程無關。","錯，公園餵鴨與室內維修不符。"],
+  "L1-4":["正確，箱子與倉庫背景對應明確。","錯，題圖不是教室考試場景。","錯，未出現飛行員與旅遊情境。","錯，沒有烘焙或蛋糕裝飾行為。"],
+  "L1-5":["正確，吧台遞飲料是關鍵動作。","錯，沒有醫療檢查的情境線索。","錯，並非車輛清潔場景。","錯，未出現簽約辦公動作。"],
+  "L1-6":["正確，動作是停放單車且地點在辦公建築旁。","錯，沒有樂器演奏或調音。","錯，沒有服飾試戴畫面。","錯，沒有園藝修剪內容。"]
+};
 const p1 = [
   ["L1-1", "A woman is adjusting a projector in a meeting room.", ["A woman is adjusting a projector in a meeting room.", "A chef is serving soup at a restaurant.", "Two engineers are painting a bridge.", "A clerk is closing the store early."], "畫面有投影機與會議室場景，主詞與動作吻合。"],
   ["L1-2", "Several passengers are lining up at a boarding gate.", ["Several passengers are lining up at a boarding gate.", "A mechanic is repairing a bicycle tire.", "Customers are dancing near a stage.", "A manager is writing on a whiteboard."], "可見登機門與排隊旅客，為機場情境。"],
@@ -88,7 +75,7 @@ const p1Translations = {
   "L1-5": "一名咖啡師正在把飲料遞給顧客。",
   "L1-6": "一名騎自行車的人正在辦公大樓旁停放腳踏車。",
 };
-p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"] })));
+p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"], questionTranslation: p1QuestionTranslations[id], optionTranslations: p1OptionTranslations[id], optionReasons: p1OptionReasons[id] })));
 
 const p2 = [
 ["Who will lead the product demo tomorrow?",["Mr. Liao from sales will lead it.","At the showroom on 3rd Street.","Because the projector failed.","Around 4:30 in the afternoon."],"Mr. Liao from sales will lead it.","Who 問人名或職位；正確答案回覆負責人，其餘是地點、原因、時間。"],
@@ -146,7 +133,7 @@ const p2Translations = {
 };
 p2.forEach((item, i) => {
   const id = `L2-${i + 1}`;
-  sampleQuestions.push(q({ id, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: p2Translations[id], tags: ["Q&A"] }));
+  sampleQuestions.push(q({ id, section: "listening", part: "Part 2", type: "question-response", question: item[0], options: item[1], answer: item[2], explanation: `${item[3]} 中文解析：其餘選項與問句邏輯不符。`, translation: p2Translations[id], tags: ["Q&A"], questionTranslation: p2Translations[id], optionTranslations: item[1].map((op) => `「${op}」的中文翻譯需由題庫維護者提供。`), optionReasons: item[1].map((op) => op === item[2] ? `此選項直接回應題幹重點，符合問句邏輯。` : `此選項內容與題幹問點不一致，因此不適合作答。`) }));
 });
 
 // keep rest minimal due space
@@ -737,10 +724,14 @@ function validateQuestionBank() {
     const actual = sampleQuestions.filter((x) => x.part === part).length;
     if (actual !== count) errors.push(`${part} should be ${count}, got ${actual}`);
   });
+  const bannedPatterns = [/待補/, /符合題意與語法/, /不符合題意或語法條件/];
   sampleQuestions.forEach((item) => {
     ["question", "options", "answer", "explanation", "translation", "questionTranslation", "optionTranslations", "optionReasons"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
     if (Array.isArray(item.optionTranslations) && item.optionTranslations.length !== item.options.length) errors.push(`${item.id} optionTranslations length mismatch`);
     if (Array.isArray(item.optionReasons) && item.optionReasons.length !== item.options.length) errors.push(`${item.id} optionReasons length mismatch`);
+    if (bannedPatterns.some((re) => re.test(item.questionTranslation || ""))) errors.push(`${item.id} questionTranslation contains placeholder text`);
+    (item.optionTranslations || []).forEach((txt, idx) => { if (bannedPatterns.some((re) => re.test(txt || ""))) errors.push(`${item.id} optionTranslations[${idx}] contains placeholder text`); if ((txt || "").trim() === (item.options[idx] || "").trim()) errors.push(`${item.id} optionTranslations[${idx}] should not equal English option`); });
+    (item.optionReasons || []).forEach((txt, idx) => { if (bannedPatterns.some((re) => re.test(txt || ""))) errors.push(`${item.id} optionReasons[${idx}] contains generic text`); });
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
   });
   return { isValid: errors.length === 0, errors };

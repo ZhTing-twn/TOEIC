@@ -816,7 +816,19 @@ function validateQuestionBank() {
 const tabs = [["home", "首頁"], ["listening", "聽力"], ["reading", "閱讀"], ["vocabulary", "單字"], ["cloze", "填空"], ["sentence", "句子"], ["review", "複習清單"], ["wrongbook", "錯題本"]];
 const speechState = { currentKey: "" };
 let currentTab = "home";
-function defaultState() { return { total: 0, correct: 0, wrongbook: [], reviewList: [], doneToday: 0, lastPracticeDate: new Date().toISOString().slice(0, 10), byPart: {}, solvedIds: {} }; }
+function defaultState() {
+  return {
+    total: 0,
+    correct: 0,
+    wrongbook: [],
+    reviewList: [],
+    doneToday: 0,
+    lastPracticeDate: new Date().toISOString().slice(0, 10),
+    byPart: {},
+    solvedIds: {},
+    currentExam: null,
+  };
+}
 function dedupeWrongbook(list = []) {
   const byId = new Map();
   list.forEach((item) => {
@@ -832,7 +844,15 @@ function dedupeWrongbook(list = []) {
   });
   return Array.from(byId.values()).sort((a, b) => Date.parse(b.wrongAt || 0) - Date.parse(a.wrongAt || 0));
 }
-function loadState() { const raw = localStorage.getItem(STORAGE_KEY); const parsed = raw ? JSON.parse(raw) : defaultState(); const t = new Date().toISOString().slice(0, 10); if (parsed.lastPracticeDate !== t) parsed.doneToday = 0; parsed.lastPracticeDate = t; parsed.wrongbook = dedupeWrongbook(parsed.wrongbook || []); return { ...defaultState(), ...parsed }; }
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const parsed = raw ? JSON.parse(raw) : defaultState();
+  const t = new Date().toISOString().slice(0, 10);
+  if (parsed.lastPracticeDate !== t) parsed.doneToday = 0;
+  parsed.lastPracticeDate = t;
+  parsed.wrongbook = dedupeWrongbook(parsed.wrongbook || []);
+  return { ...defaultState(), ...parsed };
+}
 let state = loadState();
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const GROUPED_RANDOM_PARTS = new Set(["Part 3", "Part 4", "Part 6", "Part 7"]);
@@ -858,6 +878,123 @@ function buildRandomPracticePool(section, part = "all") {
 
   return shuffle(blocks).flat();
 }
+
+function buildQuestionBlocks(section) {
+  const blocks = [];
+  const groupedIndex = new Map();
+  sampleQuestions.filter((item) => item.section === section).forEach((item) => {
+    if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+      const key = `${item.part}::${item.groupId}`;
+      if (!groupedIndex.has(key)) {
+        groupedIndex.set(key, blocks.length);
+        blocks.push([item]);
+      } else {
+        blocks[groupedIndex.get(key)].push(item);
+      }
+      return;
+    }
+    blocks.push([item]);
+  });
+  return blocks;
+}
+
+function buildExamSectionIds(section, targetCount = 100) {
+  const sourceBlocks = buildQuestionBlocks(section);
+  const availableCount = sourceBlocks.reduce((sum, block) => sum + block.length, 0);
+  if (availableCount === targetCount) return shuffle(sourceBlocks).flat().map((item) => item.id);
+
+  const selected = [];
+  let attempts = 0;
+
+  while (selected.length < targetCount && attempts < 200) {
+    let addedThisPass = false;
+    shuffle(sourceBlocks).forEach((block) => {
+      if (selected.length >= targetCount) return;
+      if (selected.length + block.length <= targetCount) {
+        selected.push(...block.map((item) => item.id));
+        addedThisPass = true;
+      }
+    });
+    if (!addedThisPass) break;
+    attempts++;
+  }
+
+  return selected.slice(0, targetCount);
+}
+
+function createExamPool() {
+  return {
+    listeningIds: buildExamSectionIds("listening", 100),
+    readingIds: buildExamSectionIds("reading", 100),
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function getQuestionsByIds(ids = []) {
+  const byId = new Map(sampleQuestions.map((item) => [item.id, item]));
+  return ids.map((id) => byId.get(id)).filter(Boolean);
+}
+
+function resetLearningStats() {
+  const fresh = defaultState();
+  fresh.currentExam = createExamPool();
+  state = fresh;
+  saveState();
+  renderContent();
+}
+
+function validateExamPool(exam = state.currentExam) {
+  const errors = [];
+  const byId = new Map(sampleQuestions.map((item) => [item.id, item]));
+  const groupedByKey = new Map();
+
+  sampleQuestions.forEach((item) => {
+    if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+      const key = `${item.part}::${item.groupId}`;
+      if (!groupedByKey.has(key)) groupedByKey.set(key, []);
+      groupedByKey.get(key).push(item.id);
+    }
+  });
+
+  if (!exam) {
+    errors.push("currentExam missing");
+    return { isValid: false, errors };
+  }
+
+  const checkIds = (ids, section, field) => {
+    if (!Array.isArray(ids)) {
+      errors.push(`${field} should be an array`);
+      return;
+    }
+    if (ids.length !== 100) errors.push(`${field} length should be 100, got ${ids.length}`);
+
+    const selectedCounts = new Map();
+    ids.forEach((id) => {
+      const item = byId.get(id);
+      if (!item) {
+        errors.push(`${field} has missing question id: ${id}`);
+        return;
+      }
+      if (item.section !== section) errors.push(`${id} should be section ${section}, got ${item.section}`);
+      selectedCounts.set(id, (selectedCounts.get(id) || 0) + 1);
+    });
+
+    groupedByKey.forEach((groupIds, key) => {
+      const groupSection = byId.get(groupIds[0])?.section;
+      if (groupSection !== section) return;
+      const counts = groupIds.map((id) => selectedCounts.get(id) || 0);
+      const hasAny = counts.some((count) => count > 0);
+      if (hasAny && !counts.every((count) => count === counts[0])) {
+        errors.push(`${field} has partial group ${key}`);
+      }
+    });
+  };
+
+  checkIds(exam.listeningIds, "listening", "currentExam.listeningIds");
+  checkIds(exam.readingIds, "reading", "currentExam.readingIds");
+  return { isValid: errors.length === 0, errors };
+}
+
 const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderDashboard(); }
 function stopSpeech() {
@@ -1021,10 +1158,52 @@ function bindQuestionEvents(pool, options = {}) {
 }
 
 function renderTabs(){const nav=document.getElementById("tabNav");nav.innerHTML=tabs.map(([k,v])=>`<button class='tab-btn ${currentTab===k?"active":""}' data-tab='${k}'>${v}</button>`).join("");nav.querySelectorAll(".tab-btn").forEach((b)=>{b.onclick=()=>{currentTab=b.dataset.tab;renderTabs();renderContent();};});}
-function renderDashboard(){const acc=state.total?((state.correct/state.total)*100).toFixed(1):"0.0";document.getElementById("dashboard").innerHTML=`<h2>學習統計</h2><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div></div>`;}
+function renderDashboard() {
+  const acc = state.total ? ((state.correct / state.total) * 100).toFixed(1) : "0.0";
+  const examInfo = state.currentExam ? `<div class='stat'>正式測驗題組：<strong>${esc(state.currentExam.listeningIds?.length || 0)} 聽力 / ${esc(state.currentExam.readingIds?.length || 0)} 閱讀</strong></div>` : "";
+  document.getElementById("dashboard").innerHTML = `<div class='dashboard-header'><h2>學習統計</h2><button id='resetStatsBtn' class='danger'>重製學習統計</button></div><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div>${examInfo}</div>`;
+  const resetBtn = document.getElementById("resetStatsBtn");
+  if (resetBtn) {
+    resetBtn.onclick = () => {
+      if (!confirm("確定要重製學習統計並產生新的正式測驗題組嗎？")) return;
+      resetLearningStats();
+    };
+  }
+}
 function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=>PART_SPECS[p].section===section);document.getElementById("content").innerHTML=`<h2>${section==="listening"?"聽力":"閱讀"}練習</h2><select id='partFilter'><option value='all'>全部</option>${parts.map((p)=>`<option value='${p}'>${p}</option>`).join("")}</select><button id='reshuffle' class='primary'>重新隨機出題</button><div id='qArea'></div>`;const draw=()=>{const part=document.getElementById("partFilter").value;const pool=buildRandomPracticePool(section,part);document.getElementById("qArea").innerHTML=renderPracticePool(pool);bindQuestionEvents(pool);};document.getElementById("partFilter").onchange=draw;document.getElementById("reshuffle").onclick=draw;draw();}
 function renderMiniPractice(title,pool,label){document.getElementById("content").innerHTML=`<h2>${title}</h2><button id='reshuffleMini' class='primary'>重新隨機出題</button><div id='qAreaMini'></div>`;const draw=()=>{const shuffled=shuffle(pool).map((x)=>({...x,part:label,type:label}));document.getElementById("qAreaMini").innerHTML=shuffled.map((item)=>renderQuestionCard(item,label)).join("");bindQuestionEvents(shuffled);};document.getElementById("reshuffleMini").onclick=draw;draw();}
 function renderReview(){const list=state.reviewList;document.getElementById("content").innerHTML=`<h2>複習清單</h2><button id='startReview' class='primary'>開始複習清單練習</button>${list.length?list.map((i)=>`<div class='card'><p>${esc(i.part)} ${esc(i.question)}</p></div>`).join(""):"<p>尚未加入題目。</p>"}`;const sr=document.getElementById("startReview");if(sr)sr.onclick=()=>{const pool=shuffle(state.reviewList);const sessionSolvedIds=new Set();const reviewModeOptions={reviewMode:true,allowRetakeInReview:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("reviewRemain");if(remain)remain.textContent=String(state.reviewList.length);};document.getElementById("content").innerHTML=`<h2>複習清單練習</h2><p>目前剩餘複習清單題數：<strong id='reviewRemain'>${state.reviewList.length}</strong></p>${renderPracticePool(pool,reviewModeOptions)}`;bindQuestionEvents(pool,{...reviewModeOptions,removeReviewOnCorrect:true,onAfterEvaluate:updateRemain});};}
 function renderWrongbook(){state.wrongbook=dedupeWrongbook(state.wrongbook);const list=state.wrongbook;document.getElementById("content").innerHTML=`<h2>錯題本</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><div id='wrongbookInfo'>${list.length?"":"<p>目前沒有錯題。</p>"}</div><div id='wrongbookList'>${list.map((i)=>`<div class='card'><p>${esc(i.part)}</p><p>${esc(i.question)}</p><p>我的答案：${esc(i.myAnswer)}</p><p>正確答案：${esc(i.answer)}</p><p>解析：${esc(i.explanation)}</p></div>`).join("")}</div>`;const sw=document.getElementById("startWrongbook");if(sw)sw.onclick=()=>{state.wrongbook=dedupeWrongbook(state.wrongbook);if(!state.wrongbook.length){const info=document.getElementById("wrongbookInfo");if(info)info.innerHTML="<p>錯題本已清空</p>";return;}const pool=shuffle(state.wrongbook.slice());const sessionSolvedIds=new Set();const wrongbookModeOptions={wrongbookMode:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("wrongbookRemain");if(remain)remain.textContent=String(state.wrongbook.length);if(!state.wrongbook.length){const area=document.getElementById("qAreaWrongbook");if(area)area.innerHTML="<p>錯題本已清空</p>";}};document.getElementById("content").innerHTML=`<h2>錯題本練習</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><p>目前剩餘錯題數：<strong id='wrongbookRemain'>${state.wrongbook.length}</strong></p><div id='qAreaWrongbook'>${renderPracticePool(pool,wrongbookModeOptions)}</div>`;const startInMode=document.getElementById("startWrongbook");if(startInMode)startInMode.onclick=()=>renderWrongbook();bindQuestionEvents(pool,{...wrongbookModeOptions,removeWrongbookOnCorrect:true,onAfterEvaluate:updateRemain});};}
-function renderContent(){if(currentTab==="home")document.getElementById("content").innerHTML="<h2>首頁</h2><p>保留聽力、閱讀、單字、填空、句子、複習清單、錯題本功能。</p>";else if(currentTab==="listening"||currentTab==="reading")renderPractice(currentTab);else if(currentTab==="vocabulary")renderMiniPractice("單字練習",vocabQuestions,"單字");else if(currentTab==="cloze")renderMiniPractice("填空練習",clozeQuestions,"填空");else if(currentTab==="sentence")renderMiniPractice("句子練習",sentenceQuestions,"句子");else if(currentTab==="review")renderReview();else renderWrongbook();}
+function renderHome() {
+  const exam = state.currentExam;
+  document.getElementById("content").innerHTML = `<h2>首頁</h2><p>保留聽力、閱讀、單字、填空、句子、複習清單、錯題本功能。</p><button id='startOfficialExam' class='primary'>開始正式測驗</button>${exam ? `<p><small class='muted'>目前正式測驗題組建立時間：${esc(exam.createdAt)}</small></p>` : "<p><small class='muted'>尚未建立正式測驗題組，開始時會自動產生。</small></p>"}`;
+  document.getElementById("startOfficialExam").onclick = () => renderOfficialExam();
+}
+
+function ensureCurrentExam() {
+  if (!state.currentExam || !validateExamPool(state.currentExam).isValid) {
+    state.currentExam = createExamPool();
+    saveState();
+  }
+  return state.currentExam;
+}
+
+function renderOfficialExam() {
+  const exam = ensureCurrentExam();
+  const listeningPool = getQuestionsByIds(exam.listeningIds);
+  const readingPool = getQuestionsByIds(exam.readingIds);
+  const pool = [...listeningPool, ...readingPool];
+  document.getElementById("content").innerHTML = `<h2>正式測驗</h2><p>聽力 100 題，閱讀 100 題。題組題目會維持在同一組內。</p><h3>Listening 聽力</h3>${renderPracticePool(listeningPool)}<h3>Reading 閱讀</h3>${renderPracticePool(readingPool)}`;
+  bindQuestionEvents(pool);
+}
+
+function renderContent() {
+  if (currentTab === "home") renderHome();
+  else if (currentTab === "listening" || currentTab === "reading") renderPractice(currentTab);
+  else if (currentTab === "vocabulary") renderMiniPractice("單字練習", vocabQuestions, "單字");
+  else if (currentTab === "cloze") renderMiniPractice("填空練習", clozeQuestions, "填空");
+  else if (currentTab === "sentence") renderMiniPractice("句子練習", sentenceQuestions, "句子");
+  else if (currentTab === "review") renderReview();
+  else renderWrongbook();
+}
 renderTabs();renderDashboard();renderContent();

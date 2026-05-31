@@ -861,59 +861,50 @@ p7Groups.forEach((group, gi) => {
 
 
 
-const OPTION_TRANSLATION_HINTS = {
-  by: "在期限之前", from: "從某時間或來源開始", among: "在三者以上之中", during: "在某段期間內",
-  once: "一旦、當……就……", unless: "除非", despite: "儘管", while: "當……時；然而", because: "因為",
-  although: "雖然", whereas: "然而；鑑於", in: "在……裡面", at: "在某地點或時間點", for: "為了；持續一段時間", with: "和……一起；具有", on: "在……上；準時",
-  is: "單數現在式 be 動詞", are: "複數現在式 be 動詞", were: "過去式或假設語氣 be 動詞", was: "單數過去式 be 動詞", be: "原形 be 動詞",
-  who: "指人的主格關係代名詞", which: "指物的關係代名詞", whom: "指人的受格關係代名詞", whose: "表示所有關係的關係代名詞",
-  information: "資訊；不可數名詞", items: "多個項目", item: "單一項目", boxes: "多個箱子", box: "單一箱子", ink: "墨水；不可數名詞",
+const explicitExplanationMetadata = {
+  "L1-1": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["一名女子正在會議室調整投影機。", "一名廚師正在餐廳端湯。", "兩名工程師正在粉刷橋梁。", "一名店員正提早關店。"],
+    optionReasons: ["正確，題目描述的女子、調整投影機與會議室場景都符合圖片內容。", "錯誤，圖片不是餐廳場景，也沒有廚師端湯。", "錯誤，圖片沒有兩名工程師，也沒有粉刷橋梁的動作。", "錯誤，圖片沒有店員關店或商店場景。"],
+  },
+  "L2-1": {
+    questionTranslation: "誰會主持明天的產品展示？",
+    optionTranslations: ["業務部的廖先生會主持。", "在第三街的展示間。", "因為投影機故障了。", "大約在下午四點半。"],
+    optionReasons: ["正確，Who 問人或職位，此選項直接回答主持者是業務部的廖先生。", "錯誤，這是地點回覆，沒有回答誰會主持。", "錯誤，這是原因回覆，沒有回答主持者。", "錯誤，這是時間回覆，沒有回答人物。"],
+  },
+  "L3-1": {
+    questionTranslation: "說話者為什麼要更改會議時間？",
+    optionTranslations: ["主管週一會不在辦公室。", "預算檔案被刪除了。", "會議室要維修一週。", "財務部要求換更大的會議室。"],
+    optionReasons: ["正確，對話中男方說主管週一早上要去高雄分公司，因此原訂會議時間需要更改。", "錯誤，對話沒有提到預算檔案被刪除。", "錯誤，對話沒有提到會議室維修。", "錯誤，財務部只是需要被通知，沒有要求更大的會議室。"],
+  },
+  "R5-1": {
+    questionTranslation: "稽核員抵達時，團隊已經整理好所有收據。空格應填入哪個動詞形式？",
+    optionTranslations: ["已經整理好（過去完成式）。", "已經整理好（現在完成式）。", "整理（原形動詞）。", "正在整理／整理中（動名詞或現在分詞）。"],
+    optionReasons: ["正確，by the time 加過去時間 arrived 表示稽核員抵達之前已完成的動作，需用過去完成式 had organized。", "錯誤，has organized 是現在完成式，不能配合 arrived 這個過去時間點之前的動作。", "錯誤，organize 是原形動詞，無法與主詞 the team 和過去完成語意搭配。", "錯誤，organizing 是動名詞或現在分詞，不能表達已完成整理的動作。"],
+  },
+  "R6-1": {
+    questionTranslation: "這則通知的主要目的是什麼？",
+    optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],
+    optionReasons: ["正確，短文說各部門從 7 月 1 日起必須每週五提交進度更新，主旨是宣布新的回報規定。", "錯誤，短文提到使用內部網路表單，沒有說取消存取權。", "錯誤，短文沒有招募經理的內容。", "錯誤，短文沒有討論差旅費或報銷流程。"],
+  },
+  "R7-1": {
+    questionTranslation: "員工續辦時必須提交什麼？",
+    optionTranslations: ["車牌號碼與員工編號。", "燃油收據與路線圖。", "主管推薦信。", "只有駕照影本。"],
+    optionReasons: ["正確，文章明確要求員工提交車牌號碼與員工編號以保留停車權限。", "錯誤，文章沒有要求燃油收據或路線圖。", "錯誤，文章沒有提到主管推薦信。", "錯誤，文章要求車牌號碼與員工編號，不是只有駕照影本。"],
+  },
 };
 
-function describeQuestionInChinese(item) {
-  if (item.questionTranslation) return item.questionTranslation;
-  if (item.part === "Part 1") return "照片題：選出最符合照片中人物、物品或場景的描述。";
-  if (item.part === "Part 2") return "問答題：依照問句語意選出最自然、最直接的回應。";
-  if (item.part === "Part 5" || item.part === "Part 6") return `空格題：${item.translation}`;
-  if (item.part === "Part 3") return `對話理解題：依對話內容判斷「${item.question}」的答案。`;
-  if (item.part === "Part 7") return `閱讀理解題：依文章資訊判斷「${item.question}」的答案。`;
-  return `聽力理解題：依廣播內容判斷「${item.question}」的答案。`;
-}
-
-function describeOptionInChinese(item, option, idx) {
-  if (item.optionTranslations && item.optionTranslations[idx]) return item.optionTranslations[idx];
-  const key = String(option).trim().toLowerCase();
-  if (OPTION_TRANSLATION_HINTS[key]) return OPTION_TRANSLATION_HINTS[key];
-  const optionOrder = ["第一", "第二", "第三", "第四"][idx] || `第 ${idx + 1}`;
-  if (option === item.answer) return `符合「${item.translation}」答案資訊的正確選項`;
-  if (item.part === "Part 5") return `${optionOrder}個不符合「${item.translation}」句意與${item.grammarPoint}規則的干擾選項`;
-  if (item.part === "Part 6") return `${optionOrder}個與「${item.translation}」短文脈絡不一致的干擾選項`;
-  if (item.part === "Part 1") return `${optionOrder}個與照片重點「${item.translation}」不一致的干擾描述`;
-  if (item.part === "Part 2") return `${optionOrder}個沒有回應「${item.translation}」問答重點的干擾回覆`;
-  if (item.part === "Part 3" || item.part === "Part 4") return `${optionOrder}個未受「${item.translation}」聽力內容支持的干擾選項`;
-  return `${optionOrder}個與「${item.translation}」文章資訊不一致的干擾選項`;
-}
-
-function describeOptionReason(item, option, optionTranslation, idx) {
-  if (item.optionReasons && item.optionReasons[idx]) return item.optionReasons[idx];
-  if (option === item.answer) return `正確，${item.explanation}`;
-  if (item.part === "Part 5") return `錯誤，${optionTranslation}；本題需符合「${item.grammarPoint}」，且解析指出「${item.explanation}」。`;
-  if (item.part === "Part 6") return `錯誤，${optionTranslation}；解析指出「${item.explanation}」，所以此選項無法銜接短文。`;
-  if (item.part === "Part 1") return `錯誤，${optionTranslation}；解析指出「${item.explanation}」，照片中的人物、物品或場景不支持此描述。`;
-  if (item.part === "Part 2") return `錯誤，${optionTranslation}；解析指出「${item.explanation}」，此回覆未對準問句語意。`;
-  if (item.part === "Part 3" || item.part === "Part 4") return `錯誤，${optionTranslation}；解析指出「${item.explanation}」，對話或廣播沒有支持此選項。`;
-  return `錯誤，${optionTranslation}；解析指出「${item.explanation}」，文章資訊不支持此選項。`;
-}
-
-function applyExplanationMetadata() {
-  sampleQuestions.forEach((item) => {
-    item.questionTranslation = describeQuestionInChinese(item);
-    item.optionTranslations = item.options.map((option, idx) => describeOptionInChinese(item, option, idx));
-    item.optionReasons = item.options.map((option, idx) => describeOptionReason(item, option, item.optionTranslations[idx], idx));
+function applyExplicitExplanationMetadata() {
+  Object.entries(explicitExplanationMetadata).forEach(([id, metadata]) => {
+    const item = sampleQuestions.find((question) => question.id === id);
+    if (!item) return;
+    item.questionTranslation = metadata.questionTranslation;
+    item.optionTranslations = metadata.optionTranslations;
+    item.optionReasons = metadata.optionReasons;
   });
 }
 
-applyExplanationMetadata();
+applyExplicitExplanationMetadata();
 
 vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`; });
 

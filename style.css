@@ -67,3 +67,13 @@ small.muted { color:#69788f; }
 @media (max-width: 720px) {
   .grid-2 { grid-template-columns: 1fr; }
 }
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.dashboard-header h2 { margin: 0; }
+@media (max-width: 720px) {
+  .dashboard-header { align-items: stretch; flex-direction: column; }
+}

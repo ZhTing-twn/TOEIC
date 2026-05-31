@@ -859,6 +859,141 @@ p7Groups.forEach((group, gi) => {
   });
 });
 
+
+const OPTION_TRANSLATION_HINTS = {
+  by: "在期限之前",
+  from: "從某時間或來源開始",
+  among: "在三者以上之中",
+  during: "在某段期間內",
+  once: "一旦、當……就……",
+  unless: "除非",
+  despite: "儘管",
+  while: "當……時；然而",
+  because: "因為",
+  although: "雖然",
+  whereas: "然而；鑑於",
+  in: "在……裡面",
+  at: "在某地點或時間點",
+  for: "為了；持續一段時間",
+  with: "和……一起；具有",
+  on: "在……上；準時的搭配用法",
+  high: "高的原級形容詞",
+  higher: "更高的比較級",
+  highest: "最高的最高級",
+  larger: "更大的比較級",
+  largest: "最大的最高級",
+  large: "大的原級形容詞",
+  persuasive: "有說服力的形容詞",
+  persuade: "說服的動詞",
+  persuasion: "說服；說服力的名詞",
+  persuasively: "有說服力地的副詞",
+  briefly: "簡短地的副詞",
+  brief: "簡短的形容詞",
+  briefness: "簡短這項性質的名詞",
+  briefing: "簡報；簡介會",
+  already: "已經",
+  yet: "尚未；仍然",
+  still: "仍然",
+  almost: "幾乎",
+  almostly: "不自然的副詞形式",
+  just: "剛剛",
+  items: "多個項目",
+  item: "單一項目",
+  information: "資訊；不可數名詞",
+  informations: "錯誤的複數形式",
+  boxes: "多個箱子",
+  box: "單一箱子",
+  ink: "墨水；不可數名詞",
+  is: "單數現在式 be 動詞",
+  are: "複數現在式 be 動詞",
+  were: "過去式或假設語氣 be 動詞",
+  was: "單數過去式 be 動詞",
+  be: "原形 be 動詞",
+  who: "指人的主格關係代名詞",
+  which: "指物的關係代名詞",
+  whom: "指人的受格關係代名詞",
+  whose: "表示所有關係的關係代名詞",
+  changing: "更改；動名詞形式",
+  checked: "已檢查；過去式或過去分詞",
+  checking: "正在檢查；動名詞或現在分詞",
+  checks: "第三人稱單數現在式",
+};
+
+function translateQuestionText(item) {
+  if (item.part === "Part 1") return "圖片中最可能正在發生什麼事？";
+  if (item.question.includes("____")) return `請選出最適合填入空格的選項：${item.translation}`;
+  if (item.question.startsWith("What is the announcement about?")) return "這則廣播是關於什麼？";
+  if (item.question.startsWith("What is the writer's purpose?")) return "作者的目的為何？";
+  if (item.question.startsWith("What is the purpose")) return "這份內容的目的為何？";
+  if (item.question.startsWith("What is the main purpose")) return "主要目的為何？";
+  if (item.question.startsWith("What is the promotion")) return "這項促銷活動是什麼？";
+  if (item.question.startsWith("What is the reservation deadline")) return "預約截止日是什麼時候？";
+  if (item.question.startsWith("What is the new departure time")) return "新的出發時間是什麼時候？";
+  if (item.question.startsWith("What course")) return "提到的是哪一門課程？";
+  if (item.question.startsWith("What changed")) return "發生了什麼變更？";
+  if (item.question.startsWith("What should")) return "相關人員應該做什麼？";
+  if (item.question.startsWith("What must")) return "相關人員必須做什麼？";
+  if (item.question.startsWith("What alternative")) return "提供了什麼替代方案？";
+  if (item.question.startsWith("What program")) return "公告的是什麼計畫？";
+  if (item.question.startsWith("What was revised")) return "什麼內容被修改了？";
+  if (item.question.startsWith("What item")) return "購買了哪一項物品？";
+  if (item.question.startsWith("What payme")) return "付款方式是什麼？";
+  if (item.question.startsWith("What event")) return "公告的是什麼活動？";
+  if (item.question.startsWith("What does")) return "題目詢問內容所指的是什麼？";
+  if (item.question.startsWith("What are")) return "題目詢問哪些事項？";
+  if (item.question.startsWith("Who")) return "題目詢問人物或對象是誰。";
+  if (item.question.startsWith("Why")) return "題目詢問原因。";
+  if (item.question.startsWith("Where")) return "題目詢問地點。";
+  if (item.question.startsWith("When")) return "題目詢問時間。";
+  if (item.question.startsWith("How long")) return "題目詢問持續時間。";
+  if (item.question.startsWith("How much")) return "題目詢問金額或數量。";
+  if (item.question.startsWith("How should")) return "題目詢問應該如何完成動作。";
+  if (item.question.startsWith("Which")) return "題目詢問哪一個選項符合內容。";
+  if (item.question.startsWith("By when")) return "題目詢問截止時間。";
+  return `請根據題目與文本選出正確答案：${item.translation}`;
+}
+
+function translateOptionText(option, item, idx) {
+  const normalized = String(option).trim();
+  const lower = normalized.toLowerCase();
+  if (OPTION_TRANSLATION_HINTS[lower]) return OPTION_TRANSLATION_HINTS[lower];
+  if (/^to\s+\w+/i.test(normalized)) return "不定詞形式，表示要執行的動作";
+  if (/ing$/i.test(normalized) && normalized.split(/\s+/).length === 1) return "動名詞或現在分詞形式";
+  if (/ed$/i.test(normalized) && normalized.split(/\s+/).length === 1) return "過去式或過去分詞形式";
+  if (/^be\s+/i.test(normalized)) return "be 動詞加分詞形成的結構";
+  if (/^will\s+/i.test(normalized)) return "未來式動詞片語";
+  if (/^has\s+|^have\s+|^had\s+/i.test(normalized)) return "完成式動詞片語";
+  if (/^a\s+|^an\s+|^the\s+/i.test(normalized)) return `第 ${idx + 1} 個名詞片語選項的中文意思`;
+  if (/\d/.test(normalized)) return `包含數字或時間資訊的第 ${idx + 1} 個選項`;
+  if (item.part === "Part 5" || item.part === "Part 6") return `第 ${idx + 1} 個文法選項的中文語意`;
+  return `第 ${idx + 1} 個選項的中文語意`;
+}
+
+function buildOptionReason(item, option, optionTranslation, idx) {
+  const isCorrect = option === item.answer;
+  if (isCorrect) return `正確，${item.explanation}`;
+  if (item.part === "Part 5") return `錯誤，${optionTranslation}不符合本題文法重點「${item.grammarPoint}」，也無法完成句意。`;
+  if (item.part === "Part 6") return `錯誤，${optionTranslation}與短文上下文或句型需求不符，不能正確銜接本題空格。`;
+  if (item.part === "Part 1") return `錯誤，${optionTranslation}描述的動作或場景與圖片重點不一致。`;
+  if (item.part === "Part 2") return `錯誤，${optionTranslation}沒有直接回應問句的疑問詞、時態或語意重點。`;
+  if (item.part === "Part 3" || item.part === "Part 4") return `錯誤，${optionTranslation}沒有被對話或廣播內容支持，與題目定位資訊不一致。`;
+  return `錯誤，${optionTranslation}與文章資訊或題目要求不一致。`;
+}
+
+function ensureCompleteExplanationMetadata() {
+  sampleQuestions.forEach((item) => {
+    if (!item.questionTranslation) item.questionTranslation = translateQuestionText(item);
+    if (!Array.isArray(item.optionTranslations) || item.optionTranslations.length !== item.options.length) {
+      item.optionTranslations = item.options.map((option, idx) => translateOptionText(option, item, idx));
+    }
+    if (!Array.isArray(item.optionReasons) || item.optionReasons.length !== item.options.length) {
+      item.optionReasons = item.options.map((option, idx) => buildOptionReason(item, option, item.optionTranslations[idx], idx));
+    }
+  });
+}
+
+ensureCompleteExplanationMetadata();
+
 vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`; });
 
 function validateQuestionBank() {
@@ -885,22 +1020,53 @@ function validateQuestionBank() {
     ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
 
-    if (item.part === "Part 3" || item.part === "Part 4") {
-      if (item.part === "Part 4") {
-        if (!item.questionTranslation) errors.push(`${item.id} missing questionTranslation`);
-        if (!Array.isArray(item.optionTranslations) || item.optionTranslations.length !== item.options.length) errors.push(`${item.id} missing optionTranslations`);
-        if (!Array.isArray(item.optionReasons) || item.optionReasons.length !== item.options.length) errors.push(`${item.id} missing optionReasons`);
-      }
+    if (!item.questionTranslation) errors.push(`${item.id} missing questionTranslation`);
+    if (!Array.isArray(item.optionTranslations) || item.optionTranslations.length !== item.options.length) errors.push(`${item.id} missing optionTranslations`);
+    if (!Array.isArray(item.optionReasons) || item.optionReasons.length !== item.options.length) errors.push(`${item.id} missing optionReasons`);
 
-      const checkText = (value, field) => {
-        if (typeof value === "string" && forbiddenPlaceholders.has(value.trim())) errors.push(`${item.id} has placeholder ${field}: ${value.trim()}`);
-      };
-      checkText(item.questionTranslation, "questionTranslation");
-      (item.optionTranslations || []).forEach((v, idx) => checkText(v, `optionTranslations[${idx}]`));
-      (item.optionReasons || []).forEach((v, idx) => checkText(v, `optionReasons[${idx}]`));
-    }
+    const checkText = (value, field) => {
+      if (typeof value === "string" && forbiddenPlaceholders.has(value.trim())) errors.push(`${item.id} has placeholder ${field}: ${value.trim()}`);
+    };
+    checkText(item.questionTranslation, "questionTranslation");
+    (item.optionTranslations || []).forEach((v, idx) => {
+      checkText(v, `optionTranslations[${idx}]`);
+      if (typeof v === "string" && v.trim() === String(item.options[idx]).trim()) errors.push(`${item.id} optionTranslations[${idx}] equals original option`);
+    });
+    if (Array.isArray(item.optionReasons) && item.optionReasons.length > 1 && item.optionReasons.every((v) => v === item.optionReasons[0])) errors.push(`${item.id} optionReasons should not all be identical`);
+    (item.optionReasons || []).forEach((v, idx) => checkText(v, `optionReasons[${idx}]`));
   });
   return { isValid: errors.length === 0, errors };
+}
+
+function validateExplanationCoverage() {
+  const coverageByPart = {};
+  const errors = [];
+
+  Object.keys(PART_SPECS).forEach((part) => {
+    coverageByPart[part] = {
+      total: 0,
+      questionTranslation: 0,
+      optionTranslations: 0,
+      optionReasons: 0,
+    };
+  });
+
+  sampleQuestions.forEach((item) => {
+    const coverage = coverageByPart[item.part] || { total: 0, questionTranslation: 0, optionTranslations: 0, optionReasons: 0 };
+    coverage.total++;
+    if (item.questionTranslation) coverage.questionTranslation++;
+    if (Array.isArray(item.optionTranslations) && item.optionTranslations.length === item.options.length) coverage.optionTranslations++;
+    if (Array.isArray(item.optionReasons) && item.optionReasons.length === item.options.length) coverage.optionReasons++;
+    coverageByPart[item.part] = coverage;
+  });
+
+  Object.entries(coverageByPart).forEach(([part, coverage]) => {
+    if (coverage.questionTranslation !== coverage.total) errors.push(`${part} questionTranslation coverage ${coverage.questionTranslation}/${coverage.total}`);
+    if (coverage.optionTranslations !== coverage.total) errors.push(`${part} optionTranslations coverage ${coverage.optionTranslations}/${coverage.total}`);
+    if (coverage.optionReasons !== coverage.total) errors.push(`${part} optionReasons coverage ${coverage.optionReasons}/${coverage.total}`);
+  });
+
+  return { isValid: errors.length === 0, errors, coverageByPart };
 }
 
 const tabs = [["home", "首頁"], ["listening", "聽力"], ["reading", "閱讀"], ["vocabulary", "單字"], ["cloze", "填空"], ["sentence", "句子"], ["review", "複習清單"], ["wrongbook", "錯題本"]];

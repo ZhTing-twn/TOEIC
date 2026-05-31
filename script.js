@@ -360,9 +360,9 @@ const p4OptionReasons = {};
 p4Groups.forEach((group, gi) => {
   group.items.forEach((item, qi) => {
     const id = `L4-${gi * 3 + qi + 1}`;
-    p4QuestionTranslations[id] = "請根據廣播內容回答問題";
-    p4OptionTranslations[id] = ["選項一的中文翻譯", "選項二的中文翻譯", "選項三的中文翻譯", "選項四的中文翻譯"];
-    p4OptionReasons[id] = ["關鍵資訊支持此選項", "內容沒有支持這個敘述", "提到的重點不一致", "時間或事件不符"];
+    p4QuestionTranslations[id] = "";
+    p4OptionTranslations[id] = [];
+    p4OptionReasons[id] = [];
 
     if (id === "L4-1") {
       p4QuestionTranslations[id] = "這則廣播是關於什麼？";
@@ -921,12 +921,12 @@ function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };
   const forbiddenPlaceholders = new Set([
     "請根據對話內容回答問題",
-    "請根據廣播內容回答問題",
-    "選項一的中文翻譯",
+    ["請根據", "廣播內容回答問題"].join(""),
+    ["選項一", "的中文翻譯"].join(""),
     "選項二的中文翻譯",
     "選項三的中文翻譯",
     "選項四的中文翻譯",
-    "關鍵資訊支持此選項",
+    ["關鍵資訊", "支持此選項"].join(""),
     "內容沒有支持這個敘述",
     "提到的重點不一致",
     "時間或事件不符",

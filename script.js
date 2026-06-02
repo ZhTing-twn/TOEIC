@@ -1112,6 +1112,11 @@ const explicitExplanationMetadata = {
     optionTranslations: ["影印機一直卡紙。", "掃描器無法連接 Wi-Fi。", "投影機燈泡壞了。", "筆電電池膨脹。"],
     optionReasons: ["正確，女方說六樓的影印機一直卡紙。", "錯誤，對話沒有提到掃描器無法連接 Wi-Fi。", "錯誤，對話沒有提到投影機燈泡壞了。", "錯誤，對話沒有提到筆電電池膨脹。"],
   },
+  "L3-20": {
+    questionTranslation: "男方什麼時候會檢查機器？",
+    optionTranslations: ["午餐後。", "上午 9 點前。", "明天晚上。", "下週。"],
+    optionReasons: ["正確，男方說午餐後會立刻檢查。", "錯誤，對話沒有提到上午 9 點前。", "錯誤，對話沒有提到明天晚上。", "錯誤，對話沒有提到下週。"],
+  },
   "L3-22": {
     questionTranslation: "男方的旅行計畫有什麼變更？",
     optionTranslations: ["他的班機現在早上 6 點起飛。", "他的目的地改成東京。", "他的飯店預訂被取消。", "他的護照過期了。"],

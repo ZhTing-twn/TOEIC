@@ -1202,10 +1202,45 @@ const explicitExplanationMetadata = {
     optionTranslations: ["手機 App 專案。", "分公司搬遷。", "客戶退款案件。", "配送路線變更。"],
     optionReasons: ["正確，女方開頭問手機 App 專案進度。", "錯誤，對話沒有提到分公司搬遷。", "錯誤，對話沒有提到客戶退款案件。", "錯誤，對話沒有提到配送路線變更。"],
   },
+  "L3-38": {
+    questionTranslation: "程式開發完成多少？",
+    optionTranslations: ["大約 70%。", "大約 30%。", "完全完成。", "程式開發尚未開始。"],
+    optionReasons: ["正確，男方說程式開發約完成 70%。", "錯誤，對話沒有說完成 30%。", "錯誤，男方說約完成 70%，不是完全完成。", "錯誤，男方說程式開發已完成約 70%，不是尚未開始。"],
+  },
+  "L3-39": {
+    questionTranslation: "女方要求什麼？",
+    optionTranslations: ["明天中午前提交進度報告。", "今晚前提交新的設計模型。", "發出會議取消通知。", "提出增加預算的要求。"],
+    optionReasons: ["正確，女方要求男方在明天中午前寄給她進度報告。", "錯誤，對話沒有提到新的設計模型。", "錯誤，對話沒有提到取消會議。", "錯誤，對話沒有提到增加預算。"],
+  },
   "R5-1": {
     questionTranslation: "稽核員抵達時，團隊已經整理好所有收據。空格應填入哪個動詞形式？",
     optionTranslations: ["已經整理好（過去完成式）。", "已經整理好（現在完成式）。", "整理（原形動詞）。", "正在整理／整理中（動名詞或現在分詞）。"],
     optionReasons: ["正確，by the time 加過去時間 arrived 表示稽核員抵達之前已完成的動作，需用過去完成式 had organized。", "錯誤，has organized 是現在完成式，不能配合 arrived 這個過去時間點之前的動作。", "錯誤，organize 是原形動詞，無法與主詞 the team 和過去完成語意搭配。", "錯誤，organizing 是動名詞或現在分詞，不能表達已完成整理的動作。"],
+  },
+  "R5-2": {
+    questionTranslation: "請把已簽署的協議放進藍色資料夾。空格應填入哪個介系詞？",
+    optionTranslations: ["在裡面。", "在某地點或時間點。", "為了，給。", "和，用。"],
+    optionReasons: ["正確，文件放在資料夾裡，應填 in。", "錯誤，at 常指地點或時間點，不適合表達放進資料夾裡。", "錯誤，for 表示目的或對象，不符合句意。", "錯誤，with 表示和或用，不符合句意。"],
+  },
+  "R5-3": {
+    questionTranslation: "經理核准了加班，因為截止日期被提前了。空格應填入哪個連接詞？",
+    optionTranslations: ["因為。", "雖然。", "除非。", "然而，而。"],
+    optionReasons: ["正確，後半句說明核准加班的原因，應填 because。", "錯誤，although 表示讓步，句意不符。", "錯誤，unless 表示除非，句意不符。", "錯誤，whereas 表示對比，句意不符。"],
+  },
+  "R5-4": {
+    questionTranslation: "她的說明清楚且很有說服力。空格應填入哪個詞性？",
+    optionTranslations: ["有說服力的。", "說服。", "說服力，說服。", "有說服力地。"],
+    optionReasons: ["正確，clear 是形容詞，and 連接平行結構，空格也應填形容詞 persuasive。", "錯誤，persuade 是動詞，不能和 clear 平行。", "錯誤，persuasion 是名詞，不能修飾 explanation。", "錯誤，persuasively 是副詞，不能和 clear 平行。"],
+  },
+  "R5-5": {
+    questionTranslation: "所有訪客識別證都必須歸還到前台。空格應填入哪個動詞形式？",
+    optionTranslations: ["被歸還。", "歸還，原形動詞。", "已歸還，過去式或過去分詞。", "正在被歸還。"],
+    optionReasons: ["正確，visitor badges 是被歸還，must 後接 be returned 形成被動語態。", "錯誤，return 是主動語態，主詞 badges 不能主動歸還自己。", "錯誤，returned 少了 be，不能構成 must 後的被動結構。", "錯誤，be returning 是進行式語意，不符合必須被歸還的規定。"],
+  },
+  "R5-6": {
+    questionTranslation: "我們決定在簽合約前先與供應商會面。空格應填入哪個動詞形式？",
+    optionTranslations: ["去會面。", "會面，動名詞或現在分詞。", "會面，原形動詞。", "會面，過去式或過去分詞。"],
+    optionReasons: ["正確，decide 後面接不定詞 to meet。", "錯誤，meeting 不能直接接在 decided 後表達決定做某事。", "錯誤，meet 是原形動詞，缺少 to。", "錯誤，met 是過去式或過去分詞，不符合 decide to V 句型。"],
   },
   "R6-1": {
     questionTranslation: "這則通知的主要目的是什麼？",

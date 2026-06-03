@@ -1242,6 +1242,51 @@ const explicitExplanationMetadata = {
     optionTranslations: ["去會面。", "會面，動名詞或現在分詞。", "會面，原形動詞。", "會面，過去式或過去分詞。"],
     optionReasons: ["正確，decide 後面接不定詞 to meet。", "錯誤，meeting 不能直接接在 decided 後表達決定做某事。", "錯誤，meet 是原形動詞，缺少 to。", "錯誤，met 是過去式或過去分詞，不符合 decide to V 句型。"],
   },
+  "R5-7": {
+    questionTranslation: "他們把安裝軟體延後到下週。空格應填入哪個動詞形式？",
+    optionTranslations: ["安裝，動名詞。", "去安裝，不定詞。", "安裝，原形動詞。", "安裝，過去式或過去分詞。"],
+    optionReasons: ["正確，postpone 後面接動名詞，因此應填 installing。", "錯誤，to install 是不定詞，不符合 postpone 後接 V-ing 的句型。", "錯誤，install 是原形動詞，不能直接接在 postponed 後面。", "錯誤，installed 是過去式或過去分詞，不符合此句型。"],
+  },
+  "R5-8": {
+    questionTranslation: "準備圖表的助理會先進行簡報。空格應填入哪個關係代名詞？",
+    optionTranslations: ["指人且作主詞的關係代名詞。", "指物的關係代名詞。", "指人且作受詞的關係代名詞。", "表示所有關係的關係代名詞。"],
+    optionReasons: ["正確，先行詞是 The assistant，且關係子句中缺主詞，所以應填 who。", "錯誤，which 通常指物，不適合指 assistant。", "錯誤，whom 指人但作受詞，這裡缺的是主詞。", "錯誤，whose 表所有關係，句中沒有所有格語意。"],
+  },
+  "R5-9": {
+    questionTranslation: "本季利潤比上一季高。空格應填入哪個比較級？",
+    optionTranslations: ["更高的。", "最高的。", "高的。", "錯誤形式的更高。"],
+    optionReasons: ["正確，than 表示兩者比較，profit 高低比較應填 higher。", "錯誤，highest 是最高級，不符合 than 的比較結構。", "錯誤，high 是原級，不能搭配 than 表示比較。", "錯誤，high 的比較級是 higher，不是 more high。"],
+  },
+  "R5-10": {
+    questionTranslation: "接待員已經確認了你的預約。空格應填入哪個副詞？",
+    optionTranslations: ["已經。", "尚未，還。", "仍然。", "非標準英文用字。"],
+    optionReasons: ["正確，has already confirmed 表示已經確認，already 放在助動詞 has 後、過去分詞 confirmed 前。", "錯誤，yet 常用於疑問句或否定句，這裡是肯定句。", "錯誤，still 表示仍然，放入句中語意不如 already 精確。", "錯誤，almostly 不是標準英文副詞。"],
+  },
+  "R5-11": {
+    questionTranslation: "在審查提案兩次後，她發現一個定價錯誤。空格應填入哪個分詞形式？",
+    optionTranslations: ["審查，現在分詞。", "審查，原形動詞。", "已審查，過去分詞。", "為了審查，不定詞。"],
+    optionReasons: ["正確，Reviewing the proposal twice 作分詞構句，表示她審查提案後發現錯誤。", "錯誤，Review 是原形動詞，不能直接放在句首形成此分詞構句。", "錯誤，Reviewed 表示被審查，主詞 she 與動作關係不符。", "錯誤，To review 表目的，句意會變成為了審查而發現錯誤，不自然。"],
+  },
+  "R5-12": {
+    questionTranslation: "如果我是你，我會要求延長期限。空格應填入哪個假設語氣形式？",
+    optionTranslations: ["是，假設語氣。", "是，現在式第一人稱。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，If I were in your position 是與現在事實相反的假設語氣，應填 were。", "錯誤，am 是直述語氣現在式，不符合假設語氣。", "錯誤，was 在口語中有時出現，但標準假設語氣此題應選 were。", "錯誤，be 是原形，不能直接接在 I 後面。"],
+  },
+  "R5-13": {
+    questionTranslation: "出貨清單中少了幾個項目。空格應填入哪個名詞形式？",
+    optionTranslations: ["項目，複數。", "項目，單數。", "項目的，單數所有格。", "項目的，複數所有格。"],
+    optionReasons: ["正確，several 後面接可數複數名詞，因此應填 items。", "錯誤，item 是單數，不能直接接在 several 後面。", "錯誤，item's 是所有格，不符合句中主詞位置。", "錯誤，items' 是複數所有格，不符合句意。"],
+  },
+  "R5-14": {
+    questionTranslation: "在我們完成預算前，需要更多資訊。空格應填入哪個名詞形式？",
+    optionTranslations: ["資訊。", "錯誤的複數資訊。", "一個資訊。", "非正式的資訊。"],
+    optionReasons: ["正確，information 是不可數名詞，可接 more，表示更多資訊。", "錯誤，information 不加複數 s。", "錯誤，information 是不可數名詞，不能說 an information。", "錯誤，info 偏口語且非此題正式語境的最佳答案。"],
+  },
+  "R5-15": {
+    questionTranslation: "每個部門都必須提交每月摘要。空格應填入哪個動詞形式？",
+    optionTranslations: ["是，單數現在式。", "是，複數現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，Each department 視為單數主詞，因此應填 is。", "錯誤，are 搭配複數主詞，不符合 Each department。", "錯誤，were 是過去式，句子是在描述一般規定。", "錯誤，be 是原形，不能直接接在 Each department 後面。"],
+  },
   "R6-1": {
     questionTranslation: "這則通知的主要目的是什麼？",
     optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],

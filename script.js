@@ -1287,6 +1287,51 @@ const explicitExplanationMetadata = {
     optionTranslations: ["是，單數現在式。", "是，複數現在式。", "是，過去式。", "是，原形。"],
     optionReasons: ["正確，Each department 視為單數主詞，因此應填 is。", "錯誤，are 搭配複數主詞，不符合 Each department。", "錯誤，were 是過去式，句子是在描述一般規定。", "錯誤，be 是原形，不能直接接在 Each department 後面。"],
   },
+  "R5-16": {
+    questionTranslation: "到明年六月時，這家公司在這棟大樓營運就滿十年了。空格應填入哪個時態？",
+    optionTranslations: ["將已經營運，未來完成式。", "將營運，未來簡單式。", "營運了，過去式。", "已經營運，現在完成式。"],
+    optionReasons: ["正確，By next June 表示到未來某時間點以前已完成或持續的動作，應填 will have operated。", "錯誤，will operate 只表示未來會營運，無法表達到明年六月已滿十年的完成語意。", "錯誤，operated 是過去式，不能搭配 By next June 的未來時間。", "錯誤，has operated 是現在完成式，不能表達到未來時間點前的完成狀態。"],
+  },
+  "R5-17": {
+    questionTranslation: "儘管交通壅塞，包裹仍準時送達。空格應填入哪個介系詞？",
+    optionTranslations: ["在上面，準時片語的一部分。", "在裡面。", "在某地點或時間點。", "從。"],
+    optionReasons: ["正確，on time 是固定片語，表示準時。", "錯誤，in time 表示及時，不是本句要表達的準時送達。", "錯誤，at time 不是此語境的正確片語。", "錯誤，from 表示來源或起點，無法組成準時的意思。"],
+  },
+  "R5-18": {
+    questionTranslation: "你收到已簽署的副本後，請打電話給我。空格應填入哪個連接詞？",
+    optionTranslations: ["一旦。", "除非。", "儘管。", "然而，而。"],
+    optionReasons: ["正確，once 表示一旦，符合收到副本後就打電話的時間條件。", "錯誤，unless 表示除非，句意會變成除非你收到副本，邏輯不符。", "錯誤，despite 是介系詞，後面不能直接接完整子句 you receive。", "錯誤，whereas 表示對比，不符合時間條件語意。"],
+  },
+  "R5-19": {
+    questionTranslation: "主管簡短說明了合併計畫。空格應填入哪個詞性？",
+    optionTranslations: ["簡短地。", "簡短的。", "簡短，名詞。", "簡報，說明會。"],
+    optionReasons: ["正確，spoke 是動詞，修飾動詞要用副詞 briefly。", "錯誤，brief 是形容詞，不能直接修飾 spoke。", "錯誤，briefness 是名詞，不符合修飾動詞的位置。", "錯誤，briefing 是名詞，表示簡報或說明會，不符合句型。"],
+  },
+  "R5-20": {
+    questionTranslation: "所有報告都應在星期五中午前提交。空格應填入哪個動詞形式？",
+    optionTranslations: ["被提交。", "提交，原形動詞。", "已提交，過去式或過去分詞。", "正在提交。"],
+    optionReasons: ["正確，reports 是被提交，should 後接 be submitted 形成被動語態。", "錯誤，submit 是主動語態，主詞 reports 不能主動提交自己。", "錯誤，submitted 少了 be，不能構成 should 後的被動結構。", "錯誤，be submitting 是進行式語意，不符合規定句中的被提交。"],
+  },
+  "R5-21": {
+    questionTranslation: "他同意今晚修改簡報投影片。空格應填入哪個動詞形式？",
+    optionTranslations: ["去修改。", "修改，動名詞或現在分詞。", "修改，原形動詞。", "修改，過去式或過去分詞。"],
+    optionReasons: ["正確，agree 後面接不定詞，因此應填 to revise。", "錯誤，revising 不能直接接在 agreed 後表達同意做某事。", "錯誤，revise 是原形動詞，缺少 to。", "錯誤，revised 是過去式或過去分詞，不符合 agree to V 句型。"],
+  },
+  "R5-22": {
+    questionTranslation: "我們建議你每三個月更換一次密碼。空格應填入哪個動詞形式？",
+    optionTranslations: ["更換，動名詞。", "去更換，不定詞。", "更換，原形動詞。", "更換，過去式或過去分詞。"],
+    optionReasons: ["正確，recommend 後面接動名詞，因此應填 changing。", "錯誤，to change 不符合本題設定的 recommend 後接 V-ing 用法。", "錯誤，change 是原形動詞，不能直接接在 recommend 後面。", "錯誤，changed 是過去式或過去分詞，不符合句型。"],
+  },
+  "R5-23": {
+    questionTranslation: "窗戶朝東的辦公室會照到早晨陽光。空格應填入哪個關係代名詞？",
+    optionTranslations: ["表示所有關係的關係代名詞。", "指人且作主詞的關係代名詞。", "指物的關係代名詞。", "指人且作受詞的關係代名詞。"],
+    optionReasons: ["正確，windows 屬於 The office，表示所有關係應填 whose。", "錯誤，who 指人且作主詞，不適合指 office。", "錯誤，which 可指物，但不能表達 office 的 windows 這種所有關係。", "錯誤，whom 指人且作受詞，不符合句意。"],
+  },
+  "R5-24": {
+    questionTranslation: "這個型號比前一個更耐用。空格應填入哪個比較級？",
+    optionTranslations: ["更耐用的。", "最耐用的。", "耐用地。", "耐用性。"],
+    optionReasons: ["正確，than 表示兩者比較，durable 的比較級用 more durable。", "錯誤，most durable 是最高級，不符合 than 的兩者比較。", "錯誤，durably 是副詞，不能作為 is 後的主詞補語形容 model。", "錯誤，durability 是名詞，不符合句型。"],
+  },
   "R6-1": {
     questionTranslation: "這則通知的主要目的是什麼？",
     optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],

@@ -1332,6 +1332,36 @@ const explicitExplanationMetadata = {
     optionTranslations: ["更耐用的。", "最耐用的。", "耐用地。", "耐用性。"],
     optionReasons: ["正確，than 表示兩者比較，durable 的比較級用 more durable。", "錯誤，most durable 是最高級，不符合 than 的兩者比較。", "錯誤，durably 是副詞，不能作為 is 後的主詞補語形容 model。", "錯誤，durability 是名詞，不符合句型。"],
   },
+  "R5-25": {
+    questionTranslation: "法務團隊剛剛審查完最終草稿。空格應填入哪個副詞？",
+    optionTranslations: ["剛剛。", "尚未，還。", "仍然。", "幾乎。"],
+    optionReasons: ["正確，has just reviewed 表示剛剛審查完，just 常放在 has 和過去分詞 reviewed 中間。", "錯誤，yet 常用於疑問句或否定句，不適合此肯定句。", "錯誤，still 表示仍然，語意不如 just 符合已剛完成的狀態。", "錯誤，almost 表示幾乎，語意會變成幾乎審查完，不符合句意。"],
+  },
+  "R5-26": {
+    questionTranslation: "檢查完所有佐證檔案後，他送出了申請。空格應填入哪個分詞形式？",
+    optionTranslations: ["檢查，現在分詞。", "已檢查，過去分詞。", "檢查，原形動詞。", "錯誤的不定詞形式。"],
+    optionReasons: ["正確，Checking all supporting files 作分詞構句，表示他檢查完檔案後送出申請。", "錯誤，Checked 表示被檢查，主詞 he 與動作關係不符。", "錯誤，Check 是原形動詞，不能直接放在句首形成此分詞構句。", "錯誤，To checking 不是正確的不定詞形式。"],
+  },
+  "R5-27": {
+    questionTranslation: "如果天氣好一點，活動就會在戶外舉行。空格應填入哪個假設語氣形式？",
+    optionTranslations: ["是，假設語氣。", "是，現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，If the weather were better 是與現在事實相反的假設語氣，應填 were。", "錯誤，is 是直述語氣現在式，不符合 would be outdoors 的假設語氣結構。", "錯誤，was 在口語中可能出現，但標準假設語氣此題應選 were。", "錯誤，be 是原形，不能直接接在 the weather 後面。"],
+  },
+  "R5-28": {
+    questionTranslation: "所有箱子在入庫前都必須貼上標籤。空格應填入哪個名詞形式？",
+    optionTranslations: ["箱子，複數。", "箱子，單數。", "錯誤的複數形式。", "箱子的，單數所有格。"],
+    optionReasons: ["正確，All 後接可數複數名詞，因此應填 boxes。", "錯誤，box 是單數，不能直接接在 All 後表示所有箱子。", "錯誤，box 的複數是 boxes，不是 boxs。", "錯誤，box's 是所有格，不符合句中主詞位置。"],
+  },
+  "R5-29": {
+    questionTranslation: "印表機裡剩下的墨水不多了。空格應填入哪個名詞形式？",
+    optionTranslations: ["墨水。", "錯誤的複數墨水。", "一個墨水。", "正在上墨或相關動作。"],
+    optionReasons: ["正確，ink 是不可數名詞，可搭配 much，表示墨水不多。", "錯誤，ink 作為墨水時通常不可數，不加複數 s。", "錯誤，ink 是不可數名詞，不能說 an ink。", "錯誤，inking 是動名詞或現在分詞，不符合名詞位置與句意。"],
+  },
+  "R5-30": {
+    questionTranslation: "這兩份提案都無法被董事會接受。空格應填入哪個動詞形式？",
+    optionTranslations: ["是，單數現在式。", "是，複數現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，Neither of the proposals 視為單數主詞，因此應填 is。", "錯誤，are 搭配複數主詞，不符合 neither 的單數用法。", "錯誤，were 是過去式，句子是在描述目前判斷。", "錯誤，be 是原形，不能直接接在 Neither of the proposals 後面。"],
+  },
   "R6-1": {
     questionTranslation: "這則通知的主要目的是什麼？",
     optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],

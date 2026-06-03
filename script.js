@@ -10,8 +10,8 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [] }) {
-  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId };
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null }) {
+  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation, optionTranslations, optionReasons };
 }
 
 const sampleQuestions = [];
@@ -354,11 +354,175 @@ const p4Translations = {
   "L4G-9": "物流更新：KX-77 批次包裹預計於週四早上到達，而非週三晚上。收貨人員請準備 2 號碼頭並更新卸貨時程。",
   "L4G-10": "系統維護通知：本週六凌晨 1 點至 4 點，員工入口網站將因安全升級而暫停服務。請在週五午夜前提交請假申請。",
 };
+const p4QuestionTranslations = {};
+const p4OptionTranslations = {};
+const p4OptionReasons = {};
+p4Groups.forEach((group, gi) => {
+  group.items.forEach((item, qi) => {
+    const id = `L4-${gi * 3 + qi + 1}`;
+    p4QuestionTranslations[id] = "";
+    p4OptionTranslations[id] = [];
+    p4OptionReasons[id] = [];
+
+    if (id === "L4-1") {
+      p4QuestionTranslations[id] = "這則廣播是關於什麼？";
+      p4OptionTranslations[id] = ["飛往釜山的航班延誤。", "登機門因維修而關閉。", "行李領取發生錯誤。", "護照查驗流程改變。"];
+      p4OptionReasons[id] = ["正確，廣播說 JT328 飛往釜山的航班延誤。", "錯誤，廣播沒有說登機門維修或關閉。", "錯誤，廣播沒有提到行李領取問題。", "錯誤，廣播沒有提到護照查驗流程改變。"];
+    }
+    if (id === "L4-2") {
+      p4QuestionTranslations[id] = "航班為什麼延誤？";
+      p4OptionTranslations[id] = ["豪雨。", "人手不足。", "機械檢查。", "機師遲到。"];
+      p4OptionReasons[id] = ["正確，廣播明確說延誤原因是豪雨。", "錯誤，廣播沒有提到人手不足。", "錯誤，廣播沒有提到機械檢查。", "錯誤，廣播沒有提到機師遲到。"];
+    }
+    if (id === "L4-3") {
+      p4QuestionTranslations[id] = "乘客應該怎麼做？";
+      p4OptionTranslations[id] = ["在 C12 登機門附近等候。", "立刻前往 A1 登機門。", "現在領取行李。", "離開機場。"];
+      p4OptionReasons[id] = ["正確，廣播要求乘客留在 C12 登機門附近等候更新。", "錯誤，廣播沒有要求前往 A1 登機門。", "錯誤，廣播沒有要求領取行李。", "錯誤，廣播要求乘客留在原處，不是離開機場。"];
+    }
+    if (id === "L4-4") {
+      p4QuestionTranslations[id] = "公告正在宣布什麼計畫？";
+      p4OptionTranslations[id] = ["年度健康檢查。", "語言訓練課程。", "新的獎金政策。", "辦公室搬遷。"];
+      p4OptionReasons[id] = ["正確，公告說年度健康檢查計畫將於 6 月 10 日開始。", "錯誤，公告沒有提到語言訓練課程。", "錯誤，公告沒有提到獎金政策。", "錯誤，公告沒有提到辦公室搬遷。"];
+    }
+    if (id === "L4-5") {
+      p4QuestionTranslations[id] = "預約截止日是什麼時候？";
+      p4OptionTranslations[id] = ["6 月 5 日。", "6 月 10 日。", "5 月 31 日。", "6 月 20 日。"];
+      p4OptionReasons[id] = ["正確，公告說員工必須在 6 月 5 日前完成預約。", "錯誤，6 月 10 日是計畫開始日，不是預約截止日。", "錯誤，公告沒有提到 5 月 31 日。", "錯誤，公告沒有提到 6 月 20 日。"];
+    }
+    if (id === "L4-6") {
+      p4QuestionTranslations[id] = "員工應該如何預約時段？";
+      p4OptionTranslations[id] = ["透過 HR 入口網站。", "打電話給會計部。", "在接待櫃台辦理。", "只能用紙本表單。"];
+      p4OptionReasons[id] = ["正確，公告指定員工透過 HR 入口網站預約。", "錯誤，公告沒有要求打電話給會計部。", "錯誤，公告沒有要求到接待櫃台辦理。", "錯誤，公告沒有說只能用紙本表單。"];
+    }
+    if (id === "L4-7") {
+      p4QuestionTranslations[id] = "這項促銷活動是什麼？";
+      p4OptionTranslations[id] = ["筆記本買二送一。", "所有電子產品五折。", "家具免費配送。", "任意消費贈送免費咖啡。"];
+      p4OptionReasons[id] = ["正確，廣播說 BrightMart 筆記本買二送一。", "錯誤，廣播沒有提到電子產品五折。", "錯誤，廣播沒有提到家具免費配送。", "錯誤，廣播沒有提到贈送咖啡。"];
+    }
+    if (id === "L4-8") {
+      p4QuestionTranslations[id] = "這項促銷活動有效到什麼時候？";
+      p4OptionTranslations[id] = ["到週日晚上 9 點。", "到週五中午。", "為期一個月。", "只限今天。"];
+      p4OptionReasons[id] = ["正確，廣播說優惠有效到週日晚上 9 點。", "錯誤，廣播沒有說週五中午截止。", "錯誤，廣播說只限本週末，不是為期一個月。", "錯誤，廣播說本週末限定，不是只限今天。"];
+    }
+    if (id === "L4-9") {
+      p4QuestionTranslations[id] = "顧客在哪裡能享有這項優惠？";
+      p4OptionTranslations[id] = ["所有市區分店。", "只限機場分店。", "只限線上。", "只限倉庫暢貨中心。"];
+      p4OptionReasons[id] = ["正確，廣播說優惠適用於所有市區分店。", "錯誤，廣播沒有說只限機場分店。", "錯誤，廣播沒有說只限線上。", "錯誤，廣播沒有提到倉庫暢貨中心。"];
+    }
+    if (id === "L4-10") {
+      p4QuestionTranslations[id] = "是誰留下這通語音留言？";
+      p4OptionTranslations[id] = ["Nova Legal 的 Eric。", "財務部的林小姐。", "一名快遞司機。", "飯店經理。"];
+      p4OptionReasons[id] = ["正確，留言開頭說話者自我介紹為 Nova Legal 的 Eric。", "錯誤，林小姐是收件人，不是留言者。", "錯誤，留言沒有提到快遞司機。", "錯誤，留言沒有提到飯店經理。"];
+    }
+    if (id === "L4-11") {
+      p4QuestionTranslations[id] = "什麼內容被修改了？";
+      p4OptionTranslations[id] = ["合約第 4 條。", "出貨發票。", "員工班表。", "專案預算。"];
+      p4OptionReasons[id] = ["正確，留言明確說已修改合約第 4 條。", "錯誤，留言沒有提到出貨發票。", "錯誤，留言沒有提到員工班表。", "錯誤，留言沒有提到專案預算。"];
+    }
+    if (id === "L4-12") {
+      p4QuestionTranslations[id] = "林小姐應該在什麼時候前回電？";
+      p4OptionTranslations[id] = ["下午 4 點前。", "明天中午前。", "本週結束前。", "不需要回電。"];
+      p4OptionReasons[id] = ["正確，Eric 要求林小姐在下午 4 點前回電。", "錯誤，留言沒有說明天中午前。", "錯誤，留言沒有說本週結束前。", "錯誤，留言明確要求回電。"];
+    }
+    if (id === "L4-13") {
+      p4QuestionTranslations[id] = "B 路線卡車為什麼延誤？";
+      p4OptionTranslations[id] = ["雷雨警報。", "燃料短缺。", "海關檢查。", "司機罷工。"];
+      p4OptionReasons[id] = ["正確，通知說因雷雨警報而延後發車。", "錯誤，通知沒有提到燃料短缺。", "錯誤，通知沒有提到海關檢查。", "錯誤，通知沒有提到司機罷工。"];
+    }
+    if (id === "L4-14") {
+      p4QuestionTranslations[id] = "新的出發時間是什麼時候？";
+      p4OptionTranslations[id] = ["下午 3 點 30 分。", "下午 1 點。", "下午 2 點。", "下午 5 點 30 分。"];
+      p4OptionReasons[id] = ["正確，通知明確說 B 路線卡車改為下午 3 點 30 分發車。", "錯誤，下午 1 點是原本的出發時間。", "錯誤，通知沒有提到下午 2 點發車。", "錯誤，通知沒有提到下午 5 點 30 分發車。"];
+    }
+    if (id === "L4-15") {
+      p4QuestionTranslations[id] = "司機被要求做什麼？";
+      p4OptionTranslations[id] = ["每 30 分鐘查看物流 App。", "立即返回總部。", "逐一打電話給客戶。", "改走 C 路線。"];
+      p4OptionReasons[id] = ["正確，通知要求司機每 30 分鐘在物流 App 查看路況更新。", "錯誤，通知沒有要求司機立即返回總部。", "錯誤，通知沒有要求逐一打電話給客戶。", "錯誤，通知沒有要求改走 C 路線。"];
+    }
+    if (id === "L4-16") {
+      p4QuestionTranslations[id] = "博覽會在哪裡舉行？";
+      p4OptionTranslations[id] = ["在 B 館。", "在 D 館。", "在 6 號櫃台。", "在二樓大廳。"];
+      p4OptionReasons[id] = ["正確，公告說智慧工廠博覽會在 B 館開幕。", "錯誤，公告沒有提到 D 館。", "錯誤，6 號櫃台是領取識別證的地點，不是展覽地點。", "錯誤，公告沒有提到二樓大廳。"];
+    }
+    if (id === "L4-17") {
+      p4QuestionTranslations[id] = "博覽會什麼時候開幕？";
+      p4OptionTranslations[id] = ["上午 10 點。", "上午 9 點。", "中午。", "下午 3 點。"];
+      p4OptionReasons[id] = ["正確，公告明確說博覽會上午 10 點開幕。", "錯誤，公告沒有說上午 9 點開幕。", "錯誤，公告沒有說中午開幕。", "錯誤，公告沒有說下午 3 點開幕。"];
+    }
+    if (id === "L4-18") {
+      p4QuestionTranslations[id] = "線上報名的來賓必須先做什麼？";
+      p4OptionTranslations[id] = ["到 6 號櫃台領取識別證。", "在 D 館付款。", "提交履歷。", "直接參加主題演講。"];
+      p4OptionReasons[id] = ["正確，公告要求線上報名者進入主題演講前先到 6 號櫃台領取識別證。", "錯誤，公告沒有要求在 D 館付款。", "錯誤，公告沒有提到提交履歷。", "錯誤，公告說要先領取識別證，不能直接參加主題演講。"];
+    }
+    if (id === "L4-19") {
+      p4QuestionTranslations[id] = "公告提到哪一門課程？";
+      p4OptionTranslations[id] = ["進階 Excel 課程。", "公開演說工作坊。", "初階程式設計營。", "設計研討會。"];
+      p4OptionReasons[id] = ["正確，課程通知提到的是進階 Excel 課程。", "錯誤，通知沒有提到公開演說工作坊。", "錯誤，通知沒有提到初階程式設計營。", "錯誤，通知沒有提到設計研討會。"];
+    }
+    if (id === "L4-20") {
+      p4QuestionTranslations[id] = "課程什麼時候舉行？";
+      p4OptionTranslations[id] = ["本週四晚上 7 點。", "本週二上午 9 點。", "週五中午。", "下週一晚上。"];
+      p4OptionReasons[id] = ["正確，通知說課程將於本週四晚上 7 點線上舉行。", "錯誤，通知沒有說本週二上午 9 點。", "錯誤，通知沒有說週五中午。", "錯誤，通知沒有說下週一晚上。"];
+    }
+    if (id === "L4-21") {
+      p4QuestionTranslations[id] = "參加者課前應該做什麼？";
+      p4OptionTranslations[id] = ["下載範例活頁簿。", "提交紙本報告。", "預約教室座位。", "安裝新印表機。"];
+      p4OptionReasons[id] = ["正確，通知要求參加者課前從訓練入口網站下載範例活頁簿。", "錯誤，通知沒有要求提交紙本報告。", "錯誤，課程在線上舉行，通知沒有要求預約教室座位。", "錯誤，通知沒有提到安裝新印表機。"];
+    }
+    if (id === "L4-22") {
+      p4QuestionTranslations[id] = "哪些樓層受到維修影響？";
+      p4OptionTranslations[id] = ["12 到 15 樓。", "1 到 3 樓。", "只有 5 樓。", "所有樓層。"];
+      p4OptionReasons[id] = ["正確，飯店公告說 12 到 15 樓會暫停供水。", "錯誤，公告沒有說 1 到 3 樓受影響。", "錯誤，5 樓是提供淋浴間的替代地點。", "錯誤，公告只提到 12 到 15 樓，不是所有樓層。"];
+    }
+    if (id === "L4-23") {
+      p4QuestionTranslations[id] = "停水會持續多久？";
+      p4OptionTranslations[id] = ["兩小時。", "一小時。", "三小時。", "一整天。"];
+      p4OptionReasons[id] = ["正確，停水時間從下午 1 點到 3 點，共兩小時。", "錯誤，公告的時段不是一小時。", "錯誤，公告的時段不是三小時。", "錯誤，公告沒有說停水一整天。"];
+    }
+    if (id === "L4-24") {
+      p4QuestionTranslations[id] = "飯店提供給住客什麼替代方案？";
+      p4OptionTranslations[id] = ["使用 5 樓淋浴間。", "搬到另一家飯店。", "到櫃台要求退款。", "使用健身房置物櫃。"];
+      p4OptionReasons[id] = ["正確，公告說住客可在該時段使用 5 樓淋浴間。", "錯誤，公告沒有要求住客搬到另一家飯店。", "錯誤，公告沒有提到退款。", "錯誤，公告沒有提到健身房置物櫃。"];
+    }
+    if (id === "L4-25") {
+      p4QuestionTranslations[id] = "配送時程有什麼變更？";
+      p4OptionTranslations[id] = ["到貨改到週四早上。", "配送改到週二晚上。", "KX-77 批次被取消。", "只有一半包裹會送達。"];
+      p4OptionReasons[id] = ["正確，物流更新說 KX-77 預計週四早上到達，而不是週三晚上。", "錯誤，通知沒有說改到週二晚上。", "錯誤，通知沒有說 KX-77 批次被取消。", "錯誤，通知沒有說只會送達一半包裹。"];
+    }
+    if (id === "L4-26") {
+      p4QuestionTranslations[id] = "公告提到哪一個批次？";
+      p4OptionTranslations[id] = ["KX-77。", "AB-19。", "MZ-04。", "TR-88。"];
+      p4OptionReasons[id] = ["正確，物流更新直接提到 Parcel batch KX-77。", "錯誤，通知沒有提到 AB-19。", "錯誤，通知沒有提到 MZ-04。", "錯誤，通知沒有提到 TR-88。"];
+    }
+    if (id === "L4-27") {
+      p4QuestionTranslations[id] = "收貨人員應該做什麼？";
+      p4OptionTranslations[id] = ["準備 2 號碼頭並更新時程。", "把包裹退回供應商。", "通知飯店接待處。", "列印帳單明細。"];
+      p4OptionReasons[id] = ["正確，通知要求收貨人員準備 2 號碼頭並更新卸貨時程。", "錯誤，通知沒有要求把包裹退回供應商。", "錯誤，通知沒有提到飯店接待處。", "錯誤，通知沒有要求列印帳單明細。"];
+    }
+    if (id === "L4-28") {
+      p4QuestionTranslations[id] = "員工入口網站為什麼會無法使用？";
+      p4OptionTranslations[id] = ["安全升級。", "天候造成的網路中斷。", "硬體交貨延遲。", "薪資錯誤。"];
+      p4OptionReasons[id] = ["正確，系統維護通知說入口網站會因安全升級而暫停服務。", "錯誤，通知沒有說是天候造成的網路中斷。", "錯誤，通知沒有提到硬體交貨延遲。", "錯誤，通知沒有提到薪資錯誤。"];
+    }
+    if (id === "L4-29") {
+      p4QuestionTranslations[id] = "維護時段是什麼時候？";
+      p4OptionTranslations[id] = ["週六凌晨 1 點到 4 點。", "週五下午 1 點到 4 點。", "週六凌晨 4 點到 8 點。", "週日午夜到凌晨 3 點。"];
+      p4OptionReasons[id] = ["正確，通知明確列出本週六凌晨 1 點至 4 點為維護時段。", "錯誤，通知沒有說週五下午 1 點到 4 點。", "錯誤，通知沒有說週六凌晨 4 點到 8 點。", "錯誤，通知沒有說週日午夜到凌晨 3 點。"];
+    }
+    if (id === "L4-30") {
+      p4QuestionTranslations[id] = "員工應該事先做什麼？";
+      p4OptionTranslations[id] = ["週五午夜前提交請假申請。", "到接待處更改密碼。", "列印所有薪資紀錄。", "整週避免使用電子郵件。"];
+      p4OptionReasons[id] = ["正確，通知要求員工在週五午夜前提交請假申請。", "錯誤，通知沒有要求到接待處更改密碼。", "錯誤，通知沒有要求列印薪資紀錄。", "錯誤，通知沒有要求整週避免使用電子郵件。"];
+    }
+
+  });
+});
 p4Groups.forEach((group, gi) => {
   group.items.forEach((item) => {
     const groupId = `L4G-${gi + 1}`;
+    const id = `L4-${l4idx++}`;
     sampleQuestions.push(q({
-      id: `L4-${l4idx++}`,
+      id,
       section: "listening",
       part: "Part 4",
       type: "talks",
@@ -369,6 +533,9 @@ p4Groups.forEach((group, gi) => {
       answer: item[2],
       explanation: `${item[3]} 中文解析：依公告中的關鍵資訊對應答案。`,
       translation: p4Translations[groupId],
+      questionTranslation: p4QuestionTranslations[id],
+      optionTranslations: p4OptionTranslations[id],
+      optionReasons: p4OptionReasons[id],
       tags: ["announcement"],
     }));
   });
@@ -692,10 +859,580 @@ p7Groups.forEach((group, gi) => {
   });
 });
 
+
+
+const explicitExplanationMetadata = {
+  "L1-1": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["一名女子正在會議室調整投影機。", "一名廚師正在餐廳端湯。", "兩名工程師正在粉刷橋梁。", "一名店員正提早關店。"],
+    optionReasons: ["正確，題目描述的女子、調整投影機與會議室場景都符合圖片內容。", "錯誤，圖片不是餐廳場景，也沒有廚師端湯。", "錯誤，圖片沒有兩名工程師，也沒有粉刷橋梁的動作。", "錯誤，圖片沒有店員關店或商店場景。"],
+  },
+  "L1-2": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["幾名旅客正在登機門前排隊。", "一名技師正在修理腳踏車輪胎。", "顧客正在舞台附近跳舞。", "一名經理正在白板上書寫。"],
+    optionReasons: ["正確，選項描述旅客在登機門前排隊，符合機場登機情境。", "錯誤，圖片沒有技師修理腳踏車輪胎。", "錯誤，圖片沒有舞台，也沒有顧客跳舞。", "錯誤，圖片沒有經理在白板上書寫。"],
+  },
+  "L1-3": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["一名技術人員正在更換天花板燈具。", "員工正在市場卸下水果。", "一對夫妻正在飯店辦理入住。", "一名小孩正在公園餵鴨子。"],
+    optionReasons: ["正確，選項描述技術人員更換天花板燈具，符合室內維修情境。", "錯誤，圖片不是市場，也沒有卸水果。", "錯誤，圖片沒有飯店櫃台或辦理入住情境。", "錯誤，圖片沒有小孩、公園或鴨子。"],
+  },
+  "L1-4": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["工人正在倉庫裡堆放箱子。", "學生正在參加化學考試。", "一名飛行員正在迎接遊客。", "辦公室人員正在裝飾蛋糕。"],
+    optionReasons: ["正確，選項描述工人在倉庫堆放箱子，符合倉儲場景與動作。", "錯誤，圖片沒有學生或考試場景。", "錯誤，圖片沒有飛行員迎接遊客。", "錯誤，圖片沒有裝飾蛋糕的動作。"],
+  },
+  "L1-5": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["一名咖啡師正在把飲料遞給顧客。", "一名護理師正在檢查病人的脈搏。", "一名司機正在清洗公車。", "一名律師正在簽署合約。"],
+    optionReasons: ["正確，選項描述咖啡師把飲料遞給顧客，符合咖啡吧台情境。", "錯誤，圖片沒有醫療場景或檢查脈搏動作。", "錯誤，圖片沒有司機或清洗公車。", "錯誤，圖片沒有律師簽署合約情境。"],
+  },
+  "L1-6": {
+    questionTranslation: "圖片中最可能正在發生什麼事？",
+    optionTranslations: ["一名騎自行車的人正在辦公大樓旁停放腳踏車。", "一名音樂家正在為小提琴調音。", "購物者正在試戴帽子。", "一名園丁正在修剪玫瑰。"],
+    optionReasons: ["正確，選項描述騎自行車的人在辦公大樓旁停放腳踏車，符合畫面重點。", "錯誤，圖片沒有音樂家或小提琴。", "錯誤，圖片沒有購物者試戴帽子。", "錯誤，圖片沒有園丁修剪玫瑰。"],
+  },
+  "L2-1": {
+    questionTranslation: "誰會主持明天的產品展示？",
+    optionTranslations: ["業務部的廖先生會主持。", "在第三街的展示間。", "因為投影機故障了。", "大約在下午四點半。"],
+    optionReasons: ["正確，Who 問人或職位，此選項直接回答主持者是業務部的廖先生。", "錯誤，這是地點回覆，沒有回答誰會主持。", "錯誤，這是原因回覆，沒有回答主持者。", "錯誤，這是時間回覆，沒有回答人物。"],
+  },
+  "L2-2": {
+    questionTranslation: "客戶合約什麼時候到期？",
+    optionTranslations: ["下週三中午到期。", "在法務部。", "陳小姐審查了它。", "為了避免滯納金。"],
+    optionReasons: ["正確，When 問時間，此選項直接回答合約到期時間是下週三中午。", "錯誤，這是地點回覆，沒有回答到期時間。", "錯誤，這是人物與動作，沒有回答時間。", "錯誤，這是原因回覆，沒有回答什麼時候到期。"],
+  },
+  "L2-3": {
+    questionTranslation: "參加研討會的訪客應該在哪裡報到？",
+    optionTranslations: ["在主大廳的前台。", "透過填寫線上表單。", "在他們見到講師之後。", "因為需要識別證。"],
+    optionReasons: ["正確，Where 問地點，此選項直接回答報到地點是主大廳前台。", "錯誤，這是方式，不是報到地點。", "錯誤，這是時間順序，不是地點。", "錯誤，這是原因，不是報到位置。"],
+  },
+  "L2-4": {
+    questionTranslation: "客服團隊為什麼把這張支援單升級處理？",
+    optionTranslations: ["這個問題影響了多位客戶。", "在二樓。", "到明天早上前。", "用替換電池。"],
+    optionReasons: ["正確，Why 問原因，此選項說明升級處理的原因是問題影響多位客戶。", "錯誤，這是地點資訊，沒有說明原因。", "錯誤，這是時間資訊，沒有說明升級原因。", "錯誤，這是處理方式或工具，不是升級原因。"],
+  },
+  "L2-5": {
+    questionTranslation: "我要如何申請差旅費報銷？",
+    optionTranslations: ["在費用系統上傳收據。", "在簡報前的 9 點。", "人資部的吳小姐。", "台中的分公司。"],
+    optionReasons: ["正確，How 問方法，此選項提供申請報銷的步驟。", "錯誤，這是時間回覆，沒有說明申請方法。", "錯誤，這是人物回覆，沒有說明操作步驟。", "錯誤，這是地點回覆，沒有說明如何申請。"],
+  },
+  "L2-6": {
+    questionTranslation: "你介意關上會議室的窗戶嗎？",
+    optionTranslations: ["不介意，我現在就去關。", "大約三公里後。", "合約昨天簽好了。", "因為型錄已經過時。"],
+    optionReasons: ["正確，Would you mind 是請求句，此選項表示願意協助並立刻關窗。", "錯誤，這是距離資訊，沒有回應請求。", "錯誤，這是合約狀態，與關窗請求無關。", "錯誤，這是原因句，與是否願意關窗無關。"],
+  },
+  "L2-7": {
+    questionTranslation: "你能把發票重新寄成 PDF 檔嗎？",
+    optionTranslations: ["當然，我會在十分鐘內寄出。", "它已經在上一季付款了。", "在裝卸碼頭入口。", "財務工作坊。"],
+    optionReasons: ["正確，Could you 是請求句，此選項直接表示會重新寄出 PDF。", "錯誤，這是付款狀態，沒有回應重新寄送的請求。", "錯誤，這是地點資訊，與寄發票無關。", "錯誤，這是活動名稱或主題，沒有回應請求。"],
+  },
+  "L2-8": {
+    questionTranslation: "你知道停車場是否已經滿了嗎？",
+    optionTranslations: ["是的，只有屋頂樓層還有空位。", "在附近的咖啡店。", "在星期五晚上。", "為了降低交通噪音。"],
+    optionReasons: ["正確，Do you know whether 問狀態，此選項直接回答停車場剩餘空位情況。", "錯誤，這是地點回覆，沒有回答停車場是否已滿。", "錯誤，這是時間資訊，沒有回答停車場狀態。", "錯誤，這是原因回覆，與停車場是否已滿無關。"],
+  },
+  "L2-9": {
+    questionTranslation: "董事會核准了哪一份提案？",
+    optionTranslations: ["有分階段推行計畫的那一份。", "今天早上用快遞寄出。", "在天氣警報期間。", "在 C 棟接待處。"],
+    optionReasons: ["正確，Which 問特定選項，此選項指出董事會核准的是分階段推行版本。", "錯誤，這是寄送方式與時間，沒有回答是哪一份提案。", "錯誤，這是情境或時間背景，不是提案內容。", "錯誤，這是地點資訊，沒有回答核准的提案。"],
+  },
+  "L2-10": {
+    questionTranslation: "你已經提交每月庫存報告了嗎？",
+    optionTranslations: ["是的，我午餐前就寄出了。", "在用品櫃裡。", "因為我們換了供應商。", "每三個月一次。"],
+    optionReasons: ["正確，Have you 問是否完成，此選項明確回答已提交。", "錯誤，這是地點資訊，沒有回答是否提交。", "錯誤，這是原因回覆，沒有回答完成狀態。", "錯誤，這是頻率回覆，與是否已提交本月報告無關。"],
+  },
+  "L2-11": {
+    questionTranslation: "我能把行李箱放在接待區嗎？",
+    optionTranslations: ["可以，他們能幫你保管到下午 6 點。", "在 12 號登機門登機。", "行銷經理。", "從去年冬天開始。"],
+    optionReasons: ["正確，Can I 問許可，此選項表示允許放置並說明保管時間。", "錯誤，這是登機地點資訊，沒有回答是否能放行李。", "錯誤，這是人物回覆，與許可問題無關。", "錯誤，這是時間起點，沒有回答是否允許。"],
+  },
+  "L2-12": {
+    questionTranslation: "我們應該延後訓練課程嗎？",
+    optionTranslations: ["是的，團隊有一半人員在出差。", "在舊倉庫。", "透過多印一些手冊。", "分公司的會計人員。"],
+    optionReasons: ["正確，Should we 問建議，此選項表達同意延後，並給出團隊多人出差的理由。", "錯誤，這是地點資訊，沒有回應是否應延後課程。", "錯誤，這是方法資訊，沒有回答是否延後。", "錯誤，這是人物資訊，與延後訓練課程無關。"],
+  },
+  "L2-13": {
+    questionTranslation: "軟體更新需要多久？",
+    optionTranslations: ["每台裝置大約二十分鐘。", "在服務台櫃台。", "因為辦公室搬遷了。", "伊藤小姐核准了。"],
+    optionReasons: ["正確，How long 問持續時間，此選項直接回答每台裝置約二十分鐘。", "錯誤，這是地點資訊，沒有回答時間長度。", "錯誤，這是原因回覆，沒有回答需要多久。", "錯誤，這是人物與動作，沒有回答時間長度。"],
+  },
+  "L2-14": {
+    questionTranslation: "你們團隊多久檢討一次供應商表現？",
+    optionTranslations: ["我們每季檢討一次。", "在 D 會議室。", "為了完成型錄。", "今天早上 8 點 15 分。"],
+    optionReasons: ["正確，How often 問頻率，此選項直接回答每季檢討一次。", "錯誤，這是地點資訊，沒有回答頻率。", "錯誤，這是目的資訊，沒有回答多久一次。", "錯誤，這是單一時間點，沒有回答頻率。"],
+  },
+  "L2-15": {
+    questionTranslation: "前往工廠的接駁車幾點出發？",
+    optionTranslations: ["早上 7 點 40 分準時出發。", "在南側停車場附近。", "因為交通比較順。", "Park 先生預訂了它。"],
+    optionReasons: ["正確，What time 問時刻，此選項直接回答接駁車出發時間。", "錯誤，這是地點資訊，沒有回答幾點出發。", "錯誤，這是原因回覆，沒有回答出發時間。", "錯誤，這是人物與動作，沒有回答時刻。"],
+  },
+  "L2-16": {
+    questionTranslation: "你們部門由誰處理保固索賠？",
+    optionTranslations: ["客服部的何小姐負責處理。", "在明天截止前。", "在配送中心。", "透過更換電纜。"],
+    optionReasons: ["正確，Who 問負責人，此選項直接回答由客服部的何小姐處理。", "錯誤，這是時間資訊，沒有回答誰負責。", "錯誤，這是地點資訊，沒有回答負責人。", "錯誤，這是處理方式，沒有回答由誰處理。"],
+  },
+  "L2-17": {
+    questionTranslation: "線上新進人員說明會什麼時候開始？",
+    optionTranslations: ["下週一上午 10 點開始。", "在供應商入口網站上。", "因為講師人在國外。", "人資助理。"],
+    optionReasons: ["正確，When 問開始時間，此選項直接回答說明會開始時間。", "錯誤，這是地點或平台資訊，沒有回答什麼時候開始。", "錯誤，這是原因資訊，沒有回答開始時間。", "錯誤，這是人物資訊，沒有回答時間。"],
+  },
+  "L2-18": {
+    questionTranslation: "我可以在哪裡領取新的門禁卡？",
+    optionTranslations: ["在一樓 B 安全櫃台。", "透過出示你的護照。", "在預算會議之後。", "因為你的舊卡過期了。"],
+    optionReasons: ["正確，Where 問地點，此選項直接回答領取門禁卡的位置。", "錯誤，這是方式資訊，沒有回答在哪裡領取。", "錯誤，這是時間順序，沒有回答地點。", "錯誤，這是原因，沒有回答領取位置。"],
+  },
+  "L2-19": {
+    questionTranslation: "為什麼展示機被蓋住了？",
+    optionTranslations: ["活動前正在清潔。", "在西側入口。", "大約十分鐘後。", "採購部職員。"],
+    optionReasons: ["正確，Why 問原因，此選項說明展示機被蓋住是因為活動前清潔。", "錯誤，這是地點資訊，沒有說明原因。", "錯誤，這是時間資訊，沒有回答為什麼被蓋住。", "錯誤，這是人物資訊，與原因不符。"],
+  },
+  "L2-20": {
+    questionTranslation: "我們要如何降低列印成本？",
+    optionTranslations: ["將預設列印設定為雙面列印。", "在外部倉庫。", "到下一個會計年度前。", "接待員會處理。"],
+    optionReasons: ["正確，How 問做法，此選項提供降低列印成本的具體方法。", "錯誤，這是地點資訊，沒有說明降低成本的方法。", "錯誤，這是時間資訊，沒有回答如何降低成本。", "錯誤，這是人物與動作，沒有提出具體方法。"],
+  },
+  "L2-21": {
+    questionTranslation: "你想在網路研討會前收到提醒電子郵件嗎？",
+    optionTranslations: ["好的，請在一小時前寄一封。", "在報到櫃台。", "因為座位有限。", "IT 部門的 Singh 先生。"],
+    optionReasons: ["正確，Would you like 問意願，此選項直接表示願意收到提醒信，並指定時間。", "錯誤，這是地點資訊，沒有回答是否想收到提醒信。", "錯誤，這是原因資訊，沒有回答意願。", "錯誤，這是人物資訊，沒有回答是否需要提醒信。"],
+  },
+  "L2-22": {
+    questionTranslation: "你能確認 503 會議室是否有空嗎？",
+    optionTranslations: ["當然，我現在會打給總務確認。", "在樓下美食廣場。", "每月電子報。", "從四月初開始。"],
+    optionReasons: ["正確，Could you 問請求，此選項表示願意確認 503 會議室是否有空。", "錯誤，這是地點資訊，沒有回應確認會議室的請求。", "錯誤，這是文件或刊物名稱，與會議室是否有空無關。", "錯誤，這是時間起點，沒有回答請求。"],
+  },
+  "L2-23": {
+    questionTranslation: "你知道緊急出口在哪裡嗎？",
+    optionTranslations: ["知道，在兩端樓梯間旁邊。", "午餐後 2 點。", "為了完成稽核。", "訓練協調員。"],
+    optionReasons: ["正確，Where 問地點，此選項直接回答緊急出口位置。", "錯誤，這是時間資訊，沒有回答出口位置。", "錯誤，這是目的資訊，沒有回答在哪裡。", "錯誤，這是人物資訊，與緊急出口位置無關。"],
+  },
+  "L2-24": {
+    questionTranslation: "我們應該用哪種檔案格式製作手冊？",
+    optionTranslations: ["用高解析度 PDF 範本。", "在影印中心。", "透過延長截止日期。", "星期五的實習生。"],
+    optionReasons: ["正確，Which file format 問檔案格式，此選項直接回答要用高解析度 PDF 範本。", "錯誤，這是地點資訊，沒有回答檔案格式。", "錯誤，這是方法或動作，沒有指出格式。", "錯誤，這是人物與時間資訊，與檔案格式無關。"],
+  },
+  "L2-25": {
+    questionTranslation: "你已經確認頒獎晚宴的場地了嗎？",
+    optionTranslations: ["還沒，但我今天下午會確認。", "在舞台附近的 7 號廳。", "因為廚師遲到了。", "每個週末。"],
+    optionReasons: ["正確，Have you 問是否完成，此選項直接回答尚未完成，並說明今天下午會確認。", "錯誤，這是場地資訊，但沒有回答是否已經確認。", "錯誤，這是原因資訊，與是否確認場地無關。", "錯誤，這是頻率資訊，沒有回答確認狀態。"],
+  },
+  "L3-1": {
+    questionTranslation: "說話者為什麼要更改會議時間？",
+    optionTranslations: ["主管週一會不在辦公室。", "預算檔案被刪除了。", "會議室要維修一週。", "財務部要求換更大的會議室。"],
+    optionReasons: ["正確，對話中男方說主管週一早上要去高雄分公司，因此原訂會議時間需要更改。", "錯誤，對話沒有提到預算檔案被刪除。", "錯誤，對話沒有提到會議室維修。", "錯誤，財務部只是需要被通知，沒有要求更大的會議室。"],
+  },
+  "L3-2": {
+    questionTranslation: "會議將在什麼時候舉行？",
+    optionTranslations: ["週二下午 2 點。", "週一下午 2 點。", "週二上午 10 點。", "週五下午 2 點。"],
+    optionReasons: ["正確，女方明確說把會議改到週二下午 2 點。", "錯誤，原本是週一的會議，但新時間不是週一下午 2 點。", "錯誤，對話沒有提到週二上午 10 點。", "錯誤，對話沒有提到週五下午 2 點。"],
+  },
+  "L3-3": {
+    questionTranslation: "女方接下來最可能會做什麼？",
+    optionTranslations: ["通知財務團隊新的時程。", "預訂前往高雄的火車票。", "獨自準備年度報告。", "完全取消會議。"],
+    optionReasons: ["正確，女方說要通知 finance，代表下一步是通知財務團隊改期資訊。", "錯誤，去高雄分公司的是主管，對話沒有說女方要訂火車票。", "錯誤，對話沒有提到年度報告。", "錯誤，女方是改期，不是取消會議。"],
+  },
+  "L3-4": {
+    questionTranslation: "男方打電話是為了什麼？",
+    optionTranslations: ["確認飯店預訂。", "抱怨餐廳。", "詢問延誤的出貨。", "申請簽證。"],
+    optionReasons: ["正確，男方一開始說想確認在 Harbor Hotel 的預訂。", "錯誤，對話沒有提到餐廳或抱怨。", "錯誤，對話沒有提到出貨。", "錯誤，對話沒有提到簽證申請。"],
+  },
+  "L3-5": {
+    questionTranslation: "男方會住多久？",
+    optionTranslations: ["三晚。", "一晚。", "五晚。", "一週。"],
+    optionReasons: ["正確，女方確認男方從 7 月 8 日開始預訂三晚。", "錯誤，對話明確說三晚，不是一晚。", "錯誤，對話沒有提到五晚。", "錯誤，對話沒有提到住一週。"],
+  },
+  "L3-6": {
+    questionTranslation: "男方提出什麼額外要求？",
+    optionTranslations: ["晚上 9 點的機場接送。", "下午 6 點延後退房。", "免費升等房型。", "兩位客人的早餐。"],
+    optionReasons: ["正確，男方要求安排晚上 9 點的機場接送。", "錯誤，對話沒有提到延後退房。", "錯誤，對話沒有提到房型升等。", "錯誤，對話沒有提到早餐。"],
+  },
+  "L3-7": {
+    questionTranslation: "女方回報了什麼問題？",
+    optionTranslations: ["她收到損壞的耳機。", "她忘記帳號密碼。", "她被收了兩次費用。", "她拿到錯誤的發票日期。"],
+    optionReasons: ["正確，女方明確說她收到的耳機有損壞。", "錯誤，對話沒有提到忘記帳號密碼。", "錯誤，對話沒有提到重複收費。", "錯誤，對話沒有提到發票日期錯誤。"],
+  },
+  "L3-8": {
+    questionTranslation: "男方提出什麼解決方式？",
+    optionTranslations: ["今天寄出替換品。", "只提供全額退款。", "下個月派技術人員。", "取消所有未來訂單。"],
+    optionReasons: ["正確，男方說今天下午會寄出替換品。", "錯誤，對話沒有提到全額退款。", "錯誤，對話沒有提到下個月派技術人員。", "錯誤，對話沒有提到取消未來訂單。"],
+  },
+  "L3-9": {
+    questionTranslation: "替換品應該寄到哪裡？",
+    optionTranslations: ["寄到女方的辦公室。", "寄到便利商店。", "寄到公司的倉庫。", "寄到機場櫃台。"],
+    optionReasons: ["正確，女方要求寄到她的辦公室地址。", "錯誤，對話沒有提到便利商店。", "錯誤，對話沒有提到公司倉庫。", "錯誤，對話沒有提到機場櫃台。"],
+  },
+  "L3-10": {
+    questionTranslation: "說話者正在準備什麼活動？",
+    optionTranslations: ["產品展示。", "新聞訪問。", "安全檢查。", "預算會議。"],
+    optionReasons: ["正確，男方開頭說產品展示十分鐘後開始。", "錯誤，對話沒有提到新聞訪問。", "錯誤，對話沒有提到安全檢查。", "錯誤，對話沒有提到預算會議。"],
+  },
+  "L3-11": {
+    questionTranslation: "女方會做什麼？",
+    optionTranslations: ["準備樣品和型錄。", "列印員工識別證。", "打電話給送貨司機。", "檢查飯店預訂。"],
+    optionReasons: ["正確，女方說她現在會擺好樣品和型錄。", "錯誤，對話沒有提到列印員工識別證。", "錯誤，對話沒有提到打電話給送貨司機。", "錯誤，對話沒有提到飯店預訂。"],
+  },
+  "L3-12": {
+    questionTranslation: "男方會在哪裡？",
+    optionTranslations: ["在入口。", "在儲藏室。", "在收銀台。", "在裝卸碼頭。"],
+    optionReasons: ["正確，男方說他會在入口迎接來賓。", "錯誤，對話沒有提到男方在儲藏室。", "錯誤，對話沒有提到收銀台。", "錯誤，對話沒有提到裝卸碼頭。"],
+  },
+  "L3-13": {
+    questionTranslation: "女方要求什麼？",
+    optionTranslations: ["鋼製支架的報價。", "修改後的訓練時程。", "更新後的薪資名單。", "預訂會議場地。"],
+    optionReasons: ["正確，女方說需要 500 個鋼製支架的報價。", "錯誤，對話沒有提到訓練時程。", "錯誤，對話沒有提到薪資名單。", "錯誤，對話沒有提到會議場地預訂。"],
+  },
+  "L3-14": {
+    questionTranslation: "男方什麼時候會提供價格？",
+    optionTranslations: ["明天早上前。", "本月底前。", "今天下午。", "下週。"],
+    optionReasons: ["正確，男方說明天早上可以提供單價。", "錯誤，對話沒有提到本月底。", "錯誤，對話沒有說今天下午提供價格。", "錯誤，對話沒有提到下週提供價格。"],
+  },
+  "L3-15": {
+    questionTranslation: "還需要什麼額外資訊？",
+    optionTranslations: ["運費和交期。", "退稅文件。", "保險單號碼。", "只有產品照片。"],
+    optionReasons: ["正確，女方要求報價中加入運費和交期。", "錯誤，對話沒有提到退稅文件。", "錯誤，對話沒有提到保險單號碼。", "錯誤，女方要的是運費和交期，不是只有產品照片。"],
+  },
+  "L3-16": {
+    questionTranslation: "說話者正在討論什麼？",
+    optionTranslations: ["員工訓練課程。", "客戶晚餐。", "軟體故障。", "合約續約。"],
+    optionReasons: ["正確，男方開頭說新進員工訓練在這週五。", "錯誤，對話沒有提到客戶晚餐。", "錯誤，對話沒有提到軟體故障。", "錯誤，對話沒有提到合約續約。"],
+  },
+  "L3-17": {
+    questionTranslation: "為什麼他們需要較大的教室？",
+    optionTranslations: ["很多員工報名了。", "投影機不見了。", "原本的教室永久關閉了。", "講師要求戶外座位。"],
+    optionReasons: ["正確，男方說有三十位員工報名，因此需要較大的訓練教室。", "錯誤，對話沒有提到投影機不見。", "錯誤，對話沒有提到原本教室永久關閉。", "錯誤，對話沒有提到講師要求戶外座位。"],
+  },
+  "L3-18": {
+    questionTranslation: "訓練安排在什麼時候？",
+    optionTranslations: ["本週五。", "明天早上。", "下週一。", "本季結束時。"],
+    optionReasons: ["正確，男方第一句說新進員工訓練在本週五。", "錯誤，對話沒有提到明天早上。", "錯誤，對話沒有提到下週一。", "錯誤，對話沒有提到本季結束時。"],
+  },
+  "L3-19": {
+    questionTranslation: "對話中提到什麼設備問題？",
+    optionTranslations: ["影印機一直卡紙。", "掃描器無法連接 Wi-Fi。", "投影機燈泡壞了。", "筆電電池膨脹。"],
+    optionReasons: ["正確，女方說六樓的影印機一直卡紙。", "錯誤，對話沒有提到掃描器無法連接 Wi-Fi。", "錯誤，對話沒有提到投影機燈泡壞了。", "錯誤，對話沒有提到筆電電池膨脹。"],
+  },
+  "L3-20": {
+    questionTranslation: "男方什麼時候會檢查機器？",
+    optionTranslations: ["午餐後。", "上午 9 點前。", "明天晚上。", "下週。"],
+    optionReasons: ["正確，男方說午餐後會立刻檢查。", "錯誤，對話沒有提到上午 9 點前。", "錯誤，對話沒有提到明天晚上。", "錯誤，對話沒有提到下週。"],
+  },
+  "L3-21": {
+    questionTranslation: "為什麼快速維修很重要？",
+    optionTranslations: ["今天必須列印薪資文件。", "客戶參觀現在開始。", "辦公室今晚搬遷。", "影印機租約今天到期。"],
+    optionReasons: ["正確，女方說今天需要用影印機列印薪資文件。", "錯誤，對話沒有提到客戶參觀。", "錯誤，對話沒有提到辦公室今晚搬遷。", "錯誤，對話沒有提到影印機租約到期。"],
+  },
+  "L3-22": {
+    questionTranslation: "男方的旅行計畫有什麼變更？",
+    optionTranslations: ["他的班機現在早上 6 點起飛。", "他的目的地改成東京。", "他的飯店預訂被取消。", "他的護照過期了。"],
+    optionReasons: ["正確，男方說他飛大阪的班機改到早上 6 點。", "錯誤，對話沒有提到目的地改成東京。", "錯誤，對話沒有提到飯店預訂被取消。", "錯誤，對話沒有提到護照過期。"],
+  },
+  "L3-23": {
+    questionTranslation: "女方會更新什麼？",
+    optionTranslations: ["行程和飯店入住時間。", "年度預算報告。", "產品型錄。", "訓練出席表。"],
+    optionReasons: ["正確，女方說她會修改男方的行程和飯店入住時間。", "錯誤，對話沒有提到年度預算報告。", "錯誤，對話沒有提到產品型錄。", "錯誤，對話沒有提到訓練出席表。"],
+  },
+  "L3-24": {
+    questionTranslation: "還需要通知誰？",
+    optionTranslations: ["客戶。", "大樓管理員。", "快遞公司。", "會計實習生。"],
+    optionReasons: ["正確，男方要求女方也通知客戶他會更早抵達。", "錯誤，對話沒有提到大樓管理員。", "錯誤，對話沒有提到快遞公司。", "錯誤，對話沒有提到會計實習生。"],
+  },
+  "L3-25": {
+    questionTranslation: "說話者正在規劃什麼專案？",
+    optionTranslations: ["辦公室搬遷。", "產品上市。", "稅務稽核。", "供應商展覽。"],
+    optionReasons: ["正確，女方說辦公室搬遷下週末開始。", "錯誤，對話沒有提到產品上市。", "錯誤，對話沒有提到稅務稽核。", "錯誤，對話沒有提到供應商展覽。"],
+  },
+  "L3-26": {
+    questionTranslation: "男方會負責什麼工作？",
+    optionTranslations: ["標示各部門的箱子。", "預訂搬家卡車。", "安裝電腦。", "準備歡迎禮物。"],
+    optionReasons: ["正確，男方說他這週四會幫各部門的箱子貼標籤。", "錯誤，對話沒有提到男方會預訂搬家卡車。", "錯誤，IT 會處理電腦相關事項，不是男方負責安裝電腦。", "錯誤，對話沒有提到準備歡迎禮物。"],
+  },
+  "L3-27": {
+    questionTranslation: "IT 會做什麼？",
+    optionTranslations: ["週五晚上拔除電腦設備。", "週四早上設置桌子。", "把箱子送到分公司。", "核准搬遷費用。"],
+    optionReasons: ["正確，女方說 IT 會在週五晚上拔除所有電腦設備。", "錯誤，對話沒有提到週四早上設置桌子。", "錯誤，對話沒有提到把箱子送到分公司。", "錯誤，對話沒有提到 IT 會核准搬遷費用。"],
+  },
+  "L3-28": {
+    questionTranslation: "對話中提到什麼截止時間？",
+    optionTranslations: ["安全講座報名明天下午 5 點截止。", "薪資提交今晚截止。", "飯店預訂今天早上截止。", "合約審查下週截止。"],
+    optionReasons: ["正確，男方說安全講座報名明天下午 5 點截止。", "錯誤，對話沒有提到薪資提交今晚截止。", "錯誤，對話沒有提到飯店預訂今天早上截止。", "錯誤，對話沒有提到合約審查下週截止。"],
+  },
+  "L3-29": {
+    questionTranslation: "哪個部門還需要參加人員？",
+    optionTranslations: ["會計部。", "業務部。", "人力資源部。", "法務部。"],
+    optionReasons: ["正確，女方說會計部還缺五位人員。", "錯誤，對話沒有提到業務部還缺人。", "錯誤，對話沒有提到人力資源部還缺人。", "錯誤，對話沒有提到法務部還缺人。"],
+  },
+  "L3-30": {
+    questionTranslation: "男方接下來會做什麼？",
+    optionTranslations: ["寄提醒電子郵件。", "取消講座。", "預訂更大的大廳。", "列印名牌。"],
+    optionReasons: ["正確，男方說今天下午會寄提醒給會計部。", "錯誤，對話沒有提到取消講座。", "錯誤，對話沒有提到預訂更大的大廳。", "錯誤，對話沒有提到列印名牌。"],
+  },
+  "L3-31": {
+    questionTranslation: "法務提出什麼要求？",
+    optionTranslations: ["確認第 12 條。", "新的行銷計畫。", "緊急招募需求。", "倉庫檢查。"],
+    optionReasons: ["正確，女方說法務要求確認草案中的第 12 條。", "錯誤，對話沒有提到新的行銷計畫。", "錯誤，對話沒有提到緊急招募需求。", "錯誤，對話沒有提到倉庫檢查。"],
+  },
+  "L3-32": {
+    questionTranslation: "男方會比較什麼？",
+    optionTranslations: ["草案與前一版合約。", "兩張出貨發票。", "三份供應商型錄。", "舊員工紀錄。"],
+    optionReasons: ["正確，男方說他會把草案和前一版合約比對。", "錯誤，對話沒有提到兩張出貨發票。", "錯誤，對話沒有提到供應商型錄。", "錯誤，對話沒有提到舊員工紀錄。"],
+  },
+  "L3-33": {
+    questionTranslation: "最終版本需要在什麼時候前完成？",
+    optionTranslations: ["今天下午 5 點前。", "明天中午前。", "本週結束前。", "沒有給截止時間。"],
+    optionReasons: ["正確，女方說請在今天下午 5 點前寄出最終版本。", "錯誤，對話沒有提到明天中午前。", "錯誤，對話沒有提到本週結束前。", "錯誤，對話明確給出今天下午 5 點前的截止時間。"],
+  },
+  "L3-34": {
+    questionTranslation: "對話中討論了什麼庫存問題？",
+    optionTranslations: ["碳粉庫存不足。", "迴紋針庫存過多。", "印表機被退回。", "倉庫層架壞了。"],
+    optionReasons: ["正確，男方說碳粉庫存又不夠了。", "錯誤，對話沒有提到迴紋針庫存過多。", "錯誤，對話沒有提到印表機被退回。", "錯誤，對話沒有提到倉庫層架壞了。"],
+  },
+  "L3-35": {
+    questionTranslation: "女方會採取什麼行動？",
+    optionTranslations: ["今天下加急訂單。", "取消所有列印工作。", "要求削減預算。", "把庫存移到另一個城市。"],
+    optionReasons: ["正確，女方說她今天下午會下加急訂單。", "錯誤，對話沒有提到取消列印工作。", "錯誤，對話沒有提到削減預算。", "錯誤，對話沒有提到把庫存移到另一個城市。"],
+  },
+  "L3-36": {
+    questionTranslation: "下單後應該做什麼？",
+    optionTranslations: ["更新庫存表。", "通知飯店接待處。", "提交差旅費。", "列印訓練手冊。"],
+    optionReasons: ["正確，男方要求下單後更新庫存表。", "錯誤，對話沒有提到飯店接待處。", "錯誤，對話沒有提到提交差旅費。", "錯誤，對話沒有提到列印訓練手冊。"],
+  },
+  "L3-37": {
+    questionTranslation: "他們正在談論什麼專案？",
+    optionTranslations: ["手機 App 專案。", "分公司搬遷。", "客戶退款案件。", "配送路線變更。"],
+    optionReasons: ["正確，女方開頭問手機 App 專案進度。", "錯誤，對話沒有提到分公司搬遷。", "錯誤，對話沒有提到客戶退款案件。", "錯誤，對話沒有提到配送路線變更。"],
+  },
+  "L3-38": {
+    questionTranslation: "程式開發完成多少？",
+    optionTranslations: ["大約 70%。", "大約 30%。", "完全完成。", "程式開發尚未開始。"],
+    optionReasons: ["正確，男方說程式開發約完成 70%。", "錯誤，對話沒有說完成 30%。", "錯誤，男方說約完成 70%，不是完全完成。", "錯誤，男方說程式開發已完成約 70%，不是尚未開始。"],
+  },
+  "L3-39": {
+    questionTranslation: "女方要求什麼？",
+    optionTranslations: ["明天中午前提交進度報告。", "今晚前提交新的設計模型。", "發出會議取消通知。", "提出增加預算的要求。"],
+    optionReasons: ["正確，女方要求男方在明天中午前寄給她進度報告。", "錯誤，對話沒有提到新的設計模型。", "錯誤，對話沒有提到取消會議。", "錯誤，對話沒有提到增加預算。"],
+  },
+  "R5-1": {
+    questionTranslation: "稽核員抵達時，團隊已經整理好所有收據。空格應填入哪個動詞形式？",
+    optionTranslations: ["已經整理好（過去完成式）。", "已經整理好（現在完成式）。", "整理（原形動詞）。", "正在整理／整理中（動名詞或現在分詞）。"],
+    optionReasons: ["正確，by the time 加過去時間 arrived 表示稽核員抵達之前已完成的動作，需用過去完成式 had organized。", "錯誤，has organized 是現在完成式，不能配合 arrived 這個過去時間點之前的動作。", "錯誤，organize 是原形動詞，無法與主詞 the team 和過去完成語意搭配。", "錯誤，organizing 是動名詞或現在分詞，不能表達已完成整理的動作。"],
+  },
+  "R5-2": {
+    questionTranslation: "請把已簽署的協議放進藍色資料夾。空格應填入哪個介系詞？",
+    optionTranslations: ["在裡面。", "在某地點或時間點。", "為了，給。", "和，用。"],
+    optionReasons: ["正確，文件放在資料夾裡，應填 in。", "錯誤，at 常指地點或時間點，不適合表達放進資料夾裡。", "錯誤，for 表示目的或對象，不符合句意。", "錯誤，with 表示和或用，不符合句意。"],
+  },
+  "R5-3": {
+    questionTranslation: "經理核准了加班，因為截止日期被提前了。空格應填入哪個連接詞？",
+    optionTranslations: ["因為。", "雖然。", "除非。", "然而，而。"],
+    optionReasons: ["正確，後半句說明核准加班的原因，應填 because。", "錯誤，although 表示讓步，句意不符。", "錯誤，unless 表示除非，句意不符。", "錯誤，whereas 表示對比，句意不符。"],
+  },
+  "R5-4": {
+    questionTranslation: "她的說明清楚且很有說服力。空格應填入哪個詞性？",
+    optionTranslations: ["有說服力的。", "說服。", "說服力，說服。", "有說服力地。"],
+    optionReasons: ["正確，clear 是形容詞，and 連接平行結構，空格也應填形容詞 persuasive。", "錯誤，persuade 是動詞，不能和 clear 平行。", "錯誤，persuasion 是名詞，不能修飾 explanation。", "錯誤，persuasively 是副詞，不能和 clear 平行。"],
+  },
+  "R5-5": {
+    questionTranslation: "所有訪客識別證都必須歸還到前台。空格應填入哪個動詞形式？",
+    optionTranslations: ["被歸還。", "歸還，原形動詞。", "已歸還，過去式或過去分詞。", "正在被歸還。"],
+    optionReasons: ["正確，visitor badges 是被歸還，must 後接 be returned 形成被動語態。", "錯誤，return 是主動語態，主詞 badges 不能主動歸還自己。", "錯誤，returned 少了 be，不能構成 must 後的被動結構。", "錯誤，be returning 是進行式語意，不符合必須被歸還的規定。"],
+  },
+  "R5-6": {
+    questionTranslation: "我們決定在簽合約前先與供應商會面。空格應填入哪個動詞形式？",
+    optionTranslations: ["去會面。", "會面，動名詞或現在分詞。", "會面，原形動詞。", "會面，過去式或過去分詞。"],
+    optionReasons: ["正確，decide 後面接不定詞 to meet。", "錯誤，meeting 不能直接接在 decided 後表達決定做某事。", "錯誤，meet 是原形動詞，缺少 to。", "錯誤，met 是過去式或過去分詞，不符合 decide to V 句型。"],
+  },
+  "R5-7": {
+    questionTranslation: "他們把安裝軟體延後到下週。空格應填入哪個動詞形式？",
+    optionTranslations: ["安裝，動名詞。", "去安裝，不定詞。", "安裝，原形動詞。", "安裝，過去式或過去分詞。"],
+    optionReasons: ["正確，postpone 後面接動名詞，因此應填 installing。", "錯誤，to install 是不定詞，不符合 postpone 後接 V-ing 的句型。", "錯誤，install 是原形動詞，不能直接接在 postponed 後面。", "錯誤，installed 是過去式或過去分詞，不符合此句型。"],
+  },
+  "R5-8": {
+    questionTranslation: "準備圖表的助理會先進行簡報。空格應填入哪個關係代名詞？",
+    optionTranslations: ["指人且作主詞的關係代名詞。", "指物的關係代名詞。", "指人且作受詞的關係代名詞。", "表示所有關係的關係代名詞。"],
+    optionReasons: ["正確，先行詞是 The assistant，且關係子句中缺主詞，所以應填 who。", "錯誤，which 通常指物，不適合指 assistant。", "錯誤，whom 指人但作受詞，這裡缺的是主詞。", "錯誤，whose 表所有關係，句中沒有所有格語意。"],
+  },
+  "R5-9": {
+    questionTranslation: "本季利潤比上一季高。空格應填入哪個比較級？",
+    optionTranslations: ["更高的。", "最高的。", "高的。", "錯誤形式的更高。"],
+    optionReasons: ["正確，than 表示兩者比較，profit 高低比較應填 higher。", "錯誤，highest 是最高級，不符合 than 的比較結構。", "錯誤，high 是原級，不能搭配 than 表示比較。", "錯誤，high 的比較級是 higher，不是 more high。"],
+  },
+  "R5-10": {
+    questionTranslation: "接待員已經確認了你的預約。空格應填入哪個副詞？",
+    optionTranslations: ["已經。", "尚未，還。", "仍然。", "非標準英文用字。"],
+    optionReasons: ["正確，has already confirmed 表示已經確認，already 放在助動詞 has 後、過去分詞 confirmed 前。", "錯誤，yet 常用於疑問句或否定句，這裡是肯定句。", "錯誤，still 表示仍然，放入句中語意不如 already 精確。", "錯誤，almostly 不是標準英文副詞。"],
+  },
+  "R5-11": {
+    questionTranslation: "在審查提案兩次後，她發現一個定價錯誤。空格應填入哪個分詞形式？",
+    optionTranslations: ["審查，現在分詞。", "審查，原形動詞。", "已審查，過去分詞。", "為了審查，不定詞。"],
+    optionReasons: ["正確，Reviewing the proposal twice 作分詞構句，表示她審查提案後發現錯誤。", "錯誤，Review 是原形動詞，不能直接放在句首形成此分詞構句。", "錯誤，Reviewed 表示被審查，主詞 she 與動作關係不符。", "錯誤，To review 表目的，句意會變成為了審查而發現錯誤，不自然。"],
+  },
+  "R5-12": {
+    questionTranslation: "如果我是你，我會要求延長期限。空格應填入哪個假設語氣形式？",
+    optionTranslations: ["是，假設語氣。", "是，現在式第一人稱。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，If I were in your position 是與現在事實相反的假設語氣，應填 were。", "錯誤，am 是直述語氣現在式，不符合假設語氣。", "錯誤，was 在口語中有時出現，但標準假設語氣此題應選 were。", "錯誤，be 是原形，不能直接接在 I 後面。"],
+  },
+  "R5-13": {
+    questionTranslation: "出貨清單中少了幾個項目。空格應填入哪個名詞形式？",
+    optionTranslations: ["項目，複數。", "項目，單數。", "項目的，單數所有格。", "項目的，複數所有格。"],
+    optionReasons: ["正確，several 後面接可數複數名詞，因此應填 items。", "錯誤，item 是單數，不能直接接在 several 後面。", "錯誤，item's 是所有格，不符合句中主詞位置。", "錯誤，items' 是複數所有格，不符合句意。"],
+  },
+  "R5-14": {
+    questionTranslation: "在我們完成預算前，需要更多資訊。空格應填入哪個名詞形式？",
+    optionTranslations: ["資訊。", "錯誤的複數資訊。", "一個資訊。", "非正式的資訊。"],
+    optionReasons: ["正確，information 是不可數名詞，可接 more，表示更多資訊。", "錯誤，information 不加複數 s。", "錯誤，information 是不可數名詞，不能說 an information。", "錯誤，info 偏口語且非此題正式語境的最佳答案。"],
+  },
+  "R5-15": {
+    questionTranslation: "每個部門都必須提交每月摘要。空格應填入哪個動詞形式？",
+    optionTranslations: ["是，單數現在式。", "是，複數現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，Each department 視為單數主詞，因此應填 is。", "錯誤，are 搭配複數主詞，不符合 Each department。", "錯誤，were 是過去式，句子是在描述一般規定。", "錯誤，be 是原形，不能直接接在 Each department 後面。"],
+  },
+  "R5-16": {
+    questionTranslation: "到明年六月時，這家公司在這棟大樓營運就滿十年了。空格應填入哪個時態？",
+    optionTranslations: ["將已經營運，未來完成式。", "將營運，未來簡單式。", "營運了，過去式。", "已經營運，現在完成式。"],
+    optionReasons: ["正確，By next June 表示到未來某時間點以前已完成或持續的動作，應填 will have operated。", "錯誤，will operate 只表示未來會營運，無法表達到明年六月已滿十年的完成語意。", "錯誤，operated 是過去式，不能搭配 By next June 的未來時間。", "錯誤，has operated 是現在完成式，不能表達到未來時間點前的完成狀態。"],
+  },
+  "R5-17": {
+    questionTranslation: "儘管交通壅塞，包裹仍準時送達。空格應填入哪個介系詞？",
+    optionTranslations: ["在上面，準時片語的一部分。", "在裡面。", "在某地點或時間點。", "從。"],
+    optionReasons: ["正確，on time 是固定片語，表示準時。", "錯誤，in time 表示及時，不是本句要表達的準時送達。", "錯誤，at time 不是此語境的正確片語。", "錯誤，from 表示來源或起點，無法組成準時的意思。"],
+  },
+  "R5-18": {
+    questionTranslation: "你收到已簽署的副本後，請打電話給我。空格應填入哪個連接詞？",
+    optionTranslations: ["一旦。", "除非。", "儘管。", "然而，而。"],
+    optionReasons: ["正確，once 表示一旦，符合收到副本後就打電話的時間條件。", "錯誤，unless 表示除非，句意會變成除非你收到副本，邏輯不符。", "錯誤，despite 是介系詞，後面不能直接接完整子句 you receive。", "錯誤，whereas 表示對比，不符合時間條件語意。"],
+  },
+  "R5-19": {
+    questionTranslation: "主管簡短說明了合併計畫。空格應填入哪個詞性？",
+    optionTranslations: ["簡短地。", "簡短的。", "簡短，名詞。", "簡報，說明會。"],
+    optionReasons: ["正確，spoke 是動詞，修飾動詞要用副詞 briefly。", "錯誤，brief 是形容詞，不能直接修飾 spoke。", "錯誤，briefness 是名詞，不符合修飾動詞的位置。", "錯誤，briefing 是名詞，表示簡報或說明會，不符合句型。"],
+  },
+  "R5-20": {
+    questionTranslation: "所有報告都應在星期五中午前提交。空格應填入哪個動詞形式？",
+    optionTranslations: ["被提交。", "提交，原形動詞。", "已提交，過去式或過去分詞。", "正在提交。"],
+    optionReasons: ["正確，reports 是被提交，should 後接 be submitted 形成被動語態。", "錯誤，submit 是主動語態，主詞 reports 不能主動提交自己。", "錯誤，submitted 少了 be，不能構成 should 後的被動結構。", "錯誤，be submitting 是進行式語意，不符合規定句中的被提交。"],
+  },
+  "R5-21": {
+    questionTranslation: "他同意今晚修改簡報投影片。空格應填入哪個動詞形式？",
+    optionTranslations: ["去修改。", "修改，動名詞或現在分詞。", "修改，原形動詞。", "修改，過去式或過去分詞。"],
+    optionReasons: ["正確，agree 後面接不定詞，因此應填 to revise。", "錯誤，revising 不能直接接在 agreed 後表達同意做某事。", "錯誤，revise 是原形動詞，缺少 to。", "錯誤，revised 是過去式或過去分詞，不符合 agree to V 句型。"],
+  },
+  "R5-22": {
+    questionTranslation: "我們建議你每三個月更換一次密碼。空格應填入哪個動詞形式？",
+    optionTranslations: ["更換，動名詞。", "去更換，不定詞。", "更換，原形動詞。", "更換，過去式或過去分詞。"],
+    optionReasons: ["正確，recommend 後面接動名詞，因此應填 changing。", "錯誤，to change 不符合本題設定的 recommend 後接 V-ing 用法。", "錯誤，change 是原形動詞，不能直接接在 recommend 後面。", "錯誤，changed 是過去式或過去分詞，不符合句型。"],
+  },
+  "R5-23": {
+    questionTranslation: "窗戶朝東的辦公室會照到早晨陽光。空格應填入哪個關係代名詞？",
+    optionTranslations: ["表示所有關係的關係代名詞。", "指人且作主詞的關係代名詞。", "指物的關係代名詞。", "指人且作受詞的關係代名詞。"],
+    optionReasons: ["正確，windows 屬於 The office，表示所有關係應填 whose。", "錯誤，who 指人且作主詞，不適合指 office。", "錯誤，which 可指物，但不能表達 office 的 windows 這種所有關係。", "錯誤，whom 指人且作受詞，不符合句意。"],
+  },
+  "R5-24": {
+    questionTranslation: "這個型號比前一個更耐用。空格應填入哪個比較級？",
+    optionTranslations: ["更耐用的。", "最耐用的。", "耐用地。", "耐用性。"],
+    optionReasons: ["正確，than 表示兩者比較，durable 的比較級用 more durable。", "錯誤，most durable 是最高級，不符合 than 的兩者比較。", "錯誤，durably 是副詞，不能作為 is 後的主詞補語形容 model。", "錯誤，durability 是名詞，不符合句型。"],
+  },
+  "R5-25": {
+    questionTranslation: "法務團隊剛剛審查完最終草稿。空格應填入哪個副詞？",
+    optionTranslations: ["剛剛。", "尚未，還。", "仍然。", "幾乎。"],
+    optionReasons: ["正確，has just reviewed 表示剛剛審查完，just 常放在 has 和過去分詞 reviewed 中間。", "錯誤，yet 常用於疑問句或否定句，不適合此肯定句。", "錯誤，still 表示仍然，語意不如 just 符合已剛完成的狀態。", "錯誤，almost 表示幾乎，語意會變成幾乎審查完，不符合句意。"],
+  },
+  "R5-26": {
+    questionTranslation: "檢查完所有佐證檔案後，他送出了申請。空格應填入哪個分詞形式？",
+    optionTranslations: ["檢查，現在分詞。", "已檢查，過去分詞。", "檢查，原形動詞。", "錯誤的不定詞形式。"],
+    optionReasons: ["正確，Checking all supporting files 作分詞構句，表示他檢查完檔案後送出申請。", "錯誤，Checked 表示被檢查，主詞 he 與動作關係不符。", "錯誤，Check 是原形動詞，不能直接放在句首形成此分詞構句。", "錯誤，To checking 不是正確的不定詞形式。"],
+  },
+  "R5-27": {
+    questionTranslation: "如果天氣好一點，活動就會在戶外舉行。空格應填入哪個假設語氣形式？",
+    optionTranslations: ["是，假設語氣。", "是，現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，If the weather were better 是與現在事實相反的假設語氣，應填 were。", "錯誤，is 是直述語氣現在式，不符合 would be outdoors 的假設語氣結構。", "錯誤，was 在口語中可能出現，但標準假設語氣此題應選 were。", "錯誤，be 是原形，不能直接接在 the weather 後面。"],
+  },
+  "R5-28": {
+    questionTranslation: "所有箱子在入庫前都必須貼上標籤。空格應填入哪個名詞形式？",
+    optionTranslations: ["箱子，複數。", "箱子，單數。", "錯誤的複數形式。", "箱子的，單數所有格。"],
+    optionReasons: ["正確，All 後接可數複數名詞，因此應填 boxes。", "錯誤，box 是單數，不能直接接在 All 後表示所有箱子。", "錯誤，box 的複數是 boxes，不是 boxs。", "錯誤，box's 是所有格，不符合句中主詞位置。"],
+  },
+  "R5-29": {
+    questionTranslation: "印表機裡剩下的墨水不多了。空格應填入哪個名詞形式？",
+    optionTranslations: ["墨水。", "錯誤的複數墨水。", "一個墨水。", "正在上墨或相關動作。"],
+    optionReasons: ["正確，ink 是不可數名詞，可搭配 much，表示墨水不多。", "錯誤，ink 作為墨水時通常不可數，不加複數 s。", "錯誤，ink 是不可數名詞，不能說 an ink。", "錯誤，inking 是動名詞或現在分詞，不符合名詞位置與句意。"],
+  },
+  "R5-30": {
+    questionTranslation: "這兩份提案都無法被董事會接受。空格應填入哪個動詞形式？",
+    optionTranslations: ["是，單數現在式。", "是，複數現在式。", "是，過去式。", "是，原形。"],
+    optionReasons: ["正確，Neither of the proposals 視為單數主詞，因此應填 is。", "錯誤，are 搭配複數主詞，不符合 neither 的單數用法。", "錯誤，were 是過去式，句子是在描述目前判斷。", "錯誤，be 是原形，不能直接接在 Neither of the proposals 後面。"],
+  },
+  "R6-1": {
+    questionTranslation: "這則通知的主要目的是什麼？",
+    optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],
+    optionReasons: ["正確，短文說各部門從 7 月 1 日起必須每週五提交進度更新，主旨是宣布新的回報規定。", "錯誤，短文提到使用內部網路表單，沒有說取消存取權。", "錯誤，短文沒有招募經理的內容。", "錯誤，短文沒有討論差旅費或報銷流程。"],
+  },
+  "R7-1": {
+    questionTranslation: "員工續辦時必須提交什麼？",
+    optionTranslations: ["車牌號碼與員工編號。", "燃油收據與路線圖。", "主管推薦信。", "只有駕照影本。"],
+    optionReasons: ["正確，文章明確要求員工提交車牌號碼與員工編號以保留停車權限。", "錯誤，文章沒有要求燃油收據或路線圖。", "錯誤，文章沒有提到主管推薦信。", "錯誤，文章要求車牌號碼與員工編號，不是只有駕照影本。"],
+  },
+};
+
+function applyExplicitExplanationMetadata() {
+  Object.entries(explicitExplanationMetadata).forEach(([id, metadata]) => {
+    const item = sampleQuestions.find((question) => question.id === id);
+    if (!item) return;
+    item.questionTranslation = metadata.questionTranslation;
+    item.optionTranslations = metadata.optionTranslations;
+    item.optionReasons = metadata.optionReasons;
+  });
+}
+
+applyExplicitExplanationMetadata();
+
 vocabQuestions.forEach((item) => { if (!item.translation) item.translation = `此單字的中文意思是${item.answer}。`; });
 
 function validateQuestionBank() {
   const requiredParts = { "Part 1": 6, "Part 2": 25, "Part 3": 39, "Part 4": 30, "Part 5": 30, "Part 6": 16, "Part 7": 54 };
+  const forbiddenPlaceholders = new Set([
+    "請根據對話內容回答問題",
+    ["請根據", "廣播內容回答問題"].join(""),
+    ["選項一", "的中文翻譯"].join(""),
+    "選項二的中文翻譯",
+    "選項三的中文翻譯",
+    "選項四的中文翻譯",
+    ["關鍵資訊", "支持此選項"].join(""),
+    "內容沒有支持這個敘述",
+    "提到的重點不一致",
+    "時間或事件不符",
+    "題目詢問原因",
+    "題目詢問地點",
+    "題目詢問時間",
+    "題目詢問人物或對象是誰",
+    "題目詢問哪一個選項符合內容",
+    "題目詢問內容所指的是什麼",
+    "請根據題目與文本選出正確答案",
+    "第 1 個選項的中文語意",
+    "第 2 個選項的中文語意",
+    "第 3 個選項的中文語意",
+    "第 4 個選項的中文語意",
+    "第 1 個文法選項的中文語意",
+    "第 2 個文法選項的中文語意",
+    "第 3 個文法選項的中文語意",
+    "第 4 個文法選項的中文語意",
+    "第 1 個名詞片語選項的中文意思",
+    "不定詞形式，表示要執行的動作",
+    "動名詞或現在分詞形式",
+    "過去式或過去分詞形式",
+    "be 動詞加分詞形成的結構",
+    "未來式動詞片語",
+    "完成式動詞片語",
+    "A 選項表達的是題目所需的正確資訊。",
+    "B 選項表達的是與題目線索不同的干擾資訊。",
+    "C 選項表達的是與題目線索不同的干擾資訊。",
+    "D 選項表達的是與題目線索不同的干擾資訊。",
+    "A 選項的文法語意：需判斷是否符合句型、詞性與上下文。",
+    "B 選項的文法語意：需判斷是否符合句型、詞性與上下文。",
+    "C 選項的文法語意：需判斷是否符合句型、詞性與上下文。",
+    "D 選項的文法語意：需判斷是否符合句型、詞性與上下文。",
+  ]);
+  const forbiddenFragments = ["包含數字或時間資訊的第"];
   const errors = [];
   if (sampleQuestions.length !== 200) errors.push(`sampleQuestions.length should be 200, got ${sampleQuestions.length}`);
   Object.entries(requiredParts).forEach(([part, count]) => {
@@ -705,14 +1442,73 @@ function validateQuestionBank() {
   sampleQuestions.forEach((item) => {
     ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
+
+    if (!item.questionTranslation) errors.push(`${item.id} missing questionTranslation`);
+    if (!Array.isArray(item.optionTranslations) || item.optionTranslations.length !== item.options.length) errors.push(`${item.id} missing optionTranslations`);
+    if (!Array.isArray(item.optionReasons) || item.optionReasons.length !== item.options.length) errors.push(`${item.id} missing optionReasons`);
+
+    const checkText = (value, field) => {
+      if (typeof value === "string" && forbiddenPlaceholders.has(value.trim())) errors.push(`${item.id} has placeholder ${field}: ${value.trim()}`);
+      if (typeof value === "string" && forbiddenFragments.some((fragment) => value.includes(fragment))) errors.push(`${item.id} has forbidden ${field}: ${value.trim()}`);
+    };
+    checkText(item.questionTranslation, "questionTranslation");
+    (item.optionTranslations || []).forEach((v, idx) => {
+      checkText(v, `optionTranslations[${idx}]`);
+      if (typeof v === "string" && v.trim() === String(item.options[idx]).trim()) errors.push(`${item.id} optionTranslations[${idx}] equals original option`);
+    });
+    if (Array.isArray(item.optionReasons) && item.optionReasons.length > 1 && item.optionReasons.every((v) => v === item.optionReasons[0])) errors.push(`${item.id} optionReasons should not all be identical`);
+    (item.optionReasons || []).forEach((v, idx) => checkText(v, `optionReasons[${idx}]`));
   });
   return { isValid: errors.length === 0, errors };
+}
+
+function validateExplanationCoverage() {
+  const coverageByPart = {};
+  const errors = [];
+
+  Object.keys(PART_SPECS).forEach((part) => {
+    coverageByPart[part] = {
+      total: 0,
+      questionTranslation: 0,
+      optionTranslations: 0,
+      optionReasons: 0,
+    };
+  });
+
+  sampleQuestions.forEach((item) => {
+    const coverage = coverageByPart[item.part] || { total: 0, questionTranslation: 0, optionTranslations: 0, optionReasons: 0 };
+    coverage.total++;
+    if (item.questionTranslation) coverage.questionTranslation++;
+    if (Array.isArray(item.optionTranslations) && item.optionTranslations.length === item.options.length) coverage.optionTranslations++;
+    if (Array.isArray(item.optionReasons) && item.optionReasons.length === item.options.length) coverage.optionReasons++;
+    coverageByPart[item.part] = coverage;
+  });
+
+  Object.entries(coverageByPart).forEach(([part, coverage]) => {
+    if (coverage.questionTranslation !== coverage.total) errors.push(`${part} questionTranslation coverage ${coverage.questionTranslation}/${coverage.total}`);
+    if (coverage.optionTranslations !== coverage.total) errors.push(`${part} optionTranslations coverage ${coverage.optionTranslations}/${coverage.total}`);
+    if (coverage.optionReasons !== coverage.total) errors.push(`${part} optionReasons coverage ${coverage.optionReasons}/${coverage.total}`);
+  });
+
+  return { isValid: errors.length === 0, errors, coverageByPart };
 }
 
 const tabs = [["home", "首頁"], ["listening", "聽力"], ["reading", "閱讀"], ["vocabulary", "單字"], ["cloze", "填空"], ["sentence", "句子"], ["review", "複習清單"], ["wrongbook", "錯題本"]];
 const speechState = { currentKey: "" };
 let currentTab = "home";
-function defaultState() { return { total: 0, correct: 0, wrongbook: [], reviewList: [], doneToday: 0, lastPracticeDate: new Date().toISOString().slice(0, 10), byPart: {}, solvedIds: {} }; }
+function defaultState() {
+  return {
+    total: 0,
+    correct: 0,
+    wrongbook: [],
+    reviewList: [],
+    doneToday: 0,
+    lastPracticeDate: new Date().toISOString().slice(0, 10),
+    byPart: {},
+    solvedIds: {},
+    currentExam: null,
+  };
+}
 function dedupeWrongbook(list = []) {
   const byId = new Map();
   list.forEach((item) => {
@@ -728,7 +1524,15 @@ function dedupeWrongbook(list = []) {
   });
   return Array.from(byId.values()).sort((a, b) => Date.parse(b.wrongAt || 0) - Date.parse(a.wrongAt || 0));
 }
-function loadState() { const raw = localStorage.getItem(STORAGE_KEY); const parsed = raw ? JSON.parse(raw) : defaultState(); const t = new Date().toISOString().slice(0, 10); if (parsed.lastPracticeDate !== t) parsed.doneToday = 0; parsed.lastPracticeDate = t; parsed.wrongbook = dedupeWrongbook(parsed.wrongbook || []); return { ...defaultState(), ...parsed }; }
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const parsed = raw ? JSON.parse(raw) : defaultState();
+  const t = new Date().toISOString().slice(0, 10);
+  if (parsed.lastPracticeDate !== t) parsed.doneToday = 0;
+  parsed.lastPracticeDate = t;
+  parsed.wrongbook = dedupeWrongbook(parsed.wrongbook || []);
+  return { ...defaultState(), ...parsed };
+}
 let state = loadState();
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const GROUPED_RANDOM_PARTS = new Set(["Part 3", "Part 4", "Part 6", "Part 7"]);
@@ -754,6 +1558,123 @@ function buildRandomPracticePool(section, part = "all") {
 
   return shuffle(blocks).flat();
 }
+
+function buildQuestionBlocks(section) {
+  const blocks = [];
+  const groupedIndex = new Map();
+  sampleQuestions.filter((item) => item.section === section).forEach((item) => {
+    if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+      const key = `${item.part}::${item.groupId}`;
+      if (!groupedIndex.has(key)) {
+        groupedIndex.set(key, blocks.length);
+        blocks.push([item]);
+      } else {
+        blocks[groupedIndex.get(key)].push(item);
+      }
+      return;
+    }
+    blocks.push([item]);
+  });
+  return blocks;
+}
+
+function buildExamSectionIds(section, targetCount = 100) {
+  const sourceBlocks = buildQuestionBlocks(section);
+  const availableCount = sourceBlocks.reduce((sum, block) => sum + block.length, 0);
+  if (availableCount === targetCount) return shuffle(sourceBlocks).flat().map((item) => item.id);
+
+  const selected = [];
+  let attempts = 0;
+
+  while (selected.length < targetCount && attempts < 200) {
+    let addedThisPass = false;
+    shuffle(sourceBlocks).forEach((block) => {
+      if (selected.length >= targetCount) return;
+      if (selected.length + block.length <= targetCount) {
+        selected.push(...block.map((item) => item.id));
+        addedThisPass = true;
+      }
+    });
+    if (!addedThisPass) break;
+    attempts++;
+  }
+
+  return selected.slice(0, targetCount);
+}
+
+function createExamPool() {
+  return {
+    listeningIds: buildExamSectionIds("listening", 100),
+    readingIds: buildExamSectionIds("reading", 100),
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function getQuestionsByIds(ids = []) {
+  const byId = new Map(sampleQuestions.map((item) => [item.id, item]));
+  return ids.map((id) => byId.get(id)).filter(Boolean);
+}
+
+function resetLearningStats() {
+  const fresh = defaultState();
+  fresh.currentExam = createExamPool();
+  state = fresh;
+  saveState();
+  renderContent();
+}
+
+function validateExamPool(exam = state.currentExam) {
+  const errors = [];
+  const byId = new Map(sampleQuestions.map((item) => [item.id, item]));
+  const groupedByKey = new Map();
+
+  sampleQuestions.forEach((item) => {
+    if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+      const key = `${item.part}::${item.groupId}`;
+      if (!groupedByKey.has(key)) groupedByKey.set(key, []);
+      groupedByKey.get(key).push(item.id);
+    }
+  });
+
+  if (!exam) {
+    errors.push("currentExam missing");
+    return { isValid: false, errors };
+  }
+
+  const checkIds = (ids, section, field) => {
+    if (!Array.isArray(ids)) {
+      errors.push(`${field} should be an array`);
+      return;
+    }
+    if (ids.length !== 100) errors.push(`${field} length should be 100, got ${ids.length}`);
+
+    const selectedCounts = new Map();
+    ids.forEach((id) => {
+      const item = byId.get(id);
+      if (!item) {
+        errors.push(`${field} has missing question id: ${id}`);
+        return;
+      }
+      if (item.section !== section) errors.push(`${id} should be section ${section}, got ${item.section}`);
+      selectedCounts.set(id, (selectedCounts.get(id) || 0) + 1);
+    });
+
+    groupedByKey.forEach((groupIds, key) => {
+      const groupSection = byId.get(groupIds[0])?.section;
+      if (groupSection !== section) return;
+      const counts = groupIds.map((id) => selectedCounts.get(id) || 0);
+      const hasAny = counts.some((count) => count > 0);
+      if (hasAny && !counts.every((count) => count === counts[0])) {
+        errors.push(`${field} has partial group ${key}`);
+      }
+    });
+  };
+
+  checkIds(exam.listeningIds, "listening", "currentExam.listeningIds");
+  checkIds(exam.readingIds, "reading", "currentExam.readingIds");
+  return { isValid: errors.length === 0, errors };
+}
+
 const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderDashboard(); }
 function stopSpeech() {
@@ -847,12 +1768,122 @@ function renderPracticePool(pool, options = {}) {
   }
   return html.join("");
 }
-function bindQuestionEvents(pool, options = {}) { pool.forEach((qItem) => { document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => { btn.onclick = () => { const ans = qItem.options[Number(btn.dataset.idx)]; const ok = evaluate(qItem, ans, options); if (ok === null) return; document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; }); const el = document.getElementById(`fb-${qItem.id}`); el.className = `feedback ${ok ? "success" : "error"}`; el.innerHTML = `${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}<br>解析：${esc(qItem.explanation)}${qItem.translation ? `<br>整句翻譯：${esc(qItem.translation)}` : ""}${qItem.grammarPoint ? `<br>文法重點：${esc(qItem.grammarPoint)}` : ""}`; }; }); }); document.querySelectorAll(".mark-review").forEach((btn) => { btn.onclick = () => { const item = pool.find((x) => x.id === btn.dataset.review); if (!item) return; if (!state.reviewList.some((x) => x.id === item.id)) { state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() }); saveState(); } }; }); document.querySelectorAll(".play-listening").forEach((btn) => { btn.onclick = () => { if (!window.speechSynthesis) return; const text = btn.dataset.speechText || ""; if (!text) return; stopSpeech(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = "en-US"; utterance.rate = 0.95; speechState.currentKey = btn.dataset.speechKey || ""; utterance.onend = () => { speechState.currentKey = ""; }; window.speechSynthesis.speak(utterance); }; }); document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); }); }
+function bindQuestionEvents(pool, options = {}) {
+  pool.forEach((qItem) => {
+    document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((btn) => {
+      btn.onclick = () => {
+        const ans = qItem.options[Number(btn.dataset.idx)];
+        const ok = evaluate(qItem, ans, options);
+        if (ok === null) return;
+        document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; });
+
+        const el = document.getElementById(`fb-${qItem.id}`);
+        const optionLabels = ["A", "B", "C", "D"];
+        const feedbackLines = [`${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}`];
+
+        if (qItem.questionTranslation) feedbackLines.push(`題目翻譯：${esc(qItem.questionTranslation)}`);
+
+        if (Array.isArray(qItem.optionTranslations) && qItem.optionTranslations.length === qItem.options.length) {
+          feedbackLines.push("選項翻譯：");
+          qItem.optionTranslations.forEach((text, idx) => {
+            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
+          });
+        }
+
+        feedbackLines.push(`解析：${esc(qItem.explanation)}`);
+
+        if (Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length) {
+          feedbackLines.push("選項說明：");
+          qItem.optionReasons.forEach((text, idx) => {
+            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
+          });
+        }
+
+        if (qItem.translation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
+        if (qItem.grammarPoint) feedbackLines.push(`文法重點：${esc(qItem.grammarPoint)}`);
+
+        el.className = `feedback ${ok ? "success" : "error"}`;
+        el.innerHTML = feedbackLines.join("<br>");
+      };
+    });
+  });
+
+  document.querySelectorAll(".mark-review").forEach((btn) => {
+    btn.onclick = () => {
+      const item = pool.find((x) => x.id === btn.dataset.review);
+      if (!item) return;
+      if (!state.reviewList.some((x) => x.id === item.id)) {
+        state.reviewList.unshift({ ...item, markedAt: new Date().toISOString() });
+        saveState();
+      }
+    };
+  });
+
+  document.querySelectorAll(".play-listening").forEach((btn) => {
+    btn.onclick = () => {
+      if (!window.speechSynthesis) return;
+      const text = btn.dataset.speechText || "";
+      if (!text) return;
+      stopSpeech();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.95;
+      speechState.currentKey = btn.dataset.speechKey || "";
+      utterance.onend = () => { speechState.currentKey = ""; };
+      window.speechSynthesis.speak(utterance);
+    };
+  });
+
+  document.querySelectorAll(".stop-listening").forEach((btn) => { btn.onclick = () => stopSpeech(); });
+}
+
 function renderTabs(){const nav=document.getElementById("tabNav");nav.innerHTML=tabs.map(([k,v])=>`<button class='tab-btn ${currentTab===k?"active":""}' data-tab='${k}'>${v}</button>`).join("");nav.querySelectorAll(".tab-btn").forEach((b)=>{b.onclick=()=>{currentTab=b.dataset.tab;renderTabs();renderContent();};});}
-function renderDashboard(){const acc=state.total?((state.correct/state.total)*100).toFixed(1):"0.0";document.getElementById("dashboard").innerHTML=`<h2>學習統計</h2><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div></div>`;}
+function renderDashboard() {
+  const acc = state.total ? ((state.correct / state.total) * 100).toFixed(1) : "0.0";
+  const examInfo = state.currentExam ? `<div class='stat'>正式測驗題組：<strong>${esc(state.currentExam.listeningIds?.length || 0)} 聽力 / ${esc(state.currentExam.readingIds?.length || 0)} 閱讀</strong></div>` : "";
+  document.getElementById("dashboard").innerHTML = `<div class='dashboard-header'><h2>學習統計</h2><button id='resetStatsBtn' class='danger'>重製學習統計</button></div><div class='grid-2'><div class='stat'>總題庫數：<strong>${sampleQuestions.length}</strong></div><div class='stat'>今日已答題數：<strong>${state.doneToday}</strong></div><div class='stat'>正確率：<strong>${acc}%</strong></div><div class='stat'>錯題數：<strong>${state.wrongbook.length}</strong></div><div class='stat'>複習清單題數：<strong>${state.reviewList.length}</strong></div>${examInfo}</div>`;
+  const resetBtn = document.getElementById("resetStatsBtn");
+  if (resetBtn) {
+    resetBtn.onclick = () => {
+      if (!confirm("確定要重製學習統計並產生新的正式測驗題組嗎？")) return;
+      resetLearningStats();
+    };
+  }
+}
 function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=>PART_SPECS[p].section===section);document.getElementById("content").innerHTML=`<h2>${section==="listening"?"聽力":"閱讀"}練習</h2><select id='partFilter'><option value='all'>全部</option>${parts.map((p)=>`<option value='${p}'>${p}</option>`).join("")}</select><button id='reshuffle' class='primary'>重新隨機出題</button><div id='qArea'></div>`;const draw=()=>{const part=document.getElementById("partFilter").value;const pool=buildRandomPracticePool(section,part);document.getElementById("qArea").innerHTML=renderPracticePool(pool);bindQuestionEvents(pool);};document.getElementById("partFilter").onchange=draw;document.getElementById("reshuffle").onclick=draw;draw();}
 function renderMiniPractice(title,pool,label){document.getElementById("content").innerHTML=`<h2>${title}</h2><button id='reshuffleMini' class='primary'>重新隨機出題</button><div id='qAreaMini'></div>`;const draw=()=>{const shuffled=shuffle(pool).map((x)=>({...x,part:label,type:label}));document.getElementById("qAreaMini").innerHTML=shuffled.map((item)=>renderQuestionCard(item,label)).join("");bindQuestionEvents(shuffled);};document.getElementById("reshuffleMini").onclick=draw;draw();}
 function renderReview(){const list=state.reviewList;document.getElementById("content").innerHTML=`<h2>複習清單</h2><button id='startReview' class='primary'>開始複習清單練習</button>${list.length?list.map((i)=>`<div class='card'><p>${esc(i.part)} ${esc(i.question)}</p></div>`).join(""):"<p>尚未加入題目。</p>"}`;const sr=document.getElementById("startReview");if(sr)sr.onclick=()=>{const pool=shuffle(state.reviewList);const sessionSolvedIds=new Set();const reviewModeOptions={reviewMode:true,allowRetakeInReview:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("reviewRemain");if(remain)remain.textContent=String(state.reviewList.length);};document.getElementById("content").innerHTML=`<h2>複習清單練習</h2><p>目前剩餘複習清單題數：<strong id='reviewRemain'>${state.reviewList.length}</strong></p>${renderPracticePool(pool,reviewModeOptions)}`;bindQuestionEvents(pool,{...reviewModeOptions,removeReviewOnCorrect:true,onAfterEvaluate:updateRemain});};}
 function renderWrongbook(){state.wrongbook=dedupeWrongbook(state.wrongbook);const list=state.wrongbook;document.getElementById("content").innerHTML=`<h2>錯題本</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><div id='wrongbookInfo'>${list.length?"":"<p>目前沒有錯題。</p>"}</div><div id='wrongbookList'>${list.map((i)=>`<div class='card'><p>${esc(i.part)}</p><p>${esc(i.question)}</p><p>我的答案：${esc(i.myAnswer)}</p><p>正確答案：${esc(i.answer)}</p><p>解析：${esc(i.explanation)}</p></div>`).join("")}</div>`;const sw=document.getElementById("startWrongbook");if(sw)sw.onclick=()=>{state.wrongbook=dedupeWrongbook(state.wrongbook);if(!state.wrongbook.length){const info=document.getElementById("wrongbookInfo");if(info)info.innerHTML="<p>錯題本已清空</p>";return;}const pool=shuffle(state.wrongbook.slice());const sessionSolvedIds=new Set();const wrongbookModeOptions={wrongbookMode:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("wrongbookRemain");if(remain)remain.textContent=String(state.wrongbook.length);if(!state.wrongbook.length){const area=document.getElementById("qAreaWrongbook");if(area)area.innerHTML="<p>錯題本已清空</p>";}};document.getElementById("content").innerHTML=`<h2>錯題本練習</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><p>目前剩餘錯題數：<strong id='wrongbookRemain'>${state.wrongbook.length}</strong></p><div id='qAreaWrongbook'>${renderPracticePool(pool,wrongbookModeOptions)}</div>`;const startInMode=document.getElementById("startWrongbook");if(startInMode)startInMode.onclick=()=>renderWrongbook();bindQuestionEvents(pool,{...wrongbookModeOptions,removeWrongbookOnCorrect:true,onAfterEvaluate:updateRemain});};}
-function renderContent(){if(currentTab==="home")document.getElementById("content").innerHTML="<h2>首頁</h2><p>保留聽力、閱讀、單字、填空、句子、複習清單、錯題本功能。</p>";else if(currentTab==="listening"||currentTab==="reading")renderPractice(currentTab);else if(currentTab==="vocabulary")renderMiniPractice("單字練習",vocabQuestions,"單字");else if(currentTab==="cloze")renderMiniPractice("填空練習",clozeQuestions,"填空");else if(currentTab==="sentence")renderMiniPractice("句子練習",sentenceQuestions,"句子");else if(currentTab==="review")renderReview();else renderWrongbook();}
+function renderHome() {
+  const exam = state.currentExam;
+  document.getElementById("content").innerHTML = `<h2>首頁</h2><p>保留聽力、閱讀、單字、填空、句子、複習清單、錯題本功能。</p><button id='startOfficialExam' class='primary'>開始正式測驗</button>${exam ? `<p><small class='muted'>目前正式測驗題組建立時間：${esc(exam.createdAt)}</small></p>` : "<p><small class='muted'>尚未建立正式測驗題組，開始時會自動產生。</small></p>"}`;
+  document.getElementById("startOfficialExam").onclick = () => renderOfficialExam();
+}
+
+function ensureCurrentExam() {
+  if (!state.currentExam || !validateExamPool(state.currentExam).isValid) {
+    state.currentExam = createExamPool();
+    saveState();
+  }
+  return state.currentExam;
+}
+
+function renderOfficialExam() {
+  const exam = ensureCurrentExam();
+  const listeningPool = getQuestionsByIds(exam.listeningIds);
+  const readingPool = getQuestionsByIds(exam.readingIds);
+  const pool = [...listeningPool, ...readingPool];
+  document.getElementById("content").innerHTML = `<h2>正式測驗</h2><p>聽力 100 題，閱讀 100 題。題組題目會維持在同一組內。</p><h3>Listening 聽力</h3>${renderPracticePool(listeningPool)}<h3>Reading 閱讀</h3>${renderPracticePool(readingPool)}`;
+  bindQuestionEvents(pool);
+}
+
+function renderContent() {
+  if (currentTab === "home") renderHome();
+  else if (currentTab === "listening" || currentTab === "reading") renderPractice(currentTab);
+  else if (currentTab === "vocabulary") renderMiniPractice("單字練習", vocabQuestions, "單字");
+  else if (currentTab === "cloze") renderMiniPractice("填空練習", clozeQuestions, "填空");
+  else if (currentTab === "sentence") renderMiniPractice("句子練習", sentenceQuestions, "句子");
+  else if (currentTab === "review") renderReview();
+  else renderWrongbook();
+}
 renderTabs();renderDashboard();renderContent();

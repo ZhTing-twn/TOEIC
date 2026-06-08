@@ -1592,6 +1592,81 @@ const explicitExplanationMetadata = {
     optionTranslations: ["營運經理 Nina Chen。", "業務總監 Park 先生。", "法務部實習生。", "客服人員。"],
     optionReasons: ["正確，信尾署名是 Nina Chen, Operations Manager。", "錯誤，Park 先生是收件者，不是寫信者。", "錯誤，信中沒有提到法務部實習生。", "錯誤，信中沒有提到客服人員。"],
   },
+  "R7-31": {
+    questionTranslation: "網路研討會房間為什麼更換？",
+    optionTranslations: ["參加人數限制已達上限。", "主講者取消了。", "主題更新了。", "發生停電。"],
+    optionReasons: ["正確，信件說因為 participant limits，所以從 Zoom Room A 改到 Zoom Room C。", "錯誤，文章沒有提到主講者取消。", "錯誤，文章沒有提到主題更新。", "錯誤，文章沒有提到停電。"],
+  },
+  "R7-32": {
+    questionTranslation: "收件者應該用什麼加入？",
+    optionTranslations: ["附件行事曆邀請中的新連結。", "上週的舊連結。", "頁尾中的電話號碼。", "公司內部網路首頁。"],
+    optionReasons: ["正確，信件要求收件者使用 attached calendar invite 裡的新連結。", "錯誤，文章沒有要求使用舊連結。", "錯誤，文章沒有提到用頁尾電話號碼加入。", "錯誤，文章沒有要求從公司內部網路首頁加入。"],
+  },
+  "R7-33": {
+    questionTranslation: "這是什麼類型的文字？",
+    optionTranslations: ["時程更新電子郵件。", "付款收據。", "招募公告。", "公開廣告。"],
+    optionReasons: ["正確，主旨是 Webinar Link Update，內容通知網路研討會連結與房間變更。", "錯誤，文章沒有付款或收據資訊。", "錯誤，文章沒有招募內容。", "錯誤，文章不是對外宣傳廣告。"],
+  },
+  "R7-34": {
+    questionTranslation: "誰必須提交出席紀錄？",
+    optionTranslations: ["樓層負責人。", "所有訪客。", "只有保全人員。", "外部稽核員。"],
+    optionReasons: ["正確，備忘錄說 all floor leaders must submit attendance records。", "錯誤，文章沒有要求所有訪客提交紀錄。", "錯誤，文章沒有說只有保全人員負責。", "錯誤，文章沒有提到外部稽核員提交紀錄。"],
+  },
+  "R7-35": {
+    questionTranslation: "提交期限是什麼時候？",
+    optionTranslations: ["每次演練後 24 小時內。", "演練開始前。", "每月底。", "沒有指定期限。"],
+    optionReasons: ["正確，備忘錄說 within 24 hours after each drill。", "錯誤，文章沒有說演練開始前提交。", "錯誤，文章沒有說每月底提交。", "錯誤，文章明確指定 24 小時內。"],
+  },
+  "R7-36": {
+    questionTranslation: "如果缺少紀錄，可能會發生什麼事？",
+    optionTranslations: ["合規報告會延誤。", "演練會被取消。", "員工薪資會被降低。", "總部會關閉辦公室。"],
+    optionReasons: ["正確，備忘錄說 missing records will delay compliance reporting to headquarters。", "錯誤，文章沒有說演練會取消。", "錯誤，文章沒有提到降低薪資。", "錯誤，文章沒有說總部會關閉辦公室。"],
+  },
+  "R7-37": {
+    questionTranslation: "計畫進行什麼維護工作？",
+    optionTranslations: ["更換大廳門禁卡掃描器。", "升級餐廳桌子。", "粉刷停車場。", "測試火災警報器。"],
+    optionReasons: ["正確，公告說 lobby access-card scanners will be replaced。", "錯誤，文章沒有提到餐廳桌子。", "錯誤，文章沒有提到粉刷停車場。", "錯誤，文章沒有提到測試火災警報器。"],
+  },
+  "R7-38": {
+    questionTranslation: "人們可以在哪裡取得臨時識別證？",
+    optionTranslations: ["接待櫃台。", "保全控制室。", "人資辦公室。", "裝卸碼頭。"],
+    optionReasons: ["正確，公告說 temporary paper badges will be issued at the reception desk。", "錯誤，文章沒有提到保全控制室。", "錯誤，文章沒有提到人資辦公室。", "錯誤，文章沒有提到裝卸碼頭。"],
+  },
+  "R7-39": {
+    questionTranslation: "更換作業會花多久？",
+    optionTranslations: ["三小時。", "一小時。", "半天。", "整個週末。"],
+    optionReasons: ["正確，時間從上午 8 點到 11 點，共三小時。", "錯誤，公告時間不是一小時。", "錯誤，公告時間不是半天。", "錯誤，公告沒有說整個週末都會更換。"],
+  },
+  "R7-40": {
+    questionTranslation: "GreenLine Courier 保證什麼？",
+    optionTranslations: ["中午前提交的市區包裹當日送達。", "國際包裹一天內送達。", "所有包裹免費配送。", "只在週末取件。"],
+    optionReasons: ["正確，廣告說 downtown parcels submitted before noon 可 same-day delivery。", "錯誤，文章沒有提到國際包裹一天內送達。", "錯誤，文章沒有提到免費配送。", "錯誤，文章沒有說只在週末取件。"],
+  },
+  "R7-41": {
+    questionTranslation: "公告中的固定費率是多少？",
+    optionTranslations: ["新台幣 180 元。", "新台幣 150 元。", "新台幣 200 元。", "新台幣 300 元。"],
+    optionReasons: ["正確，廣告明確寫出 flat rate of NT$180。", "錯誤，文章沒有提到 NT$150。", "錯誤，文章沒有提到 NT$200。", "錯誤，文章沒有提到 NT$300。"],
+  },
+  "R7-42": {
+    questionTranslation: "要適用該費率，包裹需要符合什麼條件？",
+    optionTranslations: ["低於 3 公斤。", "超過 5 公斤。", "只限易碎品。", "目的地為國外。"],
+    optionReasons: ["正確，廣告說固定費率適用於 packages under 3 kilograms。", "錯誤，文章沒有說超過 5 公斤適用。", "錯誤，文章沒有說只限易碎品。", "錯誤，文章沒有提到國外目的地。"],
+  },
+  "R7-43": {
+    questionTranslation: "上午 9 點 30 分的場次由誰主持？",
+    optionTranslations: ["人資部。", "IT 部門。", "財務部。", "營運部。"],
+    optionReasons: ["正確，時程表寫 09:30 Welcome Session，括號標示 HR。", "錯誤，IT 是 10:30 的帳號設定，不是 9:30 場次。", "錯誤，文章沒有提到財務部主持。", "錯誤，文章沒有提到營運部主持。"],
+  },
+  "R7-44": {
+    questionTranslation: "上午 10 點 30 分安排了什麼？",
+    optionTranslations: ["IT 帳號設定。", "辦公室導覽。", "午餐。", "歡迎場次。"],
+    optionReasons: ["正確，時程表 10:30 的項目是 IT Account Setup。", "錯誤，Office Tour 是 11:15。", "錯誤，Lunch 是 12:00。", "錯誤，Welcome Session 是 09:30。"],
+  },
+  "R7-45": {
+    questionTranslation: "這份時程表是給誰看的？",
+    optionTranslations: ["新進員工。", "外部供應商。", "參觀展示間的顧客。", "只有高階主管。"],
+    optionReasons: ["正確，活動名稱是 New Hire Orientation，對象是新進員工。", "錯誤，文章沒有提到外部供應商。", "錯誤，文章沒有提到展示間顧客。", "錯誤，文章沒有說只給高階主管。"],
+  },
 };
 
 function applyExplicitExplanationMetadata() {

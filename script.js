@@ -1367,6 +1367,81 @@ const explicitExplanationMetadata = {
     optionTranslations: ["宣布新的每週回報規定。", "取消內部網路存取權。", "招募新的經理。", "說明差旅費報銷。"],
     optionReasons: ["正確，短文說各部門從 7 月 1 日起必須每週五提交進度更新，主旨是宣布新的回報規定。", "錯誤，短文提到使用內部網路表單，沒有說取消存取權。", "錯誤，短文沒有招募經理的內容。", "錯誤，短文沒有討論差旅費或報銷流程。"],
   },
+  "R6-2": {
+    questionTranslation: "每週回報截止時間是什麼時候？",
+    optionTranslations: ["星期五下午 4 點前。", "星期四中午前。", "星期一上午 9 點前。", "週末任何時間。"],
+    optionReasons: ["正確，通知說所有部門必須每週五下午 4 點前提交進度更新。", "錯誤，短文沒有提到星期四中午前。", "錯誤，短文沒有提到星期一上午 9 點前。", "錯誤，短文給了明確截止時間，不是週末任何時間。"],
+  },
+  "R6-3": {
+    questionTranslation: "更新必須透過內部網路表單提交。空格應填入哪個介系詞？",
+    optionTranslations: ["透過。", "在兩者之間。", "儘管。", "橫跨，穿過。"],
+    optionReasons: ["正確，through the intranet form 表示透過內部網路表單提交。", "錯誤，between 表示在兩者之間，不符合提交管道。", "錯誤，despite 表示儘管，不符合句意。", "錯誤，across 表示橫跨或穿過，不符合透過表單的語意。"],
+  },
+  "R6-4": {
+    questionTranslation: "用電子郵件寄送的報告將不被接受。空格應填入哪個被動結構？",
+    optionTranslations: ["不被。", "不。", "錯誤語序的不被。", "正在不被。"],
+    optionReasons: ["正確，will not be accepted 是未來式被動否定結構。", "錯誤，will not accepted 少了 be，不能構成被動語態。", "錯誤，will be not accepted 語序不自然，本題標準答案是 will not be accepted。", "錯誤，not being 不符合 will 後面的結構。"],
+  },
+  "R6-5": {
+    questionTranslation: "這封客服回覆為什麼被寄出？",
+    optionTranslations: ["回覆訂單問題。", "宣傳新產品。", "確認飯店預訂。", "要求支付發票。"],
+    optionReasons: ["正確，短文開頭提到感謝對方就 5521 號訂單聯絡客服。", "錯誤，短文沒有宣傳新產品。", "錯誤，短文沒有飯店預訂內容。", "錯誤，短文沒有要求支付發票。"],
+  },
+  "R6-6": {
+    questionTranslation: "替換品預計什麼時候送達？",
+    optionTranslations: ["星期二。", "星期一。", "這個週末。", "沒有提供日期。"],
+    optionReasons: ["正確，短文說 delivery is expected on Tuesday。", "錯誤，短文沒有提到星期一送達。", "錯誤，短文沒有提到這個週末送達。", "錯誤，短文明確提供星期二作為送達時間。"],
+  },
+  "R6-7": {
+    questionTranslation: "請保留有瑕疵的商品，供快遞取件。空格應填入哪個介系詞？",
+    optionTranslations: ["供，為了。", "在許多之中。", "除非。", "朝向。"],
+    optionReasons: ["正確，for courier pickup 表示供快遞取件。", "錯誤，among 表示在許多之中，不符合句意。", "錯誤，unless 表示除非，不符合句型。", "錯誤，toward 表示朝向，不符合取件用途。"],
+  },
+  "R6-8": {
+    questionTranslation: "替換用電源變壓器今天已經寄出。空格應填入哪個動詞形式？",
+    optionTranslations: ["已寄出。", "正在寄送。", "寄送，原形動詞。", "寄送，第三人稱單數。"],
+    optionReasons: ["正確，has been shipped 是現在完成式被動結構。", "錯誤，shipping 是現在分詞，不能接在 has been 後表達已寄出。", "錯誤，ship 是原形動詞，不符合 has been 後接過去分詞的結構。", "錯誤，ships 是第三人稱單數，不符合被動完成式。"],
+  },
+  "R6-9": {
+    questionTranslation: "公告提到什麼活動？",
+    optionTranslations: ["商務寫作工作坊。", "軟體維護演練。", "倉庫安全稽核。", "客戶意見調查。"],
+    optionReasons: ["正確，短文第一句說 Business Writing Workshop 將舉行。", "錯誤，短文沒有提到軟體維護演練。", "錯誤，短文沒有提到倉庫安全稽核。", "錯誤，短文沒有提到客戶意見調查。"],
+  },
+  "R6-10": {
+    questionTranslation: "報名費是多少？",
+    optionTranslations: ["新台幣 1,200 元。", "新台幣 800 元。", "新台幣 2,000 元。", "不需要費用。"],
+    optionReasons: ["正確，短文明確寫出 fee is NT$1,200。", "錯誤，短文沒有提到 NT$800。", "錯誤，短文沒有提到 NT$2,000。", "錯誤，短文明確列出報名費，不是免費。"],
+  },
+  "R6-11": {
+    questionTranslation: "付款必須在 8 月 7 日前完成。空格應填入哪個介系詞？",
+    optionTranslations: ["在期限前。", "從。", "在兩者之間。", "當，然而。"],
+    optionReasons: ["正確，by August 7 表示在 8 月 7 日前完成。", "錯誤，from 表示起點，不符合截止期限。", "錯誤，between 需要兩個端點，不符合句意。", "錯誤，while 表示當或然而，不符合付款截止語意。"],
+  },
+  "R6-12": {
+    questionTranslation: "逾期付款者將被列入候補名單。空格應填入哪個動詞形式？",
+    optionTranslations: ["被放置，被列入。", "正在放置。", "放置，原形動詞。", "放置，第三人稱單數。"],
+    optionReasons: ["正確，will be placed 是未來式被動結構，表示被列入候補名單。", "錯誤，placing 是現在分詞，不能接在 will be 後表達被列入。", "錯誤，place 是原形動詞，不符合被動語態。", "錯誤，places 是第三人稱單數，不符合 will be 後接過去分詞。"],
+  },
+  "R6-13": {
+    questionTranslation: "什麼情況下需要兩份報價？",
+    optionTranslations: ["採購金額超過新台幣 50,000 元。", "所有辦公用品訂單。", "只限海外差旅。", "訂單送達之後。"],
+    optionReasons: ["正確，流程說明提到 purchases above NT$50,000 需要兩家供應商報價。", "錯誤，短文沒有說所有辦公用品訂單都需要兩份報價。", "錯誤，短文沒有提到海外差旅。", "錯誤，短文說建立採購訂單前要完成，不是送達後。"],
+  },
+  "R6-14": {
+    questionTranslation: "建立採購訂單前，團隊必須做什麼？",
+    optionTranslations: ["將文件提交給採購部。", "請人資確認出席。", "直接把發票寄給客戶。", "預訂會議室。"],
+    optionReasons: ["正確，短文說建立採購訂單前必須將文件提交給 Procurement。", "錯誤，短文沒有提到人資或出席確認。", "錯誤，短文沒有提到把發票寄給客戶。", "錯誤，短文沒有提到預訂會議室。"],
+  },
+  "R6-15": {
+    questionTranslation: "團隊應避免在核准前下訂單。空格應填入哪個動詞形式？",
+    optionTranslations: ["下訂，動名詞。", "去下訂，不定詞。", "下訂，原形動詞。", "下訂，過去式或過去分詞。"],
+    optionReasons: ["正確，avoid 後面接動名詞，因此應填 placing。", "錯誤，to place 不符合 avoid 後接 V-ing 的句型。", "錯誤，place 是原形動詞，不能直接接在 avoid 後面。", "錯誤，placed 是過去式或過去分詞，不符合句型。"],
+  },
+  "R6-16": {
+    questionTranslation: "核准表必須由部門主管簽署。空格應填入哪個動詞形式？",
+    optionTranslations: ["被簽署。", "簽署，原形動詞。", "已簽署，過去式或過去分詞。", "正在簽署。"],
+    optionReasons: ["正確，approval sheet 是被簽署，must 後接 be signed 形成被動語態。", "錯誤，sign 是主動語態，表單不能主動簽署自己。", "錯誤，signed 少了 be，不能構成 must 後的被動結構。", "錯誤，be signing 是進行式語意，不符合必須被簽署的規定。"],
+  },
   "R7-1": {
     questionTranslation: "員工續辦時必須提交什麼？",
     optionTranslations: ["車牌號碼與員工編號。", "燃油收據與路線圖。", "主管推薦信。", "只有駕照影本。"],

@@ -1517,6 +1517,81 @@ const explicitExplanationMetadata = {
     optionTranslations: ["新核准的供應商。", "飯店住客。", "工廠檢查員。", "工作申請者。"],
     optionReasons: ["正確，活動名稱是 Vendor Onboarding Day，表示對象是新核准或新加入的供應商。", "錯誤，文章沒有飯店住宿內容。", "錯誤，文章沒有工廠檢查內容。", "錯誤，文章不是面試或徵才時程。"],
   },
+  "R7-16": {
+    questionTranslation: "這張發票的總金額是多少？",
+    optionTranslations: ["新台幣 25,200 元。", "新台幣 24,000 元。", "新台幣 26,400 元。", "新台幣 1,200 元。"],
+    optionReasons: ["正確，發票明確列出總金額為 NT$25,200。", "錯誤，NT$24,000 是小計，不是總金額。", "錯誤，文章沒有列出 NT$26,400。", "錯誤，NT$1,200 是運費，不是總金額。"],
+  },
+  "R7-17": {
+    questionTranslation: "付款應如何完成？",
+    optionTranslations: ["透過銀行轉帳。", "貨到付款。", "到店刷信用卡。", "用行動錢包付款。"],
+    optionReasons: ["正確，發票寫明 payment due within 30 days by bank transfer。", "錯誤，發票沒有提到貨到付款。", "錯誤，發票沒有提到到店刷卡。", "錯誤，發票沒有提到行動錢包。"],
+  },
+  "R7-18": {
+    questionTranslation: "運費是多少？",
+    optionTranslations: ["新台幣 1,200 元。", "新台幣 2,400 元。", "新台幣 12,000 元。", "新台幣 25,200 元。"],
+    optionReasons: ["正確，發票中 Delivery fee 標示為 NT$1,200。", "錯誤，文章沒有列出 NT$2,400 作為運費。", "錯誤，文章沒有列出 NT$12,000。", "錯誤，NT$25,200 是總金額，不是運費。"],
+  },
+  "R7-19": {
+    questionTranslation: "購買了什麼服務？",
+    optionTranslations: ["當日包裹配送。", "國際空運。", "倉庫儲存。", "辦公室清潔。"],
+    optionReasons: ["正確，收據的 Service 欄位寫明 Same-day parcel delivery。", "錯誤，收據沒有提到國際空運。", "錯誤，收據沒有提到倉庫儲存。", "錯誤，收據沒有提到辦公室清潔。"],
+  },
+  "R7-20": {
+    questionTranslation: "總共支付了多少？",
+    optionTranslations: ["新台幣 385 元。", "新台幣 320 元。", "新台幣 360 元。", "新台幣 425 元。"],
+    optionReasons: ["正確，收據寫明 Amount paid NT$385。", "錯誤，NT$320 是基本費用，不是總支付金額。", "錯誤，NT$360 不是收據列出的總額。", "錯誤，NT$425 不是收據列出的總額。"],
+  },
+  "R7-21": {
+    questionTranslation: "關於付款可以推論什麼？",
+    optionTranslations: ["付款已經完成。", "付款期限是 30 天內。", "只支付了訂金。", "交易已取消。"],
+    optionReasons: ["正確，收據寫 Amount paid，表示款項已完成支付。", "錯誤，收據沒有提到 30 天付款期限。", "錯誤，收據沒有提到只付訂金。", "錯誤，收據沒有提到交易取消。"],
+  },
+  "R7-22": {
+    questionTranslation: "正在招募哪個職位？",
+    optionTranslations: ["物流協調員。", "財務分析師。", "業務訓練師。", "IT 支援專員。"],
+    optionReasons: ["正確，職缺標題寫明 Logistics Coordinator。", "錯誤，文章沒有說招募財務分析師。", "錯誤，文章沒有說招募業務訓練師。", "錯誤，文章沒有說招募 IT 支援專員。"],
+  },
+  "R7-23": {
+    questionTranslation: "哪項技能被明確要求？",
+    optionTranslations: ["進階 Excel 技能。", "平面設計專業。", "法律草擬經驗。", "公開演說證照。"],
+    optionReasons: ["正確，職缺要求列出 advanced Excel skills。", "錯誤，文章沒有提到平面設計。", "錯誤，文章沒有提到法律草擬經驗。", "錯誤，文章沒有提到公開演說證照。"],
+  },
+  "R7-24": {
+    questionTranslation: "申請者應如何應徵？",
+    optionTranslations: ["在 6 月 30 日前寄出履歷。", "打電話給倉庫經理。", "只能親自提交文件。", "透過旅遊入口網站登記。"],
+    optionReasons: ["正確，文章說申請者要在 6 月 30 日前把履歷寄到 hr@deltasupply.com。", "錯誤，文章沒有要求打電話給倉庫經理。", "錯誤，文章沒有說只能親自提交。", "錯誤，文章沒有提到旅遊入口網站。"],
+  },
+  "R7-25": {
+    questionTranslation: "評論者喜歡什麼？",
+    optionTranslations: ["預訂流程很快速。", "取消政策很清楚。", "電話支援很即時。", "費用降低了。"],
+    optionReasons: ["正確，評論者說線上預約工具快速且容易操作，兩分鐘內訂好會議室。", "錯誤，評論者說取消政策很難找到，不是很清楚。", "錯誤，文章沒有提到電話支援。", "錯誤，文章沒有提到費用降低。"],
+  },
+  "R7-26": {
+    questionTranslation: "評論中提到什麼問題？",
+    optionTranslations: ["取消政策很難找到。", "網站經常當機。", "缺少付款選項。", "沒有會議室可用。"],
+    optionReasons: ["正確，評論者明確說 cancellation policy is hard to find。", "錯誤，文章沒有提到網站當機。", "錯誤，文章沒有提到付款選項缺少。", "錯誤，文章沒有提到沒有會議室可用。"],
+  },
+  "R7-27": {
+    questionTranslation: "作者的目的是什麼？",
+    optionTranslations: ["提供包含稱讚與建議的回饋。", "立即要求退款。", "宣傳競爭服務。", "回報帳務詐欺。"],
+    optionReasons: ["正確，評論先稱讚工具快速易用，再建議讓取消政策更清楚。", "錯誤，文章沒有要求退款。", "錯誤，文章沒有宣傳其他服務。", "錯誤，文章沒有提到帳務詐欺。"],
+  },
+  "R7-28": {
+    questionTranslation: "這封信為什麼被寄出？",
+    optionTranslations: ["在同意前要求修改。", "終止現有合約。", "確認出貨送達。", "邀請 Park 先生面試。"],
+    optionReasons: ["正確，信中說願意繼續，但要求先修改第 3 條。", "錯誤，信中沒有說終止合約。", "錯誤，信中沒有提到出貨送達。", "錯誤，信中沒有面試邀請。"],
+  },
+  "R7-29": {
+    questionTranslation: "要求做什麼修改？",
+    optionTranslations: ["加入 4 小時內緊急到場支援。", "將月費降低 50%。", "移除所有維護訪視。", "將合約延長到五年。"],
+    optionReasons: ["正確，信中要求在第 3 條加入 4 小時內緊急到場支援。", "錯誤，信中沒有要求降價。", "錯誤，信中沒有要求移除維護訪視。", "錯誤，信中沒有要求延長合約到五年。"],
+  },
+  "R7-30": {
+    questionTranslation: "這封信是誰寫的？",
+    optionTranslations: ["營運經理 Nina Chen。", "業務總監 Park 先生。", "法務部實習生。", "客服人員。"],
+    optionReasons: ["正確，信尾署名是 Nina Chen, Operations Manager。", "錯誤，Park 先生是收件者，不是寫信者。", "錯誤，信中沒有提到法務部實習生。", "錯誤，信中沒有提到客服人員。"],
+  },
 };
 
 function applyExplicitExplanationMetadata() {

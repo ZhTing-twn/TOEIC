@@ -1667,6 +1667,51 @@ const explicitExplanationMetadata = {
     optionTranslations: ["新進員工。", "外部供應商。", "參觀展示間的顧客。", "只有高階主管。"],
     optionReasons: ["正確，活動名稱是 New Hire Orientation，對象是新進員工。", "錯誤，文章沒有提到外部供應商。", "錯誤，文章沒有提到展示間顧客。", "錯誤，文章沒有說只給高階主管。"],
   },
+  "R7-46": {
+    questionTranslation: "緊急修復費用是多少？",
+    optionTranslations: ["新台幣 220 元。", "新台幣 780 元。", "新台幣 1,000 元。", "新台幣 200 元。"],
+    optionReasons: ["正確，發票細項列出 Additional emergency fix NT$220。", "錯誤，NT$780 是每月服務費，不是緊急修復費。", "錯誤，NT$1,000 是應付總額，不是緊急修復費。", "錯誤，文章沒有列出 NT$200 作為緊急修復費。"],
+  },
+  "R7-47": {
+    questionTranslation: "應付總金額是多少？",
+    optionTranslations: ["新台幣 1,000 元。", "新台幣 780 元。", "新台幣 1,220 元。", "新台幣 1,500 元。"],
+    optionReasons: ["正確，發票明確寫出 Total due NT$1,000。", "錯誤，NT$780 是每月服務費，不是總金額。", "錯誤，文章沒有列出 NT$1,220。", "錯誤，文章沒有列出 NT$1,500。"],
+  },
+  "R7-48": {
+    questionTranslation: "付款截止日是什麼時候？",
+    optionTranslations: ["6 月 15 日。", "5 月 15 日。", "6 月 30 日。", "沒有提供截止日。"],
+    optionReasons: ["正確，發票寫明 Payment due date: June 15。", "錯誤，文章沒有提到 5 月 15 日。", "錯誤，文章沒有提到 6 月 30 日。", "錯誤，文章明確提供付款截止日。"],
+  },
+  "R7-49": {
+    questionTranslation: "購買了什麼品項？",
+    optionTranslations: ["200 份彩色型錄。", "200 個信封。", "一個印表機墨水匣。", "裝訂機租借。"],
+    optionReasons: ["正確，收據品項寫明 200 color brochures。", "錯誤，收據沒有提到 200 個信封。", "錯誤，收據沒有提到印表機墨水匣。", "錯誤，收據沒有提到裝訂機租借。"],
+  },
+  "R7-50": {
+    questionTranslation: "收取的稅額是多少？",
+    optionTranslations: ["新台幣 95 元。", "新台幣 300 元。", "新台幣 1,600 元。", "新台幣 1,995 元。"],
+    optionReasons: ["正確，收據明確列出 Tax NT$95。", "錯誤，NT$300 是裝訂費，不是稅額。", "錯誤，NT$1,600 是印刷費，不是稅額。", "錯誤，NT$1,995 是已付總額，不是稅額。"],
+  },
+  "R7-51": {
+    questionTranslation: "採用哪一種付款方式？",
+    optionTranslations: ["現金。", "銀行轉帳。", "信用卡。", "公司支票。"],
+    optionReasons: ["正確，收據寫明 Total paid NT$1,995 by cash。", "錯誤，收據沒有提到銀行轉帳。", "錯誤，收據沒有提到信用卡付款。", "錯誤，收據沒有提到公司支票。"],
+  },
+  "R7-52": {
+    questionTranslation: "Apex Manufacturing 正在招募哪個職位？",
+    optionTranslations: ["財務分析師。", "物流協調員。", "行銷專員。", "招募專員。"],
+    optionReasons: ["正確，職缺標題寫明 Financial Analyst。", "錯誤，文章沒有說招募物流協調員。", "錯誤，文章沒有說招募行銷專員。", "錯誤，文章沒有說招募招募專員。"],
+  },
+  "R7-53": {
+    questionTranslation: "哪一項工作被列為職責？",
+    optionTranslations: ["每月預測。", "倉庫設備維修。", "客服專線支援。", "合約翻譯。"],
+    optionReasons: ["正確，職責包含 monthly forecasting。", "錯誤，文章沒有提到倉庫設備維修。", "錯誤，文章沒有提到客服專線支援。", "錯誤，文章沒有提到合約翻譯。"],
+  },
+  "R7-54": {
+    questionTranslation: "職缺要求多少經驗？",
+    optionTranslations: ["至少三年。", "不需要經驗。", "至少一年。", "超過十年。"],
+    optionReasons: ["正確，職缺條件寫明 at least 3 years of experience。", "錯誤，文章明確要求經驗，不是不需要經驗。", "錯誤，文章要求至少三年，不是一年。", "錯誤，文章沒有要求超過十年經驗。"],
+  },
 };
 
 function applyExplicitExplanationMetadata() {

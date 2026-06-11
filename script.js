@@ -1833,9 +1833,10 @@ function validateExplanationCoverage() {
   return { isValid: errors.length === 0, errors, coverageByPart };
 }
 
-const tabs = [["home", "首頁"], ["listening", "聽力"], ["reading", "閱讀"], ["vocabulary", "單字"], ["cloze", "填空"], ["sentence", "句子"], ["review", "複習清單"], ["wrongbook", "錯題本"]];
+const tabs = [["exam", "正式測驗"], ["listening", "聽力練習"], ["reading", "閱讀練習"], ["wrongbook", "錯題本"], ["review", "複習清單"]];
 const speechState = { currentKey: "" };
-let currentTab = "home";
+const listeningSpeechTextByKey = new Map();
+let currentTab = "exam";
 function defaultState() {
   return {
     total: 0,
@@ -1899,10 +1900,10 @@ function buildRandomPracticePool(section, part = "all") {
   return shuffle(blocks).flat();
 }
 
-function buildQuestionBlocks(section) {
+function buildPartQuestionBlocks(part) {
   const blocks = [];
   const groupedIndex = new Map();
-  sampleQuestions.filter((item) => item.section === section).forEach((item) => {
+  sampleQuestions.filter((item) => item.part === part).forEach((item) => {
     if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
       const key = `${item.part}::${item.groupId}`;
       if (!groupedIndex.has(key)) {
@@ -1918,28 +1919,19 @@ function buildQuestionBlocks(section) {
   return blocks;
 }
 
+function buildQuestionBlocks(section) {
+  return Object.keys(PART_SPECS)
+    .filter((part) => PART_SPECS[part].section === section)
+    .flatMap((part) => buildPartQuestionBlocks(part));
+}
+
 function buildExamSectionIds(section, targetCount = 100) {
-  const sourceBlocks = buildQuestionBlocks(section);
-  const availableCount = sourceBlocks.reduce((sum, block) => sum + block.length, 0);
-  if (availableCount === targetCount) return shuffle(sourceBlocks).flat().map((item) => item.id);
+  const partIds = Object.keys(PART_SPECS)
+    .filter((part) => PART_SPECS[part].section === section)
+    .flatMap((part) => shuffle(buildPartQuestionBlocks(part)).flat().map((item) => item.id));
 
-  const selected = [];
-  let attempts = 0;
-
-  while (selected.length < targetCount && attempts < 200) {
-    let addedThisPass = false;
-    shuffle(sourceBlocks).forEach((block) => {
-      if (selected.length >= targetCount) return;
-      if (selected.length + block.length <= targetCount) {
-        selected.push(...block.map((item) => item.id));
-        addedThisPass = true;
-      }
-    });
-    if (!addedThisPass) break;
-    attempts++;
-  }
-
-  return selected.slice(0, targetCount);
+  if (partIds.length <= targetCount) return partIds.slice(0, targetCount);
+  return partIds.slice(0, targetCount);
 }
 
 function createExamPool() {
@@ -1988,14 +1980,31 @@ function validateExamPool(exam = state.currentExam) {
     }
     if (ids.length !== 100) errors.push(`${field} length should be 100, got ${ids.length}`);
 
+    const expectedParts = Object.keys(PART_SPECS).filter((part) => PART_SPECS[part].section === section);
+    const partRank = new Map(expectedParts.map((part, index) => [part, index]));
     const selectedCounts = new Map();
-    ids.forEach((id) => {
+    const groupPositions = new Map();
+    let previousRank = -1;
+
+    ids.forEach((id, index) => {
       const item = byId.get(id);
       if (!item) {
         errors.push(`${field} has missing question id: ${id}`);
         return;
       }
       if (item.section !== section) errors.push(`${id} should be section ${section}, got ${item.section}`);
+
+      const rank = partRank.get(item.part);
+      if (rank === undefined) errors.push(`${id} has unexpected part ${item.part} in ${field}`);
+      else if (rank < previousRank) errors.push(`${field} has out-of-order part ${item.part} at position ${index + 1}`);
+      else previousRank = rank;
+
+      if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+        const key = `${item.part}::${item.groupId}`;
+        if (!groupPositions.has(key)) groupPositions.set(key, []);
+        groupPositions.get(key).push(index);
+      }
+
       selectedCounts.set(id, (selectedCounts.get(id) || 0) + 1);
     });
 
@@ -2007,6 +2016,12 @@ function validateExamPool(exam = state.currentExam) {
       if (hasAny && !counts.every((count) => count === counts[0])) {
         errors.push(`${field} has partial group ${key}`);
       }
+    });
+
+    groupPositions.forEach((positions, key) => {
+      const sorted = [...positions].sort((a, b) => a - b);
+      const isContiguous = sorted.every((position, index) => index === 0 || position === sorted[index - 1] + 1);
+      if (!isContiguous) errors.push(`${field} has split group ${key}`);
     });
   };
 
@@ -2033,7 +2048,8 @@ function renderListeningSpeechControls(qItem, groupItems = []) {
   const speechText = getListeningSpeechText(qItem, groupItems);
   if (!speechText) return "";
   const speechKey = groupItems.length ? `${qItem.part}::${qItem.groupId}` : qItem.id;
-  return `<div class='speech-controls'><button class='primary play-listening' data-speech-key='${esc(speechKey)}' data-speech-text='${esc(speechText)}'>播放聽力</button><button class='danger stop-listening'>停止播放</button></div>`;
+  listeningSpeechTextByKey.set(speechKey, speechText);
+  return `<div class='speech-controls'><button class='primary play-listening' data-speech-key='${esc(speechKey)}'>播放聽力</button><button class='danger stop-listening'>停止播放</button></div>`;
 }
 function removeFromReviewList(questionId) {
   const index = state.reviewList.findIndex((item) => item.id === questionId);
@@ -2082,7 +2098,8 @@ function evaluate(qItem, answer, options = {}) {
   return ok;
 }
 function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
-function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`; return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function shouldHideListeningText(qItem) { return qItem.section === "listening" && ["Part 1", "Part 2", "Part 3", "Part 4"].includes(qItem.part); }
+function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = shouldHideListeningText(qItem) ? (indexInGroup === null ? "請聽音訊後作答" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
   const html = [];
@@ -2099,7 +2116,7 @@ function renderPracticePool(pool, options = {}) {
       }
       const index = groupCounter.get(item.part) || 0;
       groupCounter.set(item.part, index + 1);
-      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}</div>`);
+      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${!shouldHideListeningText(item) && item.passage ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}</div>`);
       i = j;
       continue;
     }
@@ -2162,7 +2179,7 @@ function bindQuestionEvents(pool, options = {}) {
   document.querySelectorAll(".play-listening").forEach((btn) => {
     btn.onclick = () => {
       if (!window.speechSynthesis) return;
-      const text = btn.dataset.speechText || "";
+      const text = listeningSpeechTextByKey.get(btn.dataset.speechKey || "") || "";
       if (!text) return;
       stopSpeech();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -2194,12 +2211,6 @@ function renderPractice(section){const parts=Object.keys(PART_SPECS).filter((p)=
 function renderMiniPractice(title,pool,label){document.getElementById("content").innerHTML=`<h2>${title}</h2><button id='reshuffleMini' class='primary'>重新隨機出題</button><div id='qAreaMini'></div>`;const draw=()=>{const shuffled=shuffle(pool).map((x)=>({...x,part:label,type:label}));document.getElementById("qAreaMini").innerHTML=shuffled.map((item)=>renderQuestionCard(item,label)).join("");bindQuestionEvents(shuffled);};document.getElementById("reshuffleMini").onclick=draw;draw();}
 function renderReview(){const list=state.reviewList;document.getElementById("content").innerHTML=`<h2>複習清單</h2><button id='startReview' class='primary'>開始複習清單練習</button>${list.length?list.map((i)=>`<div class='card'><p>${esc(i.part)} ${esc(i.question)}</p></div>`).join(""):"<p>尚未加入題目。</p>"}`;const sr=document.getElementById("startReview");if(sr)sr.onclick=()=>{const pool=shuffle(state.reviewList);const sessionSolvedIds=new Set();const reviewModeOptions={reviewMode:true,allowRetakeInReview:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("reviewRemain");if(remain)remain.textContent=String(state.reviewList.length);};document.getElementById("content").innerHTML=`<h2>複習清單練習</h2><p>目前剩餘複習清單題數：<strong id='reviewRemain'>${state.reviewList.length}</strong></p>${renderPracticePool(pool,reviewModeOptions)}`;bindQuestionEvents(pool,{...reviewModeOptions,removeReviewOnCorrect:true,onAfterEvaluate:updateRemain});};}
 function renderWrongbook(){state.wrongbook=dedupeWrongbook(state.wrongbook);const list=state.wrongbook;document.getElementById("content").innerHTML=`<h2>錯題本</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><div id='wrongbookInfo'>${list.length?"":"<p>目前沒有錯題。</p>"}</div><div id='wrongbookList'>${list.map((i)=>`<div class='card'><p>${esc(i.part)}</p><p>${esc(i.question)}</p><p>我的答案：${esc(i.myAnswer)}</p><p>正確答案：${esc(i.answer)}</p><p>解析：${esc(i.explanation)}</p></div>`).join("")}</div>`;const sw=document.getElementById("startWrongbook");if(sw)sw.onclick=()=>{state.wrongbook=dedupeWrongbook(state.wrongbook);if(!state.wrongbook.length){const info=document.getElementById("wrongbookInfo");if(info)info.innerHTML="<p>錯題本已清空</p>";return;}const pool=shuffle(state.wrongbook.slice());const sessionSolvedIds=new Set();const wrongbookModeOptions={wrongbookMode:true,sessionSolvedIds};const updateRemain=()=>{const remain=document.getElementById("wrongbookRemain");if(remain)remain.textContent=String(state.wrongbook.length);if(!state.wrongbook.length){const area=document.getElementById("qAreaWrongbook");if(area)area.innerHTML="<p>錯題本已清空</p>";}};document.getElementById("content").innerHTML=`<h2>錯題本練習</h2><button id='startWrongbook' class='primary'>開始錯題本練習</button><p>目前剩餘錯題數：<strong id='wrongbookRemain'>${state.wrongbook.length}</strong></p><div id='qAreaWrongbook'>${renderPracticePool(pool,wrongbookModeOptions)}</div>`;const startInMode=document.getElementById("startWrongbook");if(startInMode)startInMode.onclick=()=>renderWrongbook();bindQuestionEvents(pool,{...wrongbookModeOptions,removeWrongbookOnCorrect:true,onAfterEvaluate:updateRemain});};}
-function renderHome() {
-  const exam = state.currentExam;
-  document.getElementById("content").innerHTML = `<h2>首頁</h2><p>保留聽力、閱讀、單字、填空、句子、複習清單、錯題本功能。</p><button id='startOfficialExam' class='primary'>開始正式測驗</button>${exam ? `<p><small class='muted'>目前正式測驗題組建立時間：${esc(exam.createdAt)}</small></p>` : "<p><small class='muted'>尚未建立正式測驗題組，開始時會自動產生。</small></p>"}`;
-  document.getElementById("startOfficialExam").onclick = () => renderOfficialExam();
-}
-
 function ensureCurrentExam() {
   if (!state.currentExam || !validateExamPool(state.currentExam).isValid) {
     state.currentExam = createExamPool();
@@ -2218,11 +2229,8 @@ function renderOfficialExam() {
 }
 
 function renderContent() {
-  if (currentTab === "home") renderHome();
+  if (currentTab === "exam") renderOfficialExam();
   else if (currentTab === "listening" || currentTab === "reading") renderPractice(currentTab);
-  else if (currentTab === "vocabulary") renderMiniPractice("單字練習", vocabQuestions, "單字");
-  else if (currentTab === "cloze") renderMiniPractice("填空練習", clozeQuestions, "填空");
-  else if (currentTab === "sentence") renderMiniPractice("句子練習", sentenceQuestions, "句子");
   else if (currentTab === "review") renderReview();
   else renderWrongbook();
 }

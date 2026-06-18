@@ -2127,7 +2127,12 @@ function bindQuestionEvents(pool, options = {}) {
         const ans = qItem.options[Number(btn.dataset.idx)];
         const ok = evaluate(qItem, ans, options);
         if (ok === null) return;
-        document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => { x.disabled = true; });
+        document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => {
+          const optionText = qItem.options[Number(x.dataset.idx)];
+          x.disabled = true;
+          x.classList.toggle("correct", optionText === qItem.answer);
+          x.classList.toggle("wrong", !ok && optionText === ans);
+        });
 
         const el = document.getElementById(`fb-${qItem.id}`);
         const optionLabels = ["A", "B", "C", "D"];

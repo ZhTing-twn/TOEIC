@@ -2103,6 +2103,12 @@ function renderOptionTranscriptRows(qItem) {
     return `<li><strong>${esc(optionLabels[idx] || idx + 1)}.</strong> ${esc(option)}${translation ? `<br><span class='muted'>${esc(translation)}</span>` : ""}</li>`;
   }).join("");
 }
+function isListeningGroupFullyAnswered(qItem, pool, options = {}) {
+  if (!qItem.groupId || !(qItem.part === "Part 3" || qItem.part === "Part 4")) return true;
+  const groupItems = pool.filter((item) => item.part === qItem.part && item.groupId === qItem.groupId);
+  const sessionSolvedIds = options.sessionSolvedIds;
+  return groupItems.length > 0 && groupItems.every((item) => state.solvedIds[item.id] || (sessionSolvedIds && sessionSolvedIds.has(item.id)));
+}
 function renderListeningTranscript(qItem) {
   if (!isListeningQuestion(qItem)) return "";
   if (qItem.part === "Part 1") {
@@ -2190,7 +2196,7 @@ function bindQuestionEvents(pool, options = {}) {
           const transcriptHtml = renderListeningTranscript(qItem);
           if (qItem.part === "Part 3" || qItem.part === "Part 4") {
             const transcriptEl = document.getElementById(`transcript-${getListeningTranscriptKey(qItem)}`);
-            if (transcriptEl && !transcriptEl.innerHTML) transcriptEl.innerHTML = transcriptHtml;
+            if (transcriptEl && !transcriptEl.innerHTML && isListeningGroupFullyAnswered(qItem, pool, options)) transcriptEl.innerHTML = transcriptHtml;
           } else if (transcriptHtml) {
             el.innerHTML += transcriptHtml;
           }

@@ -44,6 +44,18 @@ input, textarea {
   margin: .4rem 0 .8rem;
 }
 .option-btn { width: 100%; text-align: left; margin-bottom: .5rem; background: #f2f5fb; }
+.option-btn.correct,
+.option-btn.correct:disabled {
+  background: #dff7e9;
+  color: #0d5f35;
+  border: 1px solid #79d49d;
+}
+.option-btn.wrong,
+.option-btn.wrong:disabled {
+  background: #fde2e2;
+  color: #8f1d1d;
+  border: 1px solid #ee9a9a;
+}
 .feedback { font-weight: 700; padding: .5rem 0; }
 .feedback.success { color: var(--success); }
 .feedback.error { color: var(--danger); }

@@ -1833,9 +1833,9 @@ function validateExplanationCoverage() {
   return { isValid: errors.length === 0, errors, coverageByPart };
 }
 
-const tabs = [["home", "首頁"], ["listening", "聽力"], ["reading", "閱讀"], ["vocabulary", "單字"], ["cloze", "填空"], ["sentence", "句子"], ["review", "複習清單"], ["wrongbook", "錯題本"]];
+const tabs = [["exam", "正式測驗"], ["listening", "聽力練習"], ["reading", "閱讀練習"], ["wrongbook", "錯題本"], ["review", "複習清單"]];
 const speechState = { currentKey: "" };
-let currentTab = "home";
+let currentTab = "exam";
 function defaultState() {
   return {
     total: 0,
@@ -1899,45 +1899,37 @@ function buildRandomPracticePool(section, part = "all") {
   return shuffle(blocks).flat();
 }
 
-function buildQuestionBlocks(section) {
+function buildQuestionBlocks(section, part = null) {
   const blocks = [];
   const groupedIndex = new Map();
-  sampleQuestions.filter((item) => item.section === section).forEach((item) => {
-    if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
-      const key = `${item.part}::${item.groupId}`;
-      if (!groupedIndex.has(key)) {
-        groupedIndex.set(key, blocks.length);
-        blocks.push([item]);
-      } else {
-        blocks[groupedIndex.get(key)].push(item);
+  sampleQuestions
+    .filter((item) => item.section === section && (!part || item.part === part))
+    .forEach((item) => {
+      if (GROUPED_RANDOM_PARTS.has(item.part) && item.groupId) {
+        const key = `${item.part}::${item.groupId}`;
+        if (!groupedIndex.has(key)) {
+          groupedIndex.set(key, blocks.length);
+          blocks.push([item]);
+        } else {
+          blocks[groupedIndex.get(key)].push(item);
+        }
+        return;
       }
-      return;
-    }
-    blocks.push([item]);
-  });
+      blocks.push([item]);
+    });
   return blocks;
 }
 
 function buildExamSectionIds(section, targetCount = 100) {
-  const sourceBlocks = buildQuestionBlocks(section);
-  const availableCount = sourceBlocks.reduce((sum, block) => sum + block.length, 0);
-  if (availableCount === targetCount) return shuffle(sourceBlocks).flat().map((item) => item.id);
-
+  const sectionParts = Object.keys(PART_SPECS).filter((part) => PART_SPECS[part].section === section);
   const selected = [];
-  let attempts = 0;
 
-  while (selected.length < targetCount && attempts < 200) {
-    let addedThisPass = false;
-    shuffle(sourceBlocks).forEach((block) => {
-      if (selected.length >= targetCount) return;
-      if (selected.length + block.length <= targetCount) {
-        selected.push(...block.map((item) => item.id));
-        addedThisPass = true;
-      }
+  sectionParts.forEach((part) => {
+    const partBlocks = buildQuestionBlocks(section, part);
+    shuffle(partBlocks).forEach((block) => {
+      selected.push(...block.map((item) => item.id));
     });
-    if (!addedThisPass) break;
-    attempts++;
-  }
+  });
 
   return selected.slice(0, targetCount);
 }
@@ -1988,15 +1980,24 @@ function validateExamPool(exam = state.currentExam) {
     }
     if (ids.length !== 100) errors.push(`${field} length should be 100, got ${ids.length}`);
 
+    const expectedParts = Object.keys(PART_SPECS).filter((part) => PART_SPECS[part].section === section);
     const selectedCounts = new Map();
-    ids.forEach((id) => {
+    const positionsById = new Map();
+    let lastPartIndex = 0;
+
+    ids.forEach((id, index) => {
       const item = byId.get(id);
       if (!item) {
         errors.push(`${field} has missing question id: ${id}`);
         return;
       }
       if (item.section !== section) errors.push(`${id} should be section ${section}, got ${item.section}`);
+      const partIndex = expectedParts.indexOf(item.part);
+      if (partIndex < lastPartIndex) errors.push(`${field} has out-of-order part ${item.part} at position ${index + 1}`);
+      if (partIndex >= 0) lastPartIndex = partIndex;
       selectedCounts.set(id, (selectedCounts.get(id) || 0) + 1);
+      if (!positionsById.has(id)) positionsById.set(id, []);
+      positionsById.get(id).push(index);
     });
 
     groupedByKey.forEach((groupIds, key) => {
@@ -2006,6 +2007,16 @@ function validateExamPool(exam = state.currentExam) {
       const hasAny = counts.some((count) => count > 0);
       if (hasAny && !counts.every((count) => count === counts[0])) {
         errors.push(`${field} has partial group ${key}`);
+      }
+      if (!hasAny) return;
+      const groupPositions = groupIds
+        .flatMap((id) => positionsById.get(id) || [])
+        .sort((a, b) => a - b);
+      for (let i = 1; i < groupPositions.length; i++) {
+        if (groupPositions[i] !== groupPositions[i - 1] + 1) {
+          errors.push(`${field} has split group ${key}`);
+          break;
+        }
       }
     });
   };
@@ -2082,7 +2093,8 @@ function evaluate(qItem, answer, options = {}) {
   return ok;
 }
 function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
-function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`; return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function isListeningQuestion(qItem) { return qItem.section === "listening" && ["Part 1", "Part 2", "Part 3", "Part 4"].includes(qItem.part); }
+function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = isListeningQuestion(qItem) ? (indexInGroup === null ? "Question" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
   const html = [];
@@ -2099,7 +2111,7 @@ function renderPracticePool(pool, options = {}) {
       }
       const index = groupCounter.get(item.part) || 0;
       groupCounter.set(item.part, index + 1);
-      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}</div>`);
+      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage && item.section !== "listening" ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}</div>`);
       i = j;
       continue;
     }
@@ -2218,11 +2230,8 @@ function renderOfficialExam() {
 }
 
 function renderContent() {
-  if (currentTab === "home") renderHome();
+  if (currentTab === "exam") renderOfficialExam();
   else if (currentTab === "listening" || currentTab === "reading") renderPractice(currentTab);
-  else if (currentTab === "vocabulary") renderMiniPractice("單字練習", vocabQuestions, "單字");
-  else if (currentTab === "cloze") renderMiniPractice("填空練習", clozeQuestions, "填空");
-  else if (currentTab === "sentence") renderMiniPractice("句子練習", sentenceQuestions, "句子");
   else if (currentTab === "review") renderReview();
   else renderWrongbook();
 }

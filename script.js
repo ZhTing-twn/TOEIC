@@ -53,7 +53,39 @@ const p1Translations = {
   "L1-5": "一名咖啡師正在把飲料遞給顧客。",
   "L1-6": "一名騎自行車的人正在辦公大樓旁停放腳踏車。",
 };
-p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"] })));
+const p1Images = {
+  "L1-1": {
+    image: "assets/images/part1/l1-1.svg",
+    imageAlt: "A woman is adjusting a projector in a meeting room.",
+    imageCaption: "Meeting room projector setup",
+  },
+  "L1-2": {
+    image: "assets/images/part1/l1-2.svg",
+    imageAlt: "Several passengers are lining up at a boarding gate.",
+    imageCaption: "Airport boarding gate line",
+  },
+  "L1-3": {
+    image: "assets/images/part1/l1-3.svg",
+    imageAlt: "A technician is replacing a ceiling light.",
+    imageCaption: "Ceiling light maintenance",
+  },
+  "L1-4": {
+    image: "assets/images/part1/l1-4.svg",
+    imageAlt: "Workers are stacking boxes in a warehouse.",
+    imageCaption: "Warehouse box stacking",
+  },
+  "L1-5": {
+    image: "assets/images/part1/l1-5.svg",
+    imageAlt: "A barista is handing a drink to a customer.",
+    imageCaption: "Coffee counter service",
+  },
+  "L1-6": {
+    image: "assets/images/part1/l1-6.svg",
+    imageAlt: "A cyclist is parking a bike beside an office building.",
+    imageCaption: "Bicycle parking by an office building",
+  },
+};
+p1.forEach(([id, ans, options, exp]) => sampleQuestions.push(q({ id, section: "listening", part: "Part 1", type: "photographs", question: "What is most likely happening in the picture?", options, answer: ans, explanation: `${exp} 中文解析：其餘選項與場景人物或動作不符。`, translation: p1Translations[id], tags: ["photo"], ...p1Images[id] })));
 
 const p2 = [
 ["Who will lead the product demo tomorrow?",["Mr. Liao from sales will lead it.","At the showroom on 3rd Street.","Because the projector failed.","Around 4:30 in the afternoon."],"Mr. Liao from sales will lead it.","Who 問人名或職位；正確答案回覆負責人，其餘是地點、原因、時間。"],

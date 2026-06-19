@@ -1834,7 +1834,7 @@ function validateExplanationCoverage() {
 }
 
 const tabs = [["exam", "正式測驗"], ["listening", "聽力練習"], ["reading", "閱讀練習"], ["wrongbook", "錯題本"], ["review", "複習清單"]];
-const speechState = { currentKey: "" };
+const speechState = { currentKey: "", textByKey: new Map() };
 let currentTab = "exam";
 function defaultState() {
   return {
@@ -2044,7 +2044,8 @@ function renderListeningSpeechControls(qItem, groupItems = []) {
   const speechText = getListeningSpeechText(qItem, groupItems);
   if (!speechText) return "";
   const speechKey = groupItems.length ? `${qItem.part}::${qItem.groupId}` : qItem.id;
-  return `<div class='speech-controls'><button class='primary play-listening' data-speech-key='${esc(speechKey)}' data-speech-text='${esc(speechText)}'>播放聽力</button><button class='danger stop-listening'>停止播放</button></div>`;
+  speechState.textByKey.set(speechKey, speechText);
+  return `<div class='speech-controls'><button class='primary play-listening' data-speech-key='${esc(speechKey)}'>播放聽力</button><button class='danger stop-listening'>停止播放</button></div>`;
 }
 function removeFromReviewList(questionId) {
   const index = state.reviewList.findIndex((item) => item.id === questionId);
@@ -2094,6 +2095,34 @@ function evaluate(qItem, answer, options = {}) {
 }
 function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function isListeningQuestion(qItem) { return qItem.section === "listening" && ["Part 1", "Part 2", "Part 3", "Part 4"].includes(qItem.part); }
+function getListeningTranscriptKey(qItem) { return qItem.groupId ? `${qItem.part}-${qItem.groupId}`.replace(/[^a-zA-Z0-9_-]/g, "-") : qItem.id; }
+function renderOptionTranscriptRows(qItem) {
+  const optionLabels = ["A", "B", "C", "D"];
+  return qItem.options.map((option, idx) => {
+    const translation = Array.isArray(qItem.optionTranslations) ? qItem.optionTranslations[idx] : "";
+    return `<li><strong>${esc(optionLabels[idx] || idx + 1)}.</strong> ${esc(option)}${translation ? `<br><span class='muted'>${esc(translation)}</span>` : ""}</li>`;
+  }).join("");
+}
+function isListeningGroupFullyAnswered(qItem, pool, options = {}) {
+  if (!qItem.groupId || !(qItem.part === "Part 3" || qItem.part === "Part 4")) return true;
+  const groupItems = pool.filter((item) => item.part === qItem.part && item.groupId === qItem.groupId);
+  const sessionSolvedIds = options.sessionSolvedIds;
+  return groupItems.length > 0 && groupItems.every((item) => state.solvedIds[item.id] || (sessionSolvedIds && sessionSolvedIds.has(item.id)));
+}
+function renderListeningTranscript(qItem) {
+  if (!isListeningQuestion(qItem)) return "";
+  if (qItem.part === "Part 1") {
+    return `<div class='listening-transcript'><h4>聽力逐字稿 Transcript</h4><h5>選項英文與中文對照</h5><ol>${renderOptionTranscriptRows(qItem)}</ol></div>`;
+  }
+  if (qItem.part === "Part 2") {
+    const questionTranslation = qItem.questionTranslation || qItem.translation || "";
+    return `<div class='listening-transcript'><h4>聽力逐字稿 Transcript</h4><h5>英文內容</h5><p>${esc(qItem.question)}</p><h5>中文翻譯</h5>${questionTranslation ? `<p>${esc(questionTranslation)}</p>` : ""}<h5>選項英文與中文對照</h5><ol>${renderOptionTranscriptRows(qItem)}</ol></div>`;
+  }
+  if (qItem.part === "Part 3" || qItem.part === "Part 4") {
+    return `<div class='listening-transcript'><h4>聽力逐字稿 Transcript</h4><h5>英文內容</h5><p>${esc(qItem.passage || "")}</p><h5>中文翻譯</h5><p>${esc(qItem.translation || "")}</p></div>`;
+  }
+  return "";
+}
 function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = isListeningQuestion(qItem) ? (indexInGroup === null ? "Question" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
@@ -2111,7 +2140,8 @@ function renderPracticePool(pool, options = {}) {
       }
       const index = groupCounter.get(item.part) || 0;
       groupCounter.set(item.part, index + 1);
-      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage && item.section !== "listening" ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}</div>`);
+      const transcriptSlot = item.section === "listening" ? `<div id='transcript-${esc(getListeningTranscriptKey(item))}'></div>` : "";
+      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage && item.section !== "listening" ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}${transcriptSlot}</div>`);
       i = j;
       continue;
     }
@@ -2156,11 +2186,22 @@ function bindQuestionEvents(pool, options = {}) {
           });
         }
 
-        if (qItem.translation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
+        const shouldShowInlineTranslation = qItem.translation && !(qItem.part === "Part 3" || qItem.part === "Part 4");
+        if (shouldShowInlineTranslation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
         if (qItem.grammarPoint) feedbackLines.push(`文法重點：${esc(qItem.grammarPoint)}`);
 
         el.className = `feedback ${ok ? "success" : "error"}`;
         el.innerHTML = feedbackLines.join("<br>");
+
+        if (isListeningQuestion(qItem)) {
+          const transcriptHtml = renderListeningTranscript(qItem);
+          if (qItem.part === "Part 3" || qItem.part === "Part 4") {
+            const transcriptEl = document.getElementById(`transcript-${getListeningTranscriptKey(qItem)}`);
+            if (transcriptEl && !transcriptEl.innerHTML && isListeningGroupFullyAnswered(qItem, pool, options)) transcriptEl.innerHTML = transcriptHtml;
+          } else if (transcriptHtml) {
+            el.innerHTML += transcriptHtml;
+          }
+        }
       };
     });
   });
@@ -2179,7 +2220,7 @@ function bindQuestionEvents(pool, options = {}) {
   document.querySelectorAll(".play-listening").forEach((btn) => {
     btn.onclick = () => {
       if (!window.speechSynthesis) return;
-      const text = btn.dataset.speechText || "";
+      const text = speechState.textByKey.get(btn.dataset.speechKey || "") || "";
       if (!text) return;
       stopSpeech();
       const utterance = new SpeechSynthesisUtterance(text);

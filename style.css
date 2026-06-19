@@ -69,19 +69,20 @@ small.muted { color:#69788f; }
 }
 
 .question-image {
-  margin: 0 0 1rem;
+  margin: 1rem 0;
+  text-align: center;
 }
 .question-image img {
-  display: block;
   max-width: 100%;
   height: auto;
+  border-radius: 8px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  background: #fff;
 }
 .question-image figcaption {
   margin-top: .4rem;
-  color: #69788f;
   font-size: .9rem;
+  color: #69788f;
 }
 
 .passage-text {

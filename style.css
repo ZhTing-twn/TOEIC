@@ -67,6 +67,23 @@ small.muted { color:#69788f; }
   padding-top: 1rem;
   border-top: 1px dashed var(--border);
 }
+
+.question-image {
+  margin: 0 0 1rem;
+}
+.question-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.question-image figcaption {
+  margin-top: .4rem;
+  color: #69788f;
+  font-size: .9rem;
+}
+
 .passage-text {
   font-size: 1rem;
   line-height: 1.7;

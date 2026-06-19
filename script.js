@@ -10,8 +10,8 @@ const PART_SPECS = {
   "Part 7": { section: "reading", count: 54, type: "reading-comprehension" }
 };
 
-function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null }) {
-  return { id, section, part, type, question, passage, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation, optionTranslations, optionReasons };
+function q({ id, section, part, type, question, options, answer, explanation, translation = "", grammarPoint = "", passage = "", groupId = "", tags = [], questionTranslation = "", optionTranslations = null, optionReasons = null, image = "", imageAlt = "", imageCaption = "" }) {
+  return { id, section, part, type, question, passage, image, imageAlt, imageCaption, audioUrl: "", options, answer, explanation, translation, grammarPoint, difficulty: "550-750", tags, groupId, questionTranslation, optionTranslations, optionReasons };
 }
 
 const sampleQuestions = [];
@@ -854,6 +854,9 @@ p7Groups.forEach((group, gi) => {
       answer: item[2],
       explanation: `${item[3]} 中文解析：請依文本中的關鍵資訊定位答案。`,
       translation: p7Translations[id],
+      image: group.image || "",
+      imageAlt: group.imageAlt || "",
+      imageCaption: group.imageCaption || "",
       tags: ["reading", group.type],
     }));
   });
@@ -1781,6 +1784,7 @@ function validateQuestionBank() {
   });
   sampleQuestions.forEach((item) => {
     ["question", "options", "answer", "explanation", "translation"].forEach((key) => { if (!item[key] || (Array.isArray(item[key]) && !item[key].length)) errors.push(`${item.id} missing ${key}`); });
+    if (item.image && /^https?:\/\//i.test(item.image)) errors.push(`${item.id} image should use a local path`);
     if (item.part === "Part 5" && !item.grammarPoint) errors.push(`${item.id} missing grammarPoint`);
 
     if (!item.questionTranslation) errors.push(`${item.id} missing questionTranslation`);
@@ -2027,6 +2031,12 @@ function validateExamPool(exam = state.currentExam) {
 }
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+function renderQuestionImage(qItem) {
+  if (!qItem || !qItem.image) return "";
+  const alt = qItem.imageAlt || qItem.imageCaption || "TOEIC question image";
+  const caption = qItem.imageCaption ? `<figcaption>${esc(qItem.imageCaption)}</figcaption>` : "";
+  return `<figure class='question-image'><img src='${esc(qItem.image)}' alt='${esc(alt)}' loading='lazy'>${caption}</figure>`;
+}
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderDashboard(); }
 function stopSpeech() {
   if (!window.speechSynthesis) return;
@@ -2093,7 +2103,7 @@ function evaluate(qItem, answer, options = {}) {
   if (typeof options.onAfterEvaluate === "function") options.onAfterEvaluate(ok);
   return ok;
 }
-function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${renderQuestionImage(qItem)}${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function isListeningQuestion(qItem) { return qItem.section === "listening" && ["Part 1", "Part 2", "Part 3", "Part 4"].includes(qItem.part); }
 function getListeningTranscriptKey(qItem) { return qItem.groupId ? `${qItem.part}-${qItem.groupId}`.replace(/[^a-zA-Z0-9_-]/g, "-") : qItem.id; }
 function renderOptionTranscriptRows(qItem) {
@@ -2123,7 +2133,7 @@ function renderListeningTranscript(qItem) {
   }
   return "";
 }
-function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = isListeningQuestion(qItem) ? (indexInGroup === null ? "Question" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); return `<div class='question-block'><p>${title}</p><div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = isListeningQuestion(qItem) ? (indexInGroup === null ? "Question" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); const imageHtml = qItem.part === "Part 1" ? renderQuestionImage(qItem) : ""; return `<div class='question-block'><p>${title}</p>${imageHtml}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
   const html = [];
@@ -2141,7 +2151,7 @@ function renderPracticePool(pool, options = {}) {
       const index = groupCounter.get(item.part) || 0;
       groupCounter.set(item.part, index + 1);
       const transcriptSlot = item.section === "listening" ? `<div id='transcript-${esc(getListeningTranscriptKey(item))}'></div>` : "";
-      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.passage && item.section !== "listening" ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}${transcriptSlot}</div>`);
+      html.push(`<div class='card grouped-card'><h3>${esc(getGroupTitle(item.part, index))}</h3>${renderListeningSpeechControls(item, groupItems)}${item.part === "Part 7" ? renderQuestionImage(item) : ""}${item.passage && item.section !== "listening" ? `<p class='passage-text'>${esc(item.passage)}</p>` : ""}${groupItems.map((qItem, idx) => renderQuestionBody(qItem, idx, options)).join("")}${transcriptSlot}</div>`);
       i = j;
       continue;
     }

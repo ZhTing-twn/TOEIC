@@ -2186,7 +2186,8 @@ function bindQuestionEvents(pool, options = {}) {
           });
         }
 
-        if (qItem.translation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
+        const shouldShowInlineTranslation = qItem.translation && !(qItem.part === "Part 3" || qItem.part === "Part 4");
+        if (shouldShowInlineTranslation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
         if (qItem.grammarPoint) feedbackLines.push(`文法重點：${esc(qItem.grammarPoint)}`);
 
         el.className = `feedback ${ok ? "success" : "error"}`;

@@ -2169,7 +2169,19 @@ function formatAnswerWithLabel(qItem, answer) {
 function renderAnswerFeedback(qItem, answerState) {
   if (!answerState) return "";
   if (answerState.legacy) {
-    return `<div class='feedback answered-summary'><strong>此題已作答</strong><br>我的答案：舊版紀錄未保存作答選項<br>正確答案：${formatAnswerWithLabel(qItem, qItem.answer)}<br>解析：${esc(qItem.explanation)}<br>中文翻譯：${esc(qItem.questionTranslation || qItem.translation || "")}</div>`;
+    const legacyLines = [
+      "此題已作答，但舊版紀錄未保存你選的答案。",
+      `正確答案：${formatAnswerWithLabel(qItem, qItem.answer)}`,
+      `解析：${esc(qItem.explanation)}`,
+      `中文翻譯：${esc(qItem.questionTranslation || qItem.translation || "")}`,
+    ];
+    if (Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length) {
+      legacyLines.push("選項解析：");
+      qItem.optionReasons.forEach((text, idx) => {
+        legacyLines.push(`${getOptionLabel(idx)}. ${esc(text)}`);
+      });
+    }
+    return `<div class='feedback answered-summary'>${legacyLines.join("<br>")}</div>`;
   }
   const lines = [
     `我的答案：${formatAnswerWithLabel(qItem, answerState.selectedAnswer)}（${answerState.isCorrect ? "答對" : "答錯"}）`,

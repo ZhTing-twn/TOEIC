@@ -1882,6 +1882,7 @@ function defaultState() {
     lastPracticeDate: new Date().toISOString().slice(0, 10),
     byPart: {},
     solvedIds: {},
+    userAnswers: {},
     currentExam: null,
   };
 }
@@ -1907,6 +1908,7 @@ function loadState() {
   if (parsed.lastPracticeDate !== t) parsed.doneToday = 0;
   parsed.lastPracticeDate = t;
   parsed.wrongbook = dedupeWrongbook(parsed.wrongbook || []);
+  parsed.userAnswers = parsed.userAnswers && typeof parsed.userAnswers === "object" ? parsed.userAnswers : {};
   return { ...defaultState(), ...parsed };
 }
 let state = loadState();
@@ -2115,10 +2117,12 @@ function evaluate(qItem, answer, options = {}) {
     if (sessionSolvedIds && sessionSolvedIds.has(qItem.id)) return null;
   } else if (state.solvedIds[qItem.id]) return null;
   const ok = answer === qItem.answer;
+  const answeredAt = new Date().toISOString();
   if (inReviewMode || inWrongbookMode) {
     if (sessionSolvedIds) sessionSolvedIds.add(qItem.id);
   } else {
     state.solvedIds[qItem.id] = true;
+    state.userAnswers[qItem.id] = { selectedAnswer: answer, isCorrect: ok, answeredAt };
   }
   state.total++;
   state.doneToday++;
@@ -2130,7 +2134,7 @@ function evaluate(qItem, answer, options = {}) {
       state.wrongbook = state.wrongbook.filter((item) => item.id !== qItem.id);
     }
   } else {
-    const now = new Date().toISOString();
+    const now = answeredAt;
     const existed = state.wrongbook.find((item) => item.id === qItem.id);
     if (existed) {
       existed.myAnswer = answer;
@@ -2144,7 +2148,56 @@ function evaluate(qItem, answer, options = {}) {
   if (typeof options.onAfterEvaluate === "function") options.onAfterEvaluate(ok);
   return ok;
 }
-function renderQuestionCard(qItem, partLabel = "", options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${renderQuestionImage(qItem)}${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function getQuestionAnswerState(qItem, options = {}) {
+  if (options.reviewMode || options.wrongbookMode) return null;
+  const stored = state.userAnswers && state.userAnswers[qItem.id];
+  if (stored && typeof stored.selectedAnswer === "string") {
+    return {
+      selectedAnswer: stored.selectedAnswer,
+      isCorrect: typeof stored.isCorrect === "boolean" ? stored.isCorrect : stored.selectedAnswer === qItem.answer,
+      answeredAt: stored.answeredAt || "",
+    };
+  }
+  if (state.solvedIds[qItem.id]) return { selectedAnswer: "", isCorrect: false, answeredAt: "", legacy: true };
+  return null;
+}
+function getOptionLabel(index) { return ["A", "B", "C", "D"][index] || String(index + 1); }
+function formatAnswerWithLabel(qItem, answer) {
+  const index = qItem.options.indexOf(answer);
+  return index >= 0 ? `${getOptionLabel(index)}. ${esc(answer)}` : esc(answer || "無法從舊紀錄判斷");
+}
+function renderAnswerFeedback(qItem, answerState) {
+  if (!answerState) return "";
+  if (answerState.legacy) {
+    return `<div class='feedback answered-summary'><strong>此題已作答</strong><br>我的答案：舊版紀錄未保存作答選項<br>結果：無法從舊版紀錄判斷<br>正確答案：${formatAnswerWithLabel(qItem, qItem.answer)}<br>解析：${esc(qItem.explanation)}<br>中文翻譯：${esc(qItem.questionTranslation || qItem.translation || "")}</div>`;
+  }
+  const lines = [
+    `我的答案：${formatAnswerWithLabel(qItem, answerState.selectedAnswer)}`,
+    `結果：${answerState.isCorrect ? "答對" : "答錯"}`,
+  ];
+  if (!answerState.isCorrect) lines.push(`正確答案：${formatAnswerWithLabel(qItem, qItem.answer)}`);
+  lines.push(`解析：${esc(qItem.explanation)}`);
+  lines.push(`中文翻譯：${esc(qItem.questionTranslation || qItem.translation || "")}`);
+  if (Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length) {
+    lines.push("選項解析：");
+    qItem.optionReasons.forEach((text, idx) => {
+      lines.push(`${getOptionLabel(idx)}. ${esc(text)}`);
+    });
+  }
+  return `<div class='feedback ${answerState.isCorrect ? "success" : "error"} answered-summary'>${lines.join("<br>")}</div>`;
+}
+function getAnsweredOptionClass(qItem, optionText, answerState) {
+  if (!answerState || answerState.legacy) return "";
+  if (optionText === qItem.answer) return " correct";
+  if (!answerState.isCorrect && optionText === answerState.selectedAnswer) return " wrong";
+  return "";
+}
+function renderQuestionCard(qItem, partLabel = "", options = {}) {
+  const answerState = getQuestionAnswerState(qItem, options);
+  const solved = !!answerState;
+  const feedback = renderAnswerFeedback(qItem, answerState);
+  return `<div class='card'><h3>${esc(partLabel || qItem.part)}</h3><p>${esc(qItem.question)}</p>${renderQuestionImage(qItem)}${qItem.passage ? `<p><small>${esc(qItem.passage)}</small></p>` : ""}${feedback || `<div id='fb-${qItem.id}'></div>`}<div>${qItem.options.map((op, i) => `<button class='option-btn${getAnsweredOptionClass(qItem, op, answerState)}' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button></div>`;
+}
 function isListeningQuestion(qItem) { return qItem.section === "listening" && ["Part 1", "Part 2", "Part 3", "Part 4"].includes(qItem.part); }
 function getListeningTranscriptKey(qItem) { return qItem.groupId ? `${qItem.part}-${qItem.groupId}`.replace(/[^a-zA-Z0-9_-]/g, "-") : qItem.id; }
 function renderOptionTranscriptRows(qItem) {
@@ -2174,7 +2227,15 @@ function renderListeningTranscript(qItem) {
   }
   return "";
 }
-function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const toeicQuestionNumber = getToeicQuestionNumber(qItem); const title = isListeningQuestion(qItem) ? `Question ${toeicQuestionNumber || (indexInGroup === null ? "" : indexInGroup + 1)}`.trim() : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); const imageHtml = qItem.part === "Part 1" ? renderQuestionImage(qItem) : ""; return `<div class='question-block'><p>${title}</p>${imageHtml}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function renderQuestionBody(qItem, indexInGroup = null, options = {}) {
+  const answerState = getQuestionAnswerState(qItem, options);
+  const solved = !!answerState;
+  const toeicQuestionNumber = getToeicQuestionNumber(qItem);
+  const title = isListeningQuestion(qItem) ? `Question ${toeicQuestionNumber || (indexInGroup === null ? "" : indexInGroup + 1)}`.trim() : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`);
+  const imageHtml = qItem.part === "Part 1" ? renderQuestionImage(qItem) : "";
+  const feedback = renderAnswerFeedback(qItem, answerState);
+  return `<div class='question-block'><p>${title}</p>${imageHtml}${feedback || `<div id='fb-${qItem.id}'></div>`}<div>${qItem.options.map((op, i) => `<button class='option-btn${getAnsweredOptionClass(qItem, op, answerState)}' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button></div>`;
+}
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
   const html = [];
@@ -2208,6 +2269,7 @@ function bindQuestionEvents(pool, options = {}) {
         const ans = qItem.options[Number(btn.dataset.idx)];
         const ok = evaluate(qItem, ans, options);
         if (ok === null) return;
+        const answeredAt = state.userAnswers?.[qItem.id]?.answeredAt || new Date().toISOString();
         document.querySelectorAll(`button[data-id='${qItem.id}']`).forEach((x) => {
           const optionText = qItem.options[Number(x.dataset.idx)];
           x.disabled = true;
@@ -2216,33 +2278,8 @@ function bindQuestionEvents(pool, options = {}) {
         });
 
         const el = document.getElementById(`fb-${qItem.id}`);
-        const optionLabels = ["A", "B", "C", "D"];
-        const feedbackLines = [`${ok ? "✅" : "❌"} 正確答案：${esc(qItem.answer)}`];
-
-        if (qItem.questionTranslation) feedbackLines.push(`題目翻譯：${esc(qItem.questionTranslation)}`);
-
-        if (Array.isArray(qItem.optionTranslations) && qItem.optionTranslations.length === qItem.options.length) {
-          feedbackLines.push("選項翻譯：");
-          qItem.optionTranslations.forEach((text, idx) => {
-            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
-          });
-        }
-
-        feedbackLines.push(`解析：${esc(qItem.explanation)}`);
-
-        if (Array.isArray(qItem.optionReasons) && qItem.optionReasons.length === qItem.options.length) {
-          feedbackLines.push("選項說明：");
-          qItem.optionReasons.forEach((text, idx) => {
-            feedbackLines.push(`${optionLabels[idx] || idx + 1}. ${esc(text)}`);
-          });
-        }
-
-        const shouldShowInlineTranslation = qItem.translation && !(qItem.part === "Part 3" || qItem.part === "Part 4");
-        if (shouldShowInlineTranslation) feedbackLines.push(`整句翻譯：${esc(qItem.translation)}`);
-        if (qItem.grammarPoint) feedbackLines.push(`文法重點：${esc(qItem.grammarPoint)}`);
-
-        el.className = `feedback ${ok ? "success" : "error"}`;
-        el.innerHTML = feedbackLines.join("<br>");
+        el.outerHTML = renderAnswerFeedback(qItem, { selectedAnswer: ans, isCorrect: ok, answeredAt });
+        const feedbackEl = document.getElementById(`fb-${qItem.id}`) || document.querySelector(`button[data-id='${qItem.id}']`)?.closest(".question-block, .card")?.querySelector(".answered-summary");
 
         if (isListeningQuestion(qItem)) {
           const transcriptHtml = renderListeningTranscript(qItem);
@@ -2250,7 +2287,7 @@ function bindQuestionEvents(pool, options = {}) {
             const transcriptEl = document.getElementById(`transcript-${getListeningTranscriptKey(qItem)}`);
             if (transcriptEl && !transcriptEl.innerHTML && isListeningGroupFullyAnswered(qItem, pool, options)) transcriptEl.innerHTML = transcriptHtml;
           } else if (transcriptHtml) {
-            el.innerHTML += transcriptHtml;
+            if (feedbackEl) feedbackEl.innerHTML += transcriptHtml;
           }
         }
       };

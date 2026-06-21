@@ -2063,6 +2063,15 @@ function validateExamPool(exam = state.currentExam) {
 }
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+function getToeicQuestionNumber(qItem) {
+  if (!qItem || !qItem.id) return null;
+  const match = String(qItem.id).match(/^(L[1-4]|R[5-7])-(\d+)$/);
+  if (!match) return null;
+  const sequence = Number(match[2]);
+  if (!Number.isInteger(sequence) || sequence < 1) return null;
+  const offsets = { L1: 0, L2: 6, L3: 31, L4: 70, R5: 100, R6: 130, R7: 146 };
+  return offsets[match[1]] + sequence;
+}
 function renderQuestionImage(qItem) {
   if (!qItem || !qItem.image) return "";
   const alt = qItem.imageAlt || qItem.imageCaption || "TOEIC question image";
@@ -2165,7 +2174,7 @@ function renderListeningTranscript(qItem) {
   }
   return "";
 }
-function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const title = isListeningQuestion(qItem) ? (indexInGroup === null ? "Question" : `Question ${indexInGroup + 1}`) : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); const imageHtml = qItem.part === "Part 1" ? renderQuestionImage(qItem) : ""; return `<div class='question-block'><p>${title}</p>${imageHtml}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
+function renderQuestionBody(qItem, indexInGroup = null, options = {}) { const solved = (options.reviewMode || options.wrongbookMode) ? false : !!state.solvedIds[qItem.id]; const toeicQuestionNumber = getToeicQuestionNumber(qItem); const title = isListeningQuestion(qItem) ? `Question ${toeicQuestionNumber || (indexInGroup === null ? "" : indexInGroup + 1)}`.trim() : (indexInGroup === null ? esc(qItem.question) : `Question ${indexInGroup + 1}. ${esc(qItem.question)}`); const imageHtml = qItem.part === "Part 1" ? renderQuestionImage(qItem) : ""; return `<div class='question-block'><p>${title}</p>${imageHtml}<div>${qItem.options.map((op, i) => `<button class='option-btn' data-id='${qItem.id}' data-idx='${i}' ${solved ? "disabled" : ""}>${esc(op)}</button>`).join("")}</div><button class='danger mark-review' data-review='${qItem.id}'>我不熟</button><div id='fb-${qItem.id}'>${solved ? "<small>此題已作答，已鎖定。</small>" : ""}</div></div>`; }
 function getGroupTitle(part, groupIndex) { const labelMap = { "Part 3": "組對話", "Part 4": "組獨白", "Part 6": "篇短文", "Part 7": "篇閱讀" }; return `${part} 第 ${groupIndex + 1} ${labelMap[part] || "組"}`; }
 function renderPracticePool(pool, options = {}) {
   const html = [];

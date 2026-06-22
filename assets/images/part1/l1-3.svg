@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc"><title id="title">Technician replacing a ceiling light</title><desc id="desc">A technician on a ladder replaces a ceiling light indoors.</desc><rect width="640" height="400" fill="#f5f0e8"/><rect x="0" y="0" width="640" height="62" fill="#d8d1c4"/><ellipse cx="340" cy="62" rx="70" ry="18" fill="#fff7b5" stroke="#bcae66" stroke-width="4"/><path d="M285 70 q55 55 110 0" fill="#ffe46b" opacity=".55"/><path d="M250 350 l70 -190 h38 l70 190" fill="none" stroke="#7d8791" stroke-width="10"/><path d="M286 258 h105 M270 305 h138" stroke="#7d8791" stroke-width="8"/><circle cx="330" cy="138" r="24" fill="#6f4a35"/><rect x="305" y="162" width="54" height="86" rx="12" fill="#f2994a"/><path d="M316 172 l-38 -38 M351 170 l38 -42" stroke="#6f4a35" stroke-width="11" stroke-linecap="round"/><path d="M318 248 l-20 62 M348 248 l28 62" stroke="#2f3b52" stroke-width="12" stroke-linecap="round"/><rect x="60" y="330" width="520" height="70" fill="#b9a995"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+<title id="title">Technician replacing a ceiling light</title>
+<desc id="desc">A technician on a ladder replaces a ceiling light indoors.</desc>
+<rect width="640" height="400" fill="#f5f0e8"/>
+<rect x="0" y="0" width="640" height="62" fill="#d8d1c4"/>
+<ellipse cx="340" cy="62" rx="70" ry="18" fill="#fff7b5" stroke="#bcae66" stroke-width="4"/>
+<path d="M285 70 q55 55 110 0" fill="#ffe46b" opacity=".55"/>
+<path d="M250 350 l70 -190 h38 l70 190" fill="none" stroke="#7d8791" stroke-width="10"/>
+<path d="M286 258 h105 M270 305 h138" stroke="#7d8791" stroke-width="8"/>
+<circle cx="330" cy="138" r="24" fill="#6f4a35"/>
+<rect x="305" y="162" width="54" height="86" rx="12" fill="#f2994a"/>
+<path d="M316 172 l-38 -38 M351 170 l38 -42" stroke="#6f4a35" stroke-width="11" stroke-linecap="round"/>
+<path d="M318 248 l-20 62 M348 248 l28 62" stroke="#2f3b52" stroke-width="12" stroke-linecap="round"/>
+<rect x="60" y="330" width="520" height="70" fill="#b9a995"/>
+</svg>

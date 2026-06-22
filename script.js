@@ -2186,6 +2186,7 @@ function renderAnswerFeedback(qItem, answerState) {
   const lines = [
     `我的答案：${formatAnswerWithLabel(qItem, answerState.selectedAnswer)}（${answerState.isCorrect ? "答對" : "答錯"}）`,
   ];
+  ];
   if (!answerState.isCorrect) lines.push(`正確答案：${formatAnswerWithLabel(qItem, qItem.answer)}`);
   lines.push(`解析：${esc(qItem.explanation)}`);
   lines.push(`中文翻譯：${esc(qItem.questionTranslation || qItem.translation || "")}`);

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">Cafeteria Service Update</title>
+  <desc id="desc">Clean business document illustration for a TOEIC reading passage.</desc>
+  <rect width="720" height="420" fill="#f4f7fb"/>
+  <rect x="70" y="40" width="580" height="340" rx="16" fill="#ffffff" stroke="#b7c3d0" stroke-width="3"/>
+  <rect x="70" y="40" width="580" height="74" rx="16" fill="#1f5f8b"/>
+  <rect x="70" y="92" width="580" height="22" fill="#1f5f8b"/>
+  <text x="100" y="88" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Cafeteria Service Update</text>
+  <g font-family="Arial, sans-serif" fill="#24364b">
+    <text x="110" y="160" font-size="28" font-weight="700">Limited menu Thursday</text>
+    <line x1="110" y1="185" x2="610" y2="185" stroke="#d7e0ea" stroke-width="3"/>
+    <rect x="110" y="215" width="220" height="52" rx="8" fill="#eaf3fb" stroke="#b7c3d0"/>
+    <rect x="390" y="215" width="220" height="52" rx="8" fill="#eaf3fb" stroke="#b7c3d0"/>
+    <text x="130" y="249" font-size="21">11:30 a.m.–1:30 p.m.</text>
+    <text x="410" y="249" font-size="21">Grill & noodle counters closed</text>
+    <circle cx="125" cy="318" r="8" fill="#1f5f8b"/>
+    <line x1="145" y1="318" x2="580" y2="318" stroke="#c8d4df" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="125" cy="348" r="8" fill="#1f5f8b"/>
+    <line x1="145" y1="348" x2="520" y2="348" stroke="#c8d4df" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

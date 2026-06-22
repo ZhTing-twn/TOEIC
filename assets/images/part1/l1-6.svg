@@ -1,1 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc"><title id="title">Cyclist parking a bike beside an office building</title><desc id="desc">A cyclist parks a bicycle next to an office building.</desc><rect width="640" height="400" fill="#dff3ff"/><rect x="375" y="45" width="185" height="260" fill="#b9c7d6" stroke="#6f8294" stroke-width="5"/><g fill="#eaf6ff" stroke="#6f8294" stroke-width="3"><rect x="400" y="75" width="42" height="38"/><rect x="470" y="75" width="42" height="38"/><rect x="400" y="135" width="42" height="38"/><rect x="470" y="135" width="42" height="38"/><rect x="400" y="195" width="42" height="38"/><rect x="470" y="195" width="42" height="38"/></g><rect x="450" y="250" width="45" height="55" fill="#506070"/><rect x="0" y="300" width="640" height="100" fill="#a7c7a2"/><path d="M65 326 h500" stroke="#667085" stroke-width="8"/><circle cx="170" cy="307" r="38" fill="none" stroke="#1f2937" stroke-width="8"/><circle cx="300" cy="307" r="38" fill="none" stroke="#1f2937" stroke-width="8"/><path d="M170 307 l48 -60 h48 l34 60 M218 247 l-8 60 M218 247 l82 60" fill="none" stroke="#1f2937" stroke-width="7" stroke-linecap="round"/><circle cx="250" cy="167" r="22" fill="#6b432e"/><rect x="225" y="190" width="52" height="70" rx="12" fill="#ef4444"/><path d="M232 209 l-38 45 M274 210 l34 42" stroke="#6b432e" stroke-width="11" stroke-linecap="round"/><path d="M238 260 l-42 46 M268 260 l34 44" stroke="#1f2937" stroke-width="12" stroke-linecap="round"/><path d="M320 252 v65" stroke="#6f8294" stroke-width="8"/><path d="M300 252 h42" stroke="#6f8294" stroke-width="8"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title desc">
+<title id="title">Cyclist parking a bike beside an office building</title>
+<desc id="desc">A cyclist parks a bicycle next to an office building.</desc>
+<rect width="640" height="400" fill="#dff3ff"/>
+<rect x="375" y="45" width="185" height="260" fill="#b9c7d6" stroke="#6f8294" stroke-width="5"/>
+<g fill="#eaf6ff" stroke="#6f8294" stroke-width="3">
+<rect x="400" y="75" width="42" height="38"/>
+<rect x="470" y="75" width="42" height="38"/>
+<rect x="400" y="135" width="42" height="38"/>
+<rect x="470" y="135" width="42" height="38"/>
+<rect x="400" y="195" width="42" height="38"/>
+<rect x="470" y="195" width="42" height="38"/>
+</g>
+<rect x="450" y="250" width="45" height="55" fill="#506070"/>
+<rect x="0" y="300" width="640" height="100" fill="#a7c7a2"/>
+<path d="M65 326 h500" stroke="#667085" stroke-width="8"/>
+<circle cx="170" cy="307" r="38" fill="none" stroke="#1f2937" stroke-width="8"/>
+<circle cx="300" cy="307" r="38" fill="none" stroke="#1f2937" stroke-width="8"/>
+<path d="M170 307 l48 -60 h48 l34 60 M218 247 l-8 60 M218 247 l82 60" fill="none" stroke="#1f2937" stroke-width="7" stroke-linecap="round"/>
+<circle cx="250" cy="167" r="22" fill="#6b432e"/>
+<rect x="225" y="190" width="52" height="70" rx="12" fill="#ef4444"/>
+<path d="M232 209 l-38 45 M274 210 l34 42" stroke="#6b432e" stroke-width="11" stroke-linecap="round"/>
+<path d="M238 260 l-42 46 M268 260 l34 44" stroke="#1f2937" stroke-width="12" stroke-linecap="round"/>
+<path d="M320 252 v65" stroke="#6f8294" stroke-width="8"/>
+<path d="M300 252 h42" stroke="#6f8294" stroke-width="8"/>
+</svg>

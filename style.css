@@ -74,6 +74,7 @@ small.muted { color:#69788f; }
 }
 .question-image img {
   max-width: 100%;
+  width: min(100%, 720px);
   height: auto;
   border-radius: 8px;
   border: 1px solid var(--border);

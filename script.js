@@ -55,32 +55,32 @@ const p1Translations = {
 };
 const p1Images = {
   "L1-1": {
-    image: "assets/images/part1/l1-1.svg",
+    image: "assets/images/part1/l1-1.jpg",
     imageAlt: "A woman is adjusting a projector in a meeting room.",
     imageCaption: "Meeting room projector setup",
   },
   "L1-2": {
-    image: "assets/images/part1/l1-2.svg",
+    image: "assets/images/part1/l1-2.jpg",
     imageAlt: "Several passengers are lining up at a boarding gate.",
     imageCaption: "Airport boarding gate line",
   },
   "L1-3": {
-    image: "assets/images/part1/l1-3.svg",
+    image: "assets/images/part1/l1-3.jpg",
     imageAlt: "A technician is replacing a ceiling light.",
     imageCaption: "Ceiling light maintenance",
   },
   "L1-4": {
-    image: "assets/images/part1/l1-4.svg",
+    image: "assets/images/part1/l1-4.jpg",
     imageAlt: "Workers are stacking boxes in a warehouse.",
     imageCaption: "Warehouse box stacking",
   },
   "L1-5": {
-    image: "assets/images/part1/l1-5.svg",
+    image: "assets/images/part1/l1-5.jpg",
     imageAlt: "A barista is handing a drink to a customer.",
     imageCaption: "Coffee counter service",
   },
   "L1-6": {
-    image: "assets/images/part1/l1-6.svg",
+    image: "assets/images/part1/l1-6.jpg",
     imageAlt: "A cyclist is parking a bike beside an office building.",
     imageCaption: "Bicycle parking by an office building",
   },
